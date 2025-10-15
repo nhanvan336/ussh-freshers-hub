@@ -33,7 +33,7 @@ router.post('/register', async (req, res) => {
         const existingUser = await User.findOne({ $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }] });
 
         if (existingUser) {
-            req.flash('error_msg', 'Email hoặc tên đăng nhập đã tồn tại.');
+            req.flash('error', 'Email hoặc tên đăng nhập đã tồn tại.');
             return res.redirect('/auth/register');
         }
 
@@ -45,12 +45,12 @@ router.post('/register', async (req, res) => {
 
         await newUser.save();
 
-        req.flash('success_msg', 'Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
+        req.flash('success', 'Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
         res.redirect('/auth/login');
 
     } catch (err) {
         console.error('Registration error:', err);
-        req.flash('error_msg', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        req.flash('error', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
         res.redirect('/auth/register');
     }
 });
@@ -60,9 +60,10 @@ router.post('/register', async (req, res) => {
 router.post('/logout', (req, res, next) => {
     req.logout(function(err) {
         if (err) { return next(err); }
-        req.flash('success_msg', 'Bạn đã đăng xuất thành công.');
+        req.flash('success', 'Bạn đã đăng xuất thành công.');
         res.redirect('/auth/login');
     });
 });
 
 module.exports = router;
+
