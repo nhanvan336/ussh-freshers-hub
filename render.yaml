@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: ussh-freshers-hub
+    env: node
+    plan: free
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromDatabase:
+          name: ussh-freshers-hub-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: BCRYPT_ROUNDS
+        value: "12"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "100"
+      - key: EMAIL_SERVICE
+        value: gmail
+      - key: EMAIL_FROM
+        value: noreply@ussh-freshers-hub.com
+
+databases:
+  - name: ussh-freshers-hub-db
+    databaseName: ussh-freshers-hub
+    user: ussh-freshers-hub
+    plan: free
+    region: singapore
