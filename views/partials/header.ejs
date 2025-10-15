@@ -1,15 +1,6 @@
 <header class="header">
     <div class="container">
         <nav class="navbar" role="navigation" aria-label="Main navigation">
-
-            <!-- === ĐOẠN CODE KIỂM TRA LỖI - BẠN CÓ THỂ XÓA SAU KHI SỬA XONG === -->
-            <div style="background: #ffc107; color: black; padding: 10px; font-family: monospace; position: fixed; top: 80px; left: 0; width: 100%; z-index: 9999; border-bottom: 2px solid #e6a700;">
-              <p style="margin: 0; font-weight: bold;">DEBUG MODE:</p>
-              <p style="margin: 0;">isAuthenticated: <strong style="color: #d9534f;"><%= typeof isAuthenticated !== 'undefined' ? isAuthenticated : 'KHÔNG TỒN TẠI' %></strong></p>
-              <p style="margin: 0;">User Object: <strong style="color: #d9534f;"><%= typeof user !== 'undefined' ? (user ? user.email : 'NULL') : 'KHÔNG TỒN TẠI' %></strong></p>
-            </div>
-            <!-- === KẾT THÚC ĐOẠN CODE KIỂM TRA === -->
-            
             <a href="/" class="navbar-brand">
                 <img src="/images/logo-ussh.png" alt="Logo USSH" class="brand-logo">
                 <h1 class="brand-name">USSH Freshers' Hub</h1>
@@ -57,7 +48,7 @@
                 
                 <div class="navbar-actions">
                     <% if (isAuthenticated && user) { %>
-                        <!-- *** GIAO DIỆN KHI ĐÃ ĐĂNG NHẬP *** -->
+                        <!-- Giao diện khi đã đăng nhập -->
                         <div class="user-menu dropdown">
                             <button class="user-toggle">
                                 <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" alt="Avatar" class="user-avatar">
