@@ -3,9 +3,7 @@
         <h2 class="text-center">Tạo tài khoản mới</h2>
         <p class="auth-subtitle">Tham gia cộng đồng sinh viên năm nhất USSH.</p>
 
-        <% if (messages.error && messages.error.length > 0) { %>
-            <div class="alert alert-danger" role="alert"><%= messages.error[0] %></div>
-        <% } %>
+        <!-- Thông báo lỗi/thành công sẽ được hiển thị bởi layout chính (main.ejs) -->
 
         <form action="/auth/register" method="POST">
             <div class="row">
@@ -19,7 +17,6 @@
                 </div>
             </div>
             
-            <!-- BỔ SUNG TẠI ĐÂY: Thay thế input bằng select/dropdown -->
             <div class="form-group">
                 <label for="major" class="form-label">Ngành học</label>
                 <select id="major" name="major" class="form-control" required>
