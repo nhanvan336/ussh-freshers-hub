@@ -25,31 +25,31 @@
             <div class="navbar-menu">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="/" class="nav-link <%= currentPage === 'home' ? 'active' : '' %>">
+                        <a href="/" class="nav-link <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">
                             <i class="fas fa-home"></i>
                             <span>Trang chủ</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/learning-hub" class="nav-link <%= currentPage === 'learning-hub' ? 'active' : '' %>">
+                        <a href="/learning-hub" class="nav-link <%= typeof currentPage !== 'undefined' && currentPage === 'learning-hub' ? 'active' : '' %>">
                             <i class="fas fa-book-open"></i>
                             <span>Học tập</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/forum" class="nav-link <%= currentPage === 'forum' ? 'active' : '' %>">
+                        <a href="/forum" class="nav-link <%= typeof currentPage !== 'undefined' && currentPage === 'forum' ? 'active' : '' %>">
                             <i class="fas fa-users"></i>
                             <span>Diễn đàn</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/wellness" class="nav-link <%= currentPage === 'wellness' ? 'active' : '' %>">
+                        <a href="/wellness" class="nav-link <%= typeof currentPage !== 'undefined' && currentPage === 'wellness' ? 'active' : '' %>">
                             <i class="fas fa-heart"></i>
                             <span>Sức khỏe</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/handbook" class="nav-link <%= currentPage === 'handbook' ? 'active' : '' %>">
+                        <a href="/handbook" class="nav-link <%= typeof currentPage !== 'undefined' && currentPage === 'handbook' ? 'active' : '' %>">
                             <i class="fas fa-map"></i>
                             <span>Cẩm nang</span>
                         </a>
