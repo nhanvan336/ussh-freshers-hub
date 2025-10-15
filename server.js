@@ -70,12 +70,13 @@ app.use(passport.session());
 // Khởi tạo Flash messages (phải sau session)
 app.use(flash());
 
-// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS ===
+// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS (ĐÃ SỬA LỖI) ===
 // Gán thông tin người dùng và các thông báo flash vào res.locals
 app.use((req, res, next) => {
-    res.locals.user = req.user || null;
+    // Passport sẽ tự động thêm `req.user` và `req.isAuthenticated()`
+    // Chúng ta chỉ cần gán chúng vào res.locals để EJS có thể truy cập
     res.locals.isAuthenticated = req.isAuthenticated();
-    // express-flash tự động gán messages vào locals, chúng ta không cần làm thủ công nữa
+    res.locals.user = req.user; 
     next();
 });
 
