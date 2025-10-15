@@ -14,8 +14,9 @@
 
                     <form action="/auth/login" method="POST">
                         <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email hoặc Tên đăng nhập</label>
-                            <input type="text" id="username" name="username" class="form-control" required>
+                            <label for="identifier" class="form-label">Email hoặc Tên đăng nhập</label>
+                            <!-- SỬA LỖI TẠI ĐÂY: name="username" đã được đổi thành "identifier" -->
+                            <input type="text" id="identifier" name="identifier" class="form-control" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">Mật khẩu</label>
