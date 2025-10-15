@@ -38,7 +38,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({ contentSecurityPolicy: false })); // Tạm tắt CSP để tránh lỗi hiển thị
 app.use(compression());
 app.use(cors());
 app.use(morgan('dev'));
@@ -49,31 +49,34 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: MONGODB_URI }),
-    proxy: true, // <-- BỔ SUNG SỐ 1: BÁO CHO SESSION BIẾT CÓ PROXY
+    proxy: true, // BÁO CHO SESSION BIẾT CÓ PROXY
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 tuần
-        sameSite: 'lax' // <-- BỔ SUNG SỐ 2: TĂNG CƯỜNG BẢO MẬT VÀ TƯƠNG THÍCH
+        sameSite: 'lax' // TĂNG CƯỜNG BẢO MẬT VÀ TƯƠNG THÍCH
     }
 }));
 
-require('./config/passport')(passport);
+// Khởi tạo Passport
+require('./config/passport')(passport); // Truyền passport vào file config
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Khởi tạo Flash messages
 app.use(flash());
 
-// === 6. MIDDLEWARE TOÀN CỤC ===
+// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS ===
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
     res.locals.user = req.user;
+    // express-flash sẽ tự động thêm các biến flash vào locals
     next();
 });
 
 // === 7. ROUTES ===
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
-// ... (Các routes khác của bạn)
 app.use('/learning-hub', require('./routes/learning-hub'));
 app.use('/forum', require('./routes/forum'));
 app.use('/wellness', require('./routes/wellness'));
