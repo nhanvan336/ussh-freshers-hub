@@ -1,5 +1,3 @@
-<% layout('layouts/main') %>
-
 <div class="error-page">
     <div class="container">
         <div class="error-content">
@@ -14,7 +12,7 @@
                 <h1 class="error-title">Không tìm thấy trang</h1>
                 <p class="error-description">
                     Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
-                    Hãy kiểm tra lại đường dẫn hoặc sờ dụng các liên kết dưới đây.
+                    Hãy kiểm tra lại đường dẫn hoặc sử dụng các liên kết dưới đây.
                 </p>
                 
                 <div class="error-actions">
@@ -33,222 +31,180 @@
         <div class="helpful-links">
             <h3>Có thể bạn đang tìm kiếm:</h3>
             <div class="links-grid">
-                <a href="/learning-hub" class="link-card">
+                <a href="/" class="helpful-link">
+                    <i class="fas fa-home"></i>
+                    <span>Trang chủ</span>
+                </a>
+                <a href="/handbook" class="helpful-link">
                     <i class="fas fa-book"></i>
-                    <span>Thư viện học tập</span>
+                    <span>Cẩm nang sinh viên</span>
                 </a>
-                
-                <a href="/forum" class="link-card">
-                    <i class="fas fa-comments"></i>
-                    <span>Diễn đàn cộng đồng</span>
+                <a href="/learning-hub" class="helpful-link">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Trung tâm học tập</span>
                 </a>
-                
-                <a href="/wellness" class="link-card">
-                    <i class="fas fa-heart"></i>
-                    <span>Tư vấn tâm lý</span>
+                <a href="/community" class="helpful-link">
+                    <i class="fas fa-users"></i>
+                    <span>Cộng đồng</span>
                 </a>
-                
-                <a href="/handbook" class="link-card">
-                    <i class="fas fa-map"></i>
-                    <span>Cẩm nang Đại học</span>
+                <a href="/events" class="helpful-link">
+                    <i class="fas fa-calendar"></i>
+                    <span>Sự kiện</span>
                 </a>
-                
-                <a href="/search" class="link-card">
-                    <i class="fas fa-search"></i>
-                    <span>Tìm kiếm</span>
-                </a>
-                
-                <a href="/contact" class="link-card">
+                <a href="/contact" class="helpful-link">
                     <i class="fas fa-envelope"></i>
-                    <span>Liên hệ hỗ trợ</span>
+                    <span>Liên hệ</span>
                 </a>
             </div>
-        </div>
-        
-        <div class="search-section">
-            <h3>Hoặc tìm kiếm thấy thông tin bạn cần:</h3>
-            <form action="/search" method="GET" class="search-form">
-                <div class="search-container">
-                    <input type="text" 
-                           name="q" 
-                           placeholder="Nhập từ khóa tìm kiếm..." 
-                           class="search-input"
-                           autofocus>
-                    <button type="submit" class="search-button">
-                        <i class="fas fa-search"></i>
-                        Tìm kiếm
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
 <style>
 .error-page {
-    min-height: calc(100vh - 200px);
+    min-height: 80vh;
     display: flex;
     align-items: center;
-    padding: 60px 0;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
 }
 
 .error-content {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 3rem;
 }
 
 .error-illustration {
-    position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
 }
 
 .error-code {
-    font-size: 120px;
-    font-weight: 800;
-    color: #8B4513;
+    font-size: 8rem;
+    font-weight: 700;
     line-height: 1;
-    opacity: 0.1;
-    margin-bottom: -60px;
+    opacity: 0.8;
+    margin-bottom: 1rem;
 }
 
 .error-icon {
-    font-size: 80px;
-    color: #8B4513;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    opacity: 0.6;
 }
 
 .error-title {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 .error-description {
-    font-size: 1.1rem;
-    color: #6c757d;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin-left: auto;
+    margin-right: auto;
     line-height: 1.6;
 }
 
 .error-actions {
     display: flex;
-    gap: 16px;
+    gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
 }
 
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.btn-primary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
 .helpful-links {
-    margin-bottom: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
 }
 
 .helpful-links h3 {
     text-align: center;
-    font-size: 1.3rem;
-    color: #2c3e50;
-    margin-bottom: 30px;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
 }
 
 .links-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    gap: 1rem;
 }
 
-.link-card {
+.helpful-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 20px;
-    background: white;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
     text-decoration: none;
-    color: #2c3e50;
+    color: white;
     transition: all 0.3s ease;
 }
 
-.link-card:hover {
-    border-color: #8B4513;
-    background: #fafafa;
+.helpful-link:hover {
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.1);
-}
-
-.link-card i {
-    font-size: 24px;
-    color: #8B4513;
-    width: 32px;
-    text-align: center;
-}
-
-.link-card span {
-    font-weight: 500;
-}
-
-.search-section {
-    text-align: center;
-}
-
-.search-section h3 {
-    font-size: 1.2rem;
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-
-.search-container {
-    display: flex;
-    max-width: 500px;
-    margin: 0 auto;
-    gap: 0;
-}
-
-.search-input {
-    flex: 1;
-    padding: 16px 20px;
-    border: 2px solid #e9ecef;
-    border-right: none;
-    border-radius: 8px 0 0 8px;
-    font-size: 16px;
-    outline: none;
-}
-
-.search-input:focus {
-    border-color: #8B4513;
-}
-
-.search-button {
-    padding: 16px 24px;
-    background: #8B4513;
     color: white;
-    border: 2px solid #8B4513;
-    border-radius: 0 8px 8px 0;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    transition: background 0.3s ease;
 }
 
-.search-button:hover {
-    background: #A0522D;
-    border-color: #A0522D;
+.helpful-link i {
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
 }
 
 @media (max-width: 768px) {
     .error-code {
-        font-size: 80px;
-        margin-bottom: -40px;
-    }
-    
-    .error-icon {
-        font-size: 60px;
+        font-size: 6rem;
     }
     
     .error-title {
         font-size: 2rem;
+    }
+    
+    .error-description {
+        font-size: 1.1rem;
     }
     
     .error-actions {
@@ -256,22 +212,12 @@
         align-items: center;
     }
     
+    .helpful-links {
+        margin: 0 1rem;
+    }
+    
     .links-grid {
         grid-template-columns: 1fr;
-    }
-    
-    .search-container {
-        flex-direction: column;
-    }
-    
-    .search-input {
-        border-radius: 8px;
-        border-right: 2px solid #e9ecef;
-    }
-    
-    .search-button {
-        border-radius: 8px;
-        margin-top: 10px;
     }
 }
 </style>
