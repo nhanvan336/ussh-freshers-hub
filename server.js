@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ussh_freshers_hub';
 
-// === BỔ SUNG QUAN TRỌNG NHẤT: BẢO SERVER TIN TƯỞNG RENDER ===
+// === BỔ SUNG QUAN TRỌNG NHẤT: BẢO SERVER TIN TƯỞỞNG RENDER ===
 app.set('trust proxy', 1);
 
 // === 2. KẾT NỐI DATABASE ===
@@ -49,10 +49,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: MONGODB_URI }),
+    proxy: true, // <-- BỔ SUNG SỐ 1: BÁO CHO SESSION BIẾT CÓ PROXY
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 tuần
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 tuần
+        sameSite: 'lax' // <-- BỔ SUNG SỐ 2: TĂNG CƯỜNG BẢO MẬT VÀ TƯƠNG THÍCH
     }
 }));
 
