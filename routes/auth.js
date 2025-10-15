@@ -2,7 +2,6 @@ const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-// DÒNG QUAN TRỌNG NHẤT ĐỂ TẠO RA ROUTER
 const router = express.Router();
 
 const User = require('../models/User');
@@ -17,11 +16,13 @@ router.get('/login', (req, res) => {
         return res.redirect('/');
     }
     res.render('pages/auth/login', {
-        title: 'Đăng nhập - USSH Freshers\' Hub'
+        title: 'Đăng nhập - USSH Freshers\' Hub',
+        // BỔ SUNG: Nạp file CSS để sửa giao diện
+        additionalCSS: ['/css/auth.css']
     });
 });
 
-// Handle login (POST) - ĐÃ THÊM CÁC DÒNG DÒ VẾT
+// Handle login (POST) - Đã có sẵn các dòng dò vết
 router.post('/login',
     loginRateLimit,
     validateUserLogin,
@@ -67,7 +68,9 @@ router.get('/register', (req, res) => {
         return res.redirect('/');
     }
     res.render('pages/auth/register', {
-        title: 'Đăng ký - USSH Freshers\' Hub'
+        title: 'Đăng ký - USSH Freshers\' Hub',
+        // BỔ SUNG: Nạp file CSS để sửa giao diện
+        additionalCSS: ['/css/auth.css']
     });
 });
 
@@ -76,7 +79,6 @@ router.post('/register',
     registerRateLimit,
     validateUserRegistration,
     asyncHandler(async (req, res) => {
-        // ... (Toàn bộ logic đăng ký gốc của bạn)
         const { fullName, studentId, major, username, email, password } = req.body;
         const existingUser = await User.findOne({ $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }, { studentId: studentId }]});
         if (existingUser) {
@@ -104,5 +106,4 @@ router.post('/register',
 // ... (Tất cả các route khác của bạn như /logout, /forgot-password... đều nằm ở đây)
 
 
-// DÒNG QUAN TRỌNG Ở CUỐI FILE
 module.exports = router;
