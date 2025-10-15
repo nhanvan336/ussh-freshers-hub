@@ -1,0 +1,472 @@
+<!-- Learning Hub Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="page-header-content">
+            <div class="page-header-text">
+                <h1 class="page-title">Trung tâm học tập</h1>
+                <p class="page-subtitle">
+                    Khám phá kho tài nguyên học tập phong phú với tài liệu, bài giảng và đề thi 
+                    được chia sẻ bởi cộng đồng sinh viên USSH
+                </p>
+                <div class="page-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">1,247</span>
+                        <span class="stat-label">Tài liệu</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">89</span>
+                        <span class="stat-label">Video bài giảng</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">156</span>
+                        <span class="stat-label">Đề thi</span>
+                    </div>
+                </div>
+            </div>
+            <div class="page-header-actions">
+                <% if (user) { %>
+                    <button class="btn btn-primary" onclick="showUploadModal()">
+                        <i class="fas fa-plus"></i>
+                        Tải lên tài liệu
+                    </button>
+                <% } else { %>
+                    <a href="/auth/login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Đăng nhập để chia sẻ
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search and Filter Section -->
+<section class="search-filter-section">
+    <div class="container">
+        <div class="search-filter-wrapper">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm tài liệu, bài giảng, đề thi..." 
+                           aria-label="Tìm kiếm tài liệu">
+                    <button type="button" class="search-btn" onclick="performSearch()">
+                        Tìm kiếm
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label for="typeFilter">Loại tài liệu:</label>
+                    <select id="typeFilter" onchange="applyFilters()">
+                        <option value="">Tất cả</option>
+                        <option value="document">Tài liệu</option>
+                        <option value="video">Video bài giảng</option>
+                        <option value="exam">Đề thi</option>
+                        <option value="assignment">Bài tập</option>
+                        <option value="note">Ghi chú</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="subjectFilter">Môn học:</label>
+                    <select id="subjectFilter" onchange="applyFilters()">
+                        <option value="">Tất cả môn học</option>
+                        <option value="philosophy">Triết học Mác-Lênin</option>
+                        <option value="history">Lịch sử Việt Nam</option>
+                        <option value="literature">Văn học Việt Nam</option>
+                        <option value="linguistics">Ngôn ngữ học đại cương</option>
+                        <option value="psychology">Tâm lý học đại cương</option>
+                        <option value="sociology">Xã hội học đại cương</option>
+                        <option value="journalism">Báo chí học đại cương</option>
+                        <option value="english">Tiếng Anh</option>
+                        <option value="computer">Tin học đại cương</option>
+                        <option value="math">Toán cao cấp</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="semesterFilter">Học kỳ:</label>
+                    <select id="semesterFilter" onchange="applyFilters()">
+                        <option value="">Tất cả học kỳ</option>
+                        <option value="1">Học kỳ 1</option>
+                        <option value="2">Học kỳ 2</option>
+                        <option value="3">Học kỳ 3</option>
+                        <option value="summer">Học kỳ hè</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sortFilter">Sắp xếp:</label>
+                    <select id="sortFilter" onchange="applyFilters()">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                        <option value="most-downloaded">Tải nhiều nhất</option>
+                        <option value="highest-rated">Đánh giá cao nhất</option>
+                        <option value="alphabetical">Theo tên A-Z</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-outline reset-filters" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i>
+                    Xóa bộ lọc
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Documents Grid -->
+<section class="documents-section">
+    <div class="container">
+        <div class="documents-header">
+            <h2 class="section-title">Tài liệu học tập</h2>
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid" onclick="switchView('grid')">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="view-btn" data-view="list" onclick="switchView('list')">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <span>Đang tải tài liệu...</span>
+        </div>
+        
+        <!-- Documents Grid -->
+        <div id="documentsGrid" class="documents-grid">
+            <!-- Sample Document Cards -->
+            <div class="document-card">
+                <div class="document-type-badge document">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF
+                </div>
+                <div class="document-thumbnail">
+                    <img src="/images/document-preview.jpg" alt="Bài giảng Triết học Mác-Lênin" loading="lazy">
+                </div>
+                <div class="document-content">
+                    <h3 class="document-title">Bài giảng Triết học Mác-Lênin - Chương 1</h3>
+                    <p class="document-description">
+                        Tổng quan về triết học Mác-Lênin, các khái niệm cơ bản và phương pháp luận...
+                    </p>
+                    <div class="document-meta">
+                        <span class="document-subject">Triết học</span>
+                        <span class="document-semester">Học kỳ 1</span>
+                        <span class="document-size">2.5 MB</span>
+                    </div>
+                    <div class="document-stats">
+                        <div class="stat">
+                            <i class="fas fa-download"></i>
+                            <span>247 lượt tải</span>
+                        </div>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="rating-score">4.2</span>
+                        </div>
+                    </div>
+                    <div class="document-author">
+                        <img src="/images/avatar1.jpg" alt="Nguyễn Văn A" class="author-avatar">
+                        <div class="author-info">
+                            <span class="author-name">Nguyễn Văn A</span>
+                            <span class="upload-date">2 ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="document-actions">
+                    <button class="btn btn-primary" onclick="downloadDocument('doc1')">
+                        <i class="fas fa-download"></i>
+                        Tải xuống
+                    </button>
+                    <button class="btn btn-outline" onclick="viewDocument('doc1')">
+                        <i class="fas fa-eye"></i>
+                        Xem trước
+                    </button>
+                    <button class="btn-icon" onclick="toggleFavorite('doc1')" title="Thêm vào yêu thích">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="document-card">
+                <div class="document-type-badge video">
+                    <i class="fas fa-play"></i>
+                    Video
+                </div>
+                <div class="document-thumbnail">
+                    <img src="/images/video-preview.jpg" alt="Video bài giảng Lịch sử" loading="lazy">
+                    <div class="video-duration">15:32</div>
+                </div>
+                <div class="document-content">
+                    <h3 class="document-title">Lịch sử Việt Nam thời kỳ phong kiến</h3>
+                    <p class="document-description">
+                        Video bài giảng về các triều đại phong kiến Việt Nam, đặc điểm chính trị, kinh tế...
+                    </p>
+                    <div class="document-meta">
+                        <span class="document-subject">Lịch sử</span>
+                        <span class="document-semester">Học kỳ 1</span>
+                        <span class="document-size">125 MB</span>
+                    </div>
+                    <div class="document-stats">
+                        <div class="stat">
+                            <i class="fas fa-play"></i>
+                            <span>1,847 lượt xem</span>
+                        </div>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-score">4.8</span>
+                        </div>
+                    </div>
+                    <div class="document-author">
+                        <img src="/images/avatar2.jpg" alt="Trần Thị B" class="author-avatar">
+                        <div class="author-info">
+                            <span class="author-name">Trần Thị B</span>
+                            <span class="upload-date">1 tuần trước</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="document-actions">
+                    <button class="btn btn-primary" onclick="playVideo('video1')">
+                        <i class="fas fa-play"></i>
+                        Xem video
+                    </button>
+                    <button class="btn btn-outline" onclick="downloadDocument('video1')">
+                        <i class="fas fa-download"></i>
+                        Tải xuống
+                    </button>
+                    <button class="btn-icon favorited" onclick="toggleFavorite('video1')" title="Bỏ yêu thích">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="document-card">
+                <div class="document-type-badge exam">
+                    <i class="fas fa-file-alt"></i>
+                    Đề thi
+                </div>
+                <div class="document-thumbnail">
+                    <img src="/images/exam-preview.jpg" alt="Đề thi Văn học" loading="lazy">
+                </div>
+                <div class="document-content">
+                    <h3 class="document-title">Đề thi cuối kỳ Văn học Việt Nam</h3>
+                    <p class="document-description">
+                        Đề thi cuối kỳ môn Văn học Việt Nam, năm học 2024-2025, có đáp án chi tiết...
+                    </p>
+                    <div class="document-meta">
+                        <span class="document-subject">Văn học</span>
+                        <span class="document-semester">Học kỳ 2</span>
+                        <span class="document-size">1.2 MB</span>
+                    </div>
+                    <div class="document-stats">
+                        <div class="stat">
+                            <i class="fas fa-download"></i>
+                            <span>892 lượt tải</span>
+                        </div>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-score">4.5</span>
+                        </div>
+                    </div>
+                    <div class="document-author">
+                        <img src="/images/avatar3.jpg" alt="Lê Văn C" class="author-avatar">
+                        <div class="author-info">
+                            <span class="author-name">Lê Văn C</span>
+                            <span class="upload-date">3 ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="document-actions">
+                    <button class="btn btn-primary" onclick="downloadDocument('exam1')">
+                        <i class="fas fa-download"></i>
+                        Tải xuống
+                    </button>
+                    <button class="btn btn-outline" onclick="viewDocument('exam1')">
+                        <i class="fas fa-eye"></i>
+                        Xem trước
+                    </button>
+                    <button class="btn-icon" onclick="toggleFavorite('exam1')" title="Thêm vào yêu thích">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+            <nav aria-label="Phân trang tài liệu">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-left"></i>
+                            Trước
+                        </span>
+                    </li>
+                    <li class="page-item active">
+                        <span class="page-link">1</span>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadPage(2)">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadPage(3)">3</a>
+                    </li>
+                    <li class="page-item">
+                        <span class="page-link">...</span>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadPage(12)">12</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadPage(2)">
+                            Sau
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Upload Modal -->
+<div id="uploadModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tải lên tài liệu mới</h3>
+                <button type="button" class="modal-close" onclick="closeUploadModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="documentFile">Tập tin <span class="required">*</span></label>
+                        <div class="file-upload-area" onclick="document.getElementById('documentFile').click()">
+                            <input type="file" id="documentFile" name="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.avi,.mov" required style="display: none;">
+                            <div class="file-upload-content">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Kéo thả tập tin vào đây hoặc click để chọn</p>
+                                <small>Hỗ trợ: PDF, DOC, DOCX, PPT, PPTX, MP4, AVI, MOV (tối đa 100MB)</small>
+                            </div>
+                        </div>
+                        <div id="selectedFile" class="selected-file" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documentTitle">Tiêu đề <span class="required">*</span></label>
+                        <input type="text" id="documentTitle" name="title" required 
+                               placeholder="Nhập tiêu đề tài liệu">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documentDescription">Mô tả</label>
+                        <textarea id="documentDescription" name="description" rows="4" 
+                                  placeholder="Mô tả ngắn về nội dung tài liệu"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="documentSubject">Môn học <span class="required">*</span></label>
+                            <select id="documentSubject" name="subject" required>
+                                <option value="">Chọn môn học</option>
+                                <option value="philosophy">Triết học Mác-Lênin</option>
+                                <option value="history">Lịch sử Việt Nam</option>
+                                <option value="literature">Văn học Việt Nam</option>
+                                <option value="linguistics">Ngôn ngữ học đại cương</option>
+                                <option value="psychology">Tâm lý học đại cương</option>
+                                <option value="sociology">Xã hội học đại cương</option>
+                                <option value="journalism">Báo chí học đại cương</option>
+                                <option value="english">Tiếng Anh</option>
+                                <option value="computer">Tin học đại cương</option>
+                                <option value="math">Toán cao cấp</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="documentSemester">Học kỳ <span class="required">*</span></label>
+                            <select id="documentSemester" name="semester" required>
+                                <option value="">Chọn học kỳ</option>
+                                <option value="1">Học kỳ 1</option>
+                                <option value="2">Học kỳ 2</option>
+                                <option value="3">Học kỳ 3</option>
+                                <option value="summer">Học kỳ hè</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documentTags">Từ khóa</label>
+                        <input type="text" id="documentTags" name="tags" 
+                               placeholder="Nhập từ khóa, cách nhau bằng dấu phẩy">
+                        <small>Ví dụ: bài giảng, lý thuyết, thực hành</small>
+                    </div>
+                    
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">Đang tải lên... 0%</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeUploadModal()">Hủy</button>
+                <button type="submit" class="btn btn-primary" form="uploadForm">
+                    <i class="fas fa-upload"></i>
+                    Tải lên
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Preview Modal -->
+<div id="previewModal" class="modal preview-modal" style="display: none;">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="previewTitle">Xem trước tài liệu</h3>
+                <button type="button" class="modal-close" onclick="closePreviewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="previewContent" class="preview-content">
+                    <!-- Document preview will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Learning Hub specific JavaScript will be loaded here
+document.addEventListener('DOMContentLoaded', function() {
+    initializeLearningHub();
+});
+</script>

@@ -1,0 +1,625 @@
+<!-- Handbook Header -->
+<section class="page-header handbook-header">
+    <div class="container">
+        <div class="page-header-content">
+            <div class="page-header-text">
+                <h1 class="page-title">Cẩm nang sinh viên USSH</h1>
+                <p class="page-subtitle">
+                    Tất cả thông tin cần thiết về Trường Đại học Khoa học Xã hội và Nhân văn. 
+                    Từ bản đồ trường học đến lịch sự kiện, quy định và liên hệ hỗ trợ
+                </p>
+                <div class="handbook-features">
+                    <div class="feature-item">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Bản đồ tương tác</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Lịch sự kiện</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-book-open"></i>
+                        <span>Quy định học tập</span>
+                    </div>
+                </div>
+            </div>
+            <div class="page-header-visual">
+                <div class="handbook-illustration">
+                    <div class="book-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="floating-elements">
+                        <span class="element element-1">📚</span>
+                        <span class="element element-2">🗺️</span>
+                        <span class="element element-3">📅</span>
+                        <span class="element element-4">📞</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Navigation -->
+<section class="quick-nav-section">
+    <div class="container">
+        <div class="quick-nav-grid">
+            <a href="#campus-map" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Bản đồ trường</h3>
+                    <p>Khám phá cơ sở vật chất</p>
+                </div>
+            </a>
+            
+            <a href="#events-calendar" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Lịch sự kiện</h3>
+                    <p>Hoạt động và lịch học</p>
+                </div>
+            </a>
+            
+            <a href="#regulations" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Quy định</h3>
+                    <p>Điều lệ và quy chế</p>
+                </div>
+            </a>
+            
+            <a href="#contact-support" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Hỗ trợ</h3>
+                    <p>Liên hệ và trợ giúp</p>
+                </div>
+            </a>
+            
+            <a href="#academic-calendar" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Lịch học tập</h3>
+                    <p>Thời khóa biểu và thi cử</p>
+                </div>
+            </a>
+            
+            <a href="#student-services" class="quick-nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="nav-content">
+                    <h3>Dịch vụ</h3>
+                    <p>Thủ tục và hỗ trợ SV</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Campus Map Section -->
+<section id="campus-map" class="campus-map-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Bản đồ trường học</h2>
+            <p class="section-subtitle">
+                Khám phá các khu vực trong trường và tìm đường dễ dàng
+            </p>
+        </div>
+        
+        <div class="map-container">
+            <div class="map-wrapper">
+                <div class="interactive-map" id="campusMap">
+                    <!-- Interactive SVG map will be here -->
+                    <svg viewBox="0 0 800 600" class="campus-svg">
+                        <!-- Main Buildings -->
+                        <rect x="100" y="100" width="120" height="80" fill="#8B4513" class="building" data-building="main">
+                            <title>Tòa nhà chính</title>
+                        </rect>
+                        <text x="160" y="145" text-anchor="middle" fill="white" class="building-label">Tòa chính</text>
+                        
+                        <rect x="250" y="100" width="100" height="80" fill="#A0522D" class="building" data-building="library">
+                            <title>Thư viện</title>
+                        </rect>
+                        <text x="300" y="145" text-anchor="middle" fill="white" class="building-label">Thư viện</text>
+                        
+                        <rect x="400" y="100" width="120" height="80" fill="#8B4513" class="building" data-building="dormitory">
+                            <title>Ký túc xá</title>
+                        </rect>
+                        <text x="460" y="145" text-anchor="middle" fill="white" class="building-label">KTX</text>
+                        
+                        <!-- Academic Buildings -->
+                        <rect x="100" y="220" width="100" height="70" fill="#B8A082" class="building" data-building="humanities">
+                            <title>Khoa Nhân văn</title>
+                        </rect>
+                        <text x="150" y="260" text-anchor="middle" fill="white" class="building-label">Nhân văn</text>
+                        
+                        <rect x="230" y="220" width="100" height="70" fill="#B8A082" class="building" data-building="social-sciences">
+                            <title>Khoa Xã hội học</title>
+                        </rect>
+                        <text x="280" y="260" text-anchor="middle" fill="white" class="building-label">Xã hội</text>
+                        
+                        <!-- Facilities -->
+                        <circle cx="450" cy="250" r="30" fill="#27AE60" class="building" data-building="cafeteria">
+                            <title>Căng tin</title>
+                        </circle>
+                        <text x="450" y="255" text-anchor="middle" fill="white" class="building-label">Căng tin</text>
+                        
+                        <rect x="100" y="320" width="80" height="60" fill="#E67E22" class="building" data-building="gym">
+                            <title>Phòng tập thể dục</title>
+                        </rect>
+                        <text x="140" y="355" text-anchor="middle" fill="white" class="building-label">Gym</text>
+                        
+                        <!-- Paths -->
+                        <path d="M 50 150 L 550 150 M 160 50 L 160 400 M 300 50 L 300 400" 
+                              stroke="#D4C4B0" stroke-width="8" fill="none" class="path"></path>
+                    </svg>
+                </div>
+                
+                <div class="map-legend">
+                    <h4>Chú thích</h4>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color main-building"></span>
+                            <span>Tòa nhà chính</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color academic-building"></span>
+                            <span>Tòa học tập</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color facility"></span>
+                            <span>Tiện ích</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color path"></span>
+                            <span>Lối đi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="building-info" id="buildingInfo" style="display: none;">
+                <div class="info-header">
+                    <h3 class="building-name"></h3>
+                    <button class="close-info" onclick="closeBuildingInfo()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="info-content">
+                    <div class="building-details"></div>
+                    <div class="building-services"></div>
+                    <div class="building-hours"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events Calendar Section -->
+<section id="events-calendar" class="events-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Lịch sự kiện</h2>
+            <p class="section-subtitle">
+                Theo dõi các hoạt động, sự kiện và thông báo quan trọng
+            </p>
+        </div>
+        
+        <div class="calendar-layout">
+            <div class="calendar-main">
+                <div class="calendar-header">
+                    <button class="calendar-nav" onclick="previousMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h3 class="calendar-title" id="calendarTitle">Tháng 10, 2025</h3>
+                    <button class="calendar-nav" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated here -->
+                </div>
+                
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="event-dot academic"></span>
+                        <span>Học tập</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="event-dot social"></span>
+                        <span>Hoạt động xã hội</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="event-dot deadline"></span>
+                        <span>Hạn cuối</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="event-dot holiday"></span>
+                        <span>Nghỉ lễ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="upcoming-events">
+                <h3>Sự kiện sắp tới</h3>
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="date-day">20</span>
+                            <span class="date-month">Th10</span>
+                        </div>
+                        <div class="event-content">
+                            <h4 class="event-title">Hội thảo: Kỹ năng học tập hiệu quả</h4>
+                            <p class="event-details">
+                                <i class="fas fa-clock"></i>
+                                9:00 - 11:00
+                                <i class="fas fa-map-marker-alt"></i>
+                                Hội trường A
+                            </p>
+                            <span class="event-category academic">Học tập</span>
+                        </div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="date-day">22</span>
+                            <span class="date-month">Th10</span>
+                        </div>
+                        <div class="event-content">
+                            <h4 class="event-title">Hạn nộp bài tập lớn Triết học</h4>
+                            <p class="event-details">
+                                <i class="fas fa-clock"></i>
+                                23:59
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Hạn cuối
+                            </p>
+                            <span class="event-category deadline">Deadline</span>
+                        </div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="date-day">25</span>
+                            <span class="date-month">Th10</span>
+                        </div>
+                        <div class="event-content">
+                            <h4 class="event-title">Ngày hội tuyển sinh CLB</h4>
+                            <p class="event-details">
+                                <i class="fas fa-clock"></i>
+                                14:00 - 17:00
+                                <i class="fas fa-map-marker-alt"></i>
+                                Sân trường
+                            </p>
+                            <span class="event-category social">Hoạt động</span>
+                        </div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="date-day">30</span>
+                            <span class="date-month">Th10</span>
+                        </div>
+                        <div class="event-content">
+                            <h4 class="event-title">Workshop: Quản lý thời gian</h4>
+                            <p class="event-details">
+                                <i class="fas fa-clock"></i>
+                                15:00 - 16:30
+                                <i class="fas fa-map-marker-alt"></i>
+                                Phòng 201
+                            </p>
+                            <span class="event-category academic">Học tập</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-outline view-all-events">
+                    Xem tất cả sự kiện
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Academic Calendar -->
+<section id="academic-calendar" class="academic-calendar-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Lịch học tập năm học 2025-2026</h2>
+        </div>
+        
+        <div class="academic-timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>Học kỳ 1</h3>
+                    <p class="timeline-date">Tháng 9 - Tháng 12, 2025</p>
+                    <ul class="timeline-details">
+                        <li>Nhập học: 05/09/2025</li>
+                        <li>Bắt đầu học: 12/09/2025</li>
+                        <li>Thi giữa kỳ: 01/11 - 15/11/2025</li>
+                        <li>Thi cuối kỳ: 15/12 - 30/12/2025</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>Nghỉ Tết</h3>
+                    <p class="timeline-date">Tháng 1 - Tháng 2, 2026</p>
+                    <ul class="timeline-details">
+                        <li>Nghỉ Tết Nguyên đán: 20/01 - 10/02/2026</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h3>Học kỳ 2</h3>
+                    <p class="timeline-date">Tháng 2 - Tháng 6, 2026</p>
+                    <ul class="timeline-details">
+                        <li>Bắt đầu học: 15/02/2026</li>
+                        <li>Thi giữa kỳ: 01/04 - 15/04/2026</li>
+                        <li>Thi cuối kỳ: 15/05 - 30/05/2026</li>
+                        <li>Nghỉ hè: 01/06 - 31/08/2026</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Regulations Section -->
+<section id="regulations" class="regulations-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Quy định và thể lệ</h2>
+            <p class="section-subtitle">
+                Những quy định quan trọng mà sinh viên cần biết
+            </p>
+        </div>
+        
+        <div class="regulations-grid">
+            <div class="regulation-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Quy định học tập</h3>
+                </div>
+                <div class="regulation-list">
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy chế đào tạo đại học</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về thi và đánh giá</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về học bổng</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về kỷ luật sinh viên</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="regulation-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Quy định nội trú</h3>
+                </div>
+                <div class="regulation-list">
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Nội quy ký túc xá</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về giờ giấc</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">An ninh và an toàn</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="regulation-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Hoạt động sinh viên</h3>
+                </div>
+                <div class="regulation-list">
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về câu lạc bộ</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Quy định về sự kiện</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a href="#" class="regulation-item">
+                        <span class="regulation-title">Hoạt động tình nguyện</span>
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Support Section -->
+<section id="contact-support" class="contact-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Liên hệ và hỗ trợ</h2>
+            <p class="section-subtitle">
+                Thông tin liên hệ các phòng ban và dịch vụ hỗ trợ sinh viên
+            </p>
+        </div>
+        
+        <div class="contact-grid">
+            <div class="contact-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Phòng Đào tạo</h3>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(024) 3514 0000</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>daotao@ussh.edu.vn</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tầng 2, Tòa nhà chính</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>8:00 - 17:00 (T2-T6)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Tư vấn tâm lý</h3>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(024) 3514 1111</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>tuvan@ussh.edu.vn</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Phòng 105, Tòa B</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>9:00 - 16:00 (T2-T6)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Ký túc xá</h3>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(024) 3514 2222</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>ktx@ussh.edu.vn</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tòa KTX, Lầu 1</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Thư viện</h3>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>(024) 3514 3333</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>thuvien@ussh.edu.vn</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tòa Thư viện</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>7:00 - 21:00 (T2-CN)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Emergency Contact -->
+        <div class="emergency-contact">
+            <div class="emergency-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Liên hệ khẩn cấp</h3>
+            </div>
+            <div class="emergency-numbers">
+                <div class="emergency-item">
+                    <span class="emergency-service">Cấp cứu y tế:</span>
+                    <span class="emergency-number">115</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="emergency-service">Công an:</span>
+                    <span class="emergency-number">113</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="emergency-service">Cảnh sát PCCC:</span>
+                    <span class="emergency-number">114</span>
+                </div>
+                <div class="emergency-item">
+                    <span class="emergency-service">Bảo vệ trường:</span>
+                    <span class="emergency-number">(024) 3514 9999</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Handbook specific JavaScript will be loaded here
+document.addEventListener('DOMContentLoaded', function() {
+    initializeHandbook();
+});
+</script>

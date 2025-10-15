@@ -1,0 +1,432 @@
+<!-- Wellness Header -->
+<section class="page-header wellness-header">
+    <div class="container">
+        <div class="page-header-content">
+            <div class="page-header-text">
+                <h1 class="page-title">Góc sức khỏe tinh thần</h1>
+                <p class="page-subtitle">
+                    Chăm sóc sức khỏe tinh thần là ưu tiên hàng đầu. Đây là không gian an toàn 
+                    để bạn chia sẻ, tìm hiểu và nhận hỗ trợ trong hành trình đại học
+                </p>
+                <div class="wellness-features">
+                    <div class="feature-item">
+                        <i class="fas fa-user-secret"></i>
+                        <span>Hỗ trợ ẩn danh</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-heart"></i>
+                        <span>Theo dõi tâm trạng</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-leaf"></i>
+                        <span>Thiền & thư giãn</span>
+                    </div>
+                </div>
+            </div>
+            <div class="page-header-visual">
+                <div class="wellness-illustration">
+                    <div class="wellness-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="wellness-particles">
+                        <span class="particle particle-1"></span>
+                        <span class="particle particle-2"></span>
+                        <span class="particle particle-3"></span>
+                        <span class="particle particle-4"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mood Tracker Section -->
+<section class="mood-tracker-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Theo dõi tâm trạng hôm nay</h2>
+            <p class="section-subtitle">
+                Ghi lại cảm xúc của bạn để hiểu rõ hơn về trạng thái tinh thần
+            </p>
+        </div>
+        
+        <div class="mood-tracker">
+            <div class="mood-selection">
+                <h3>Hôm nay bạn cảm thấy thế nào?</h3>
+                <div class="mood-options">
+                    <button class="mood-option" data-mood="very-sad" onclick="selectMood('very-sad')">
+                        <div class="mood-emoji">😢</div>
+                        <span class="mood-label">Rất buồn</span>
+                    </button>
+                    <button class="mood-option" data-mood="sad" onclick="selectMood('sad')">
+                        <div class="mood-emoji">😔</div>
+                        <span class="mood-label">Buồn</span>
+                    </button>
+                    <button class="mood-option" data-mood="neutral" onclick="selectMood('neutral')">
+                        <div class="mood-emoji">😐</div>
+                        <span class="mood-label">Bình thường</span>
+                    </button>
+                    <button class="mood-option" data-mood="happy" onclick="selectMood('happy')">
+                        <div class="mood-emoji">😊</div>
+                        <span class="mood-label">Vui</span>
+                    </button>
+                    <button class="mood-option" data-mood="very-happy" onclick="selectMood('very-happy')">
+                        <div class="mood-emoji">😄</div>
+                        <span class="mood-label">Rất vui</span>
+                    </button>
+                </div>
+                
+                <div class="mood-note" id="moodNote" style="display: none;">
+                    <textarea placeholder="Bạn có muốn chia sẻ thêm về cảm xúc hôm nay không? (tùy chọn)" 
+                              rows="3" id="moodNoteText"></textarea>
+                    <div class="mood-actions">
+                        <button class="btn btn-outline" onclick="cancelMoodEntry()">Hủy</button>
+                        <button class="btn btn-primary" onclick="saveMoodEntry()">
+                            <i class="fas fa-save"></i>
+                            Lưu tâm trạng
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mood History Chart -->
+            <% if (user) { %>
+                <div class="mood-history">
+                    <h3>Lịch sử tâm trạng (7 ngày gần đây)</h3>
+                    <div class="mood-chart" id="moodChart">
+                        <!-- Chart will be generated here -->
+                        <canvas id="moodCanvas" width="400" height="200"></canvas>
+                    </div>
+                    <div class="mood-insights">
+                        <div class="insight-item">
+                            <span class="insight-label">Tâm trạng trung bình:</span>
+                            <span class="insight-value">😊 Tích cực</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-label">Ngày tốt nhất:</span>
+                            <span class="insight-value">Thứ 6 tuần trước</span>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- Anonymous Q&A Section -->
+<section class="anonymous-qa-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Hỏi đáp ẩn danh</h2>
+            <p class="section-subtitle">
+                Đặt câu hỏi và nhận lời khuyên từ cộng đồng một cách hoàn toàn ẩn danh
+            </p>
+        </div>
+        
+        <div class="qa-layout">
+            <div class="qa-main">
+                <div class="ask-question-card">
+                    <h3>Đặt câu hỏi ẩn danh</h3>
+                    <form id="anonymousQuestionForm">
+                        <div class="form-group">
+                            <textarea id="questionText" name="question" required 
+                                      placeholder="Chia sẻ những băn khoăn, lo lắng hoặc khó khăn mà bạn đang gặp phải. Tất cả đều được giữ bí mật."
+                                      rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="questionCategory">Chủ đề:</label>
+                            <select id="questionCategory" name="category">
+                                <option value="stress">Căng thẳng học tập</option>
+                                <option value="relationships">Quan hệ xã hội</option>
+                                <option value="family">Gia đình</option>
+                                <option value="future">Lo lắng về tương lai</option>
+                                <option value="self-esteem">Tự tin bản thân</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="privacy-notice">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Câu hỏi của bạn sẽ được ẩn danh hoàn toàn. Chúng tôi không lưu trữ thông tin cá nhân.</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Gửi câu hỏi ẩn danh
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Questions List -->
+                <div class="questions-list">
+                    <div class="qa-filters">
+                        <button class="filter-btn active" data-filter="all" onclick="filterQuestions('all')">
+                            Tất cả
+                        </button>
+                        <button class="filter-btn" data-filter="stress" onclick="filterQuestions('stress')">
+                            Căng thẳng
+                        </button>
+                        <button class="filter-btn" data-filter="relationships" onclick="filterQuestions('relationships')">
+                            Quan hệ
+                        </button>
+                        <button class="filter-btn" data-filter="future" onclick="filterQuestions('future')">
+                            Tương lai
+                        </button>
+                    </div>
+                    
+                    <!-- Sample Questions -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-meta">
+                                <span class="question-category stress">Căng thẳng học tập</span>
+                                <span class="question-time">2 giờ trước</span>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <p>Mình cảm thấy rất áp lực với việc học đại học. Mọi thứ đều khác so với cấp 3 và mình không biết 
+                            làm sao để theo kịp. Có ai từng trải qua tình huống tương tự không? Làm thế nào để vượt qua?</p>
+                        </div>
+                        <div class="question-stats">
+                            <span class="helpful-count">
+                                <i class="fas fa-thumbs-up"></i>
+                                24 người thấy hữu ích
+                            </span>
+                            <span class="answer-count">
+                                <i class="fas fa-comments"></i>
+                                5 câu trả lời
+                            </span>
+                        </div>
+                        
+                        <!-- Answers -->
+                        <div class="answers-section">
+                            <div class="answer">
+                                <div class="answer-author">
+                                    <div class="author-badge">Người hỗ trợ</div>
+                                    <span class="answer-time">1 giờ trước</span>
+                                </div>
+                                <div class="answer-content">
+                                    <p>Cảm giác này rất bình thường khi bước vào môi trường mới. Hãy cho bản thân thời gian 
+                                    để thích nghi và đừng so sánh với người khác. Bạn có thể:</p>
+                                    <ul>
+                                        <li>Tham gia các nhóm học tập</li>
+                                        <li>Tìm hiểu phương pháp học phù hợp</li>
+                                        <li>Chia sẻ với bạn bè cùng lớp</li>
+                                        <li>Nhờ sự hỗ trợ từ thầy cô</li>
+                                    </ul>
+                                    <p>Hãy nhớ rằng mọi người đều cần thời gian để thích nghi!</p>
+                                </div>
+                                <div class="answer-actions">
+                                    <button class="helpful-btn" onclick="markHelpful('answer1')">
+                                        <i class="far fa-thumbs-up"></i>
+                                        Hữu ích (12)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="add-answer">
+                            <textarea placeholder="Chia sẻ lời khuyên hoặc kinh nghiệm của bạn (ẩn danh)" 
+                                      rows="3" class="answer-input"></textarea>
+                            <button class="btn btn-outline btn-small" onclick="submitAnswer('question1')">
+                                Trả lời ẩn danh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-meta">
+                                <span class="question-category relationships">Quan hệ xã hội</span>
+                                <span class="question-time">1 ngày trước</span>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <p>Mình khá hướng nội và khó giao tiếp với người lạ. Trong lớp cũng chưa có bạn thân nào. 
+                            Mình muốn kết bạn nhưng không biết bắt đầu từ đâu. Có ai có lời khuyên không?</p>
+                        </div>
+                        <div class="question-stats">
+                            <span class="helpful-count">
+                                <i class="fas fa-thumbs-up"></i>
+                                18 người thấy hữu ích
+                            </span>
+                            <span class="answer-count">
+                                <i class="fas fa-comments"></i>
+                                8 câu trả lời
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Support Resources Sidebar -->
+            <aside class="support-sidebar">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Tài nguyên hỗ trợ</h3>
+                    <div class="resource-list">
+                        <a href="#" class="resource-item">
+                            <i class="fas fa-phone"></i>
+                            <div class="resource-info">
+                                <span class="resource-name">Đường dây nóng</span>
+                                <span class="resource-desc">1800-1567 (24/7)</span>
+                            </div>
+                        </a>
+                        <a href="#" class="resource-item">
+                            <i class="fas fa-user-md"></i>
+                            <div class="resource-info">
+                                <span class="resource-name">Tư vấn tâm lý</span>
+                                <span class="resource-desc">Đặt lịch hẹn</span>
+                            </div>
+                        </a>
+                        <a href="#" class="resource-item">
+                            <i class="fas fa-book"></i>
+                            <div class="resource-info">
+                                <span class="resource-name">Tài liệu tham khảo</span>
+                                <span class="resource-desc">Sách, bài viết</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Lời khuyên hàng ngày</h3>
+                    <div class="daily-tip">
+                        <div class="tip-icon">💡</div>
+                        <p class="tip-content">
+                            "Hãy dành 10 phút mỗi ngày để thiền hoặc thở sâu. 
+                            Điều này sẽ giúp bạn giảm căng thẳng và cải thiện sự tập trung."
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Các hoạt động thư giãn</h3>
+                    <div class="relaxation-activities">
+                        <button class="activity-btn" onclick="startBreathingExercise()">
+                            <i class="fas fa-wind"></i>
+                            Bài tập thở
+                        </button>
+                        <button class="activity-btn" onclick="startMeditation()">
+                            <i class="fas fa-leaf"></i>
+                            Thiền 5 phút
+                        </button>
+                        <button class="activity-btn" onclick="playRelaxingMusic()">
+                            <i class="fas fa-music"></i>
+                            Nhạc thư giãn
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- Mental Health Articles -->
+<section class="articles-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Bài viết về sức khỏe tinh thần</h2>
+            <p class="section-subtitle">
+                Kiến thức và lời khuyên từ các chuyên gia tâm lý
+            </p>
+        </div>
+        
+        <div class="articles-grid">
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="/images/mental-health-1.jpg" alt="Quản lý căng thẳng" loading="lazy">
+                </div>
+                <div class="article-content">
+                    <div class="article-category">Căng thẳng</div>
+                    <h3 class="article-title">
+                        <a href="#">7 cách hiệu quả để quản lý căng thẳng trong học tập</a>
+                    </h3>
+                    <p class="article-excerpt">
+                        Khám phá những phương pháp đơn giản nhưng hiệu quả để giảm bớt áp lực học tập 
+                        và duy trì tinh thần thoải mái...
+                    </p>
+                    <div class="article-meta">
+                        <span class="article-author">TS. Nguyễn Văn A</span>
+                        <span class="article-date">3 ngày trước</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="/images/mental-health-2.jpg" alt="Tự tin bản thân" loading="lazy">
+                </div>
+                <div class="article-content">
+                    <div class="article-category">Tự tin</div>
+                    <h3 class="article-title">
+                        <a href="#">Xây dựng lòng tự tin cho sinh viên năm nhất</a>
+                    </h3>
+                    <p class="article-excerpt">
+                        Bước vào môi trường đại học với tâm thế tự tin và sẵn sàng đón nhận 
+                        những thử thách mới...
+                    </p>
+                    <div class="article-meta">
+                        <span class="article-author">ThS. Trần Thị B</span>
+                        <span class="article-date">1 tuần trước</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="/images/mental-health-3.jpg" alt="Cân bằng cuộc sống" loading="lazy">
+                </div>
+                <div class="article-content">
+                    <div class="article-category">Cân bằng</div>
+                    <h3 class="article-title">
+                        <a href="#">Cân bằng giữa học tập và cuộc sống cá nhân</a>
+                    </h3>
+                    <p class="article-excerpt">
+                        Làm thế nào để vừa đạt kết quả học tập tốt vừa có thời gian cho bản thân 
+                        và các mối quan hệ...
+                    </p>
+                    <div class="article-meta">
+                        <span class="article-author">PGS. Lê Văn C</span>
+                        <span class="article-date">2 tuần trước</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Breathing Exercise Modal -->
+<div id="breathingModal" class="modal breathing-modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Bài tập thở sâu</h3>
+                <button type="button" class="modal-close" onclick="stopBreathingExercise()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="breathing-exercise">
+                    <div class="breathing-circle" id="breathingCircle">
+                        <div class="breathing-text" id="breathingText">Chuẩn bị</div>
+                    </div>
+                    <div class="breathing-instructions">
+                        <p>Hãy thở theo nhịp của vòng tròn</p>
+                        <div class="breathing-controls">
+                            <button class="btn btn-primary" id="startBreathingBtn" onclick="startBreathing()">
+                                Bắt đầu
+                            </button>
+                            <button class="btn btn-outline" id="stopBreathingBtn" onclick="stopBreathing()" style="display: none;">
+                                Dừng lại
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Wellness specific JavaScript will be loaded here
+document.addEventListener('DOMContentLoaded', function() {
+    initializeWellness();
+});
+</script>

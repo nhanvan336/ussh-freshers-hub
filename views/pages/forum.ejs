@@ -1,0 +1,494 @@
+<!-- Forum Header -->
+<section class="page-header forum-header">
+    <div class="container">
+        <div class="page-header-content">
+            <div class="page-header-text">
+                <h1 class="page-title">Diễn đàn cộng đồng</h1>
+                <p class="page-subtitle">
+                    Kết nối với hàng nghìn sinh viên năm nhất USSH. Chia sẻ kinh nghiệm, đặt câu hỏi 
+                    và cùng nhau phát triển trong hành trình đại học
+                </p>
+                <div class="page-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2,847</span>
+                        <span class="stat-label">Bài viết</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12,456</span>
+                        <span class="stat-label">Bình luận</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1,234</span>
+                        <span class="stat-label">Thành viên</span>
+                    </div>
+                </div>
+            </div>
+            <div class="page-header-actions">
+                <% if (user) { %>
+                    <button class="btn btn-primary" onclick="showCreatePostModal()">
+                        <i class="fas fa-plus"></i>
+                        Tạo bài viết mới
+                    </button>
+                <% } else { %>
+                    <a href="/auth/login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Đăng nhập để tham gia
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Forum Navigation -->
+<section class="forum-navigation">
+    <div class="container">
+        <div class="forum-nav-wrapper">
+            <div class="forum-categories">
+                <button class="category-btn active" data-category="all" onclick="filterByCategory('all')">
+                    <i class="fas fa-th"></i>
+                    Tất cả
+                </button>
+                <button class="category-btn" data-category="academic" onclick="filterByCategory('academic')">
+                    <i class="fas fa-graduation-cap"></i>
+                    Học tập
+                </button>
+                <button class="category-btn" data-category="campus-life" onclick="filterByCategory('campus-life')">
+                    <i class="fas fa-university"></i>
+                    Đời sống
+                </button>
+                <button class="category-btn" data-category="career" onclick="filterByCategory('career')">
+                    <i class="fas fa-briefcase"></i>
+                    Nghề nghiệp
+                </button>
+                <button class="category-btn" data-category="events" onclick="filterByCategory('events')">
+                    <i class="fas fa-calendar"></i>
+                    Sự kiện
+                </button>
+                <button class="category-btn" data-category="general" onclick="filterByCategory('general')">
+                    <i class="fas fa-comments"></i>
+                    Tổng hợp
+                </button>
+            </div>
+            
+            <div class="forum-search">
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="forumSearchInput" placeholder="Tìm kiếm bài viết..." 
+                           aria-label="Tìm kiếm bài viết">
+                </div>
+            </div>
+            
+            <div class="forum-sort">
+                <select id="sortSelect" onchange="sortPosts()">
+                    <option value="newest">Mới nhất</option>
+                    <option value="hot">Hot nhất</option>
+                    <option value="most-liked">Nhiều thích nhất</option>
+                    <option value="most-comments">Nhiều bình luận nhất</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Forum Posts -->
+<section class="forum-posts-section">
+    <div class="container">
+        <div class="forum-layout">
+            <!-- Main Posts Area -->
+            <div class="posts-main">
+                <div class="posts-header">
+                    <h2 class="posts-title">Bài viết gần đây</h2>
+                    <div class="posts-filter">
+                        <button class="filter-btn active" data-filter="all">Tất cả</button>
+                        <button class="filter-btn" data-filter="following">Đang theo dõi</button>
+                        <button class="filter-btn" data-filter="my-posts">Bài viết của tôi</button>
+                    </div>
+                </div>
+                
+                <!-- Loading indicator -->
+                <div id="postsLoading" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>Đang tải bài viết...</span>
+                </div>
+                
+                <!-- Posts List -->
+                <div id="postsList" class="posts-list">
+                    <!-- Sample Post 1 -->
+                    <article class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <img src="/images/avatar1.jpg" alt="Nguyễn Văn A" class="author-avatar">
+                                <div class="author-info">
+                                    <h4 class="author-name">Nguyễn Văn A</h4>
+                                    <span class="author-meta">Sinh viên K69 • Văn học • 2 giờ trước</span>
+                                </div>
+                            </div>
+                            <div class="post-actions-menu">
+                                <button class="post-menu-btn" onclick="togglePostMenu('post1')">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="post-menu" id="postMenu1" style="display: none;">
+                                    <a href="#" class="menu-item">
+                                        <i class="fas fa-bookmark"></i>
+                                        Lưu bài viết
+                                    </a>
+                                    <a href="#" class="menu-item">
+                                        <i class="fas fa-share"></i>
+                                        Chia sẻ
+                                    </a>
+                                    <a href="#" class="menu-item">
+                                        <i class="fas fa-flag"></i>
+                                        Báo cáo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">
+                            <div class="post-category">
+                                <span class="category-tag academic">Học tập</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="/forum/post/1">Làm thế nào để chuẩn bị tốt cho kỳ thi cuối kỳ?</a>
+                            </h3>
+                            <div class="post-text">
+                                <p>Mình là sinh viên năm nhất, sắp tới kỳ thi cuối kỳ đầu tiên. Có ai có kinh nghiệm ôn thi hiệu quả không? 
+                                Đặc biệt là môn Triết học Mác-Lênin và Lịch sử Việt Nam. Mình cảm thấy khá lo lắng vì đây là lần đầu...</p>
+                            </div>
+                            <div class="post-tags">
+                                <span class="tag">#ôn thi</span>
+                                <span class="tag">#cuối kỳ</span>
+                                <span class="tag">#triết học</span>
+                                <span class="tag">#lịch sử</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post-footer">
+                            <div class="post-stats">
+                                <button class="stat-btn like-btn" onclick="toggleLike('post1')">
+                                    <i class="far fa-heart"></i>
+                                    <span>24</span>
+                                </button>
+                                <button class="stat-btn comment-btn" onclick="showComments('post1')">
+                                    <i class="far fa-comment"></i>
+                                    <span>8</span>
+                                </button>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>156 lượt xem</span>
+                                </div>
+                            </div>
+                            <div class="post-time">
+                                <time datetime="2025-10-15T10:30:00">2 giờ trước</time>
+                            </div>
+                        </div>
+                        
+                        <!-- Comments Section (Initially Hidden) -->
+                        <div class="post-comments" id="comments-post1" style="display: none;">
+                            <div class="comments-list">
+                                <div class="comment">
+                                    <img src="/images/avatar2.jpg" alt="Trần Thị B" class="comment-avatar">
+                                    <div class="comment-content">
+                                        <div class="comment-header">
+                                            <span class="comment-author">Trần Thị B</span>
+                                            <span class="comment-time">1 giờ trước</span>
+                                        </div>
+                                        <p class="comment-text">
+                                            Mình nghĩ bạn nên tập trung vào việc hiểu rõ các khái niệm cơ bản trước. 
+                                            Triết học thì cần nắm chắc logic, còn lịch sử thì ghi nhớ timeline quan trọng.
+                                        </p>
+                                        <div class="comment-actions">
+                                            <button class="comment-like" onclick="toggleCommentLike('comment1')">
+                                                <i class="far fa-heart"></i>
+                                                <span>3</span>
+                                            </button>
+                                            <button class="comment-reply" onclick="replyToComment('comment1')">
+                                                Trả lời
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <% if (user) { %>
+                                <div class="comment-form">
+                                    <img src="<%= user.avatar || '/images/default-avatar.png' %>" alt="<%= user.fullName %>" class="comment-form-avatar">
+                                    <div class="comment-input-wrapper">
+                                        <textarea placeholder="Viết bình luận..." class="comment-input"></textarea>
+                                        <div class="comment-form-actions">
+                                            <button class="btn btn-primary btn-small" onclick="submitComment('post1')">
+                                                Gửi
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </article>
+                    
+                    <!-- Sample Post 2 -->
+                    <article class="post-card featured">
+                        <div class="featured-badge">
+                            <i class="fas fa-fire"></i>
+                            Hot
+                        </div>
+                        <div class="post-header">
+                            <div class="post-author">
+                                <img src="/images/avatar3.jpg" alt="Lê Văn C" class="author-avatar">
+                                <div class="author-info">
+                                    <h4 class="author-name">Lê Văn C</h4>
+                                    <span class="author-meta">Sinh viên K69 • Báo chí • 5 giờ trước</span>
+                                </div>
+                            </div>
+                            <div class="post-actions-menu">
+                                <button class="post-menu-btn" onclick="togglePostMenu('post2')">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">
+                            <div class="post-category">
+                                <span class="category-tag events">Sự kiện</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="/forum/post/2">Ai tham gia Ngày hội tuyển sinh CLB không?</a>
+                            </h3>
+                            <div class="post-text">
+                                <p>Tuần sau trường tổ chức ngày hội tuyển sinh các CLB. Mình đang quan tâm đến CLB Báo chí và CLB Volunteer. 
+                                Có ai đã từng tham gia những CLB này không? Chia sẻ kinh nghiệm với mình nhé!</p>
+                            </div>
+                            <div class="post-image">
+                                <img src="/images/club-event.jpg" alt="Ngày hội tuyển sinh CLB" loading="lazy">
+                            </div>
+                            <div class="post-tags">
+                                <span class="tag">#clb</span>
+                                <span class="tag">#tuyển sinh</span>
+                                <span class="tag">#báo chí</span>
+                                <span class="tag">#volunteer</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post-footer">
+                            <div class="post-stats">
+                                <button class="stat-btn like-btn liked" onclick="toggleLike('post2')">
+                                    <i class="fas fa-heart"></i>
+                                    <span>67</span>
+                                </button>
+                                <button class="stat-btn comment-btn" onclick="showComments('post2')">
+                                    <i class="far fa-comment"></i>
+                                    <span>23</span>
+                                </button>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>489 lượt xem</span>
+                                </div>
+                            </div>
+                            <div class="post-time">
+                                <time datetime="2025-10-15T07:30:00">5 giờ trước</time>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Sample Post 3 -->
+                    <article class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <img src="/images/avatar4.jpg" alt="Phạm Thị D" class="author-avatar">
+                                <div class="author-info">
+                                    <h4 class="author-name">Phạm Thị D</h4>
+                                    <span class="author-meta">Sinh viên K69 • Tâm lý học • 1 ngày trước</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">
+                            <div class="post-category">
+                                <span class="category-tag campus-life">Đời sống</span>
+                            </div>
+                            <h3 class="post-title">
+                                <a href="/forum/post/3">Tìm bạn cùng phòng trọ gần trường</a>
+                            </h3>
+                            <div class="post-text">
+                                <p>Mình đang muốn tìm 1-2 bạn nữ cùng thuê phòng trọ gần trường. Khu vực Cầu Giấy hoặc Đống Đa. 
+                                Giá khoảng 1.5-2tr/người/tháng. Ai có nhu cầu thì inbox mình nhé!</p>
+                            </div>
+                            <div class="post-tags">
+                                <span class="tag">#phòng trọ</span>
+                                <span class="tag">#cầu giấy</span>
+                                <span class="tag">#nữ</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post-footer">
+                            <div class="post-stats">
+                                <button class="stat-btn like-btn" onclick="toggleLike('post3')">
+                                    <i class="far fa-heart"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="stat-btn comment-btn" onclick="showComments('post3')">
+                                    <i class="far fa-comment"></i>
+                                    <span>5</span>
+                                </button>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>78 lượt xem</span>
+                                </div>
+                            </div>
+                            <div class="post-time">
+                                <time datetime="2025-10-14T15:20:00">1 ngày trước</time>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                
+                <!-- Load More Button -->
+                <div class="load-more-wrapper">
+                    <button class="btn btn-outline load-more-btn" onclick="loadMorePosts()">
+                        <i class="fas fa-spinner fa-spin" style="display: none;"></i>
+                        Xem thêm bài viết
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Forum Sidebar -->
+            <aside class="forum-sidebar">
+                <!-- Popular Tags -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Thẻ phổ biến</h3>
+                    <div class="popular-tags">
+                        <a href="#" class="tag-link">#ôn thi</a>
+                        <a href="#" class="tag-link">#clb</a>
+                        <a href="#" class="tag-link">#phòng trọ</a>
+                        <a href="#" class="tag-link">#học bổng</a>
+                        <a href="#" class="tag-link">#thực tập</a>
+                        <a href="#" class="tag-link">#sự kiện</a>
+                        <a href="#" class="tag-link">#tâm lý</a>
+                        <a href="#" class="tag-link">#nghề nghiệp</a>
+                    </div>
+                </div>
+                
+                <!-- Active Members -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Thành viên tích cực</h3>
+                    <div class="active-members">
+                        <div class="member-item">
+                            <img src="/images/avatar5.jpg" alt="Nguyễn A" class="member-avatar">
+                            <div class="member-info">
+                                <span class="member-name">Nguyễn A</span>
+                                <span class="member-stats">156 bài viết</span>
+                            </div>
+                            <div class="member-status online"></div>
+                        </div>
+                        <div class="member-item">
+                            <img src="/images/avatar6.jpg" alt="Trần B" class="member-avatar">
+                            <div class="member-info">
+                                <span class="member-name">Trần B</span>
+                                <span class="member-stats">132 bài viết</span>
+                            </div>
+                            <div class="member-status online"></div>
+                        </div>
+                        <div class="member-item">
+                            <img src="/images/avatar7.jpg" alt="Lê C" class="member-avatar">
+                            <div class="member-info">
+                                <span class="member-name">Lê C</span>
+                                <span class="member-stats">98 bài viết</span>
+                            </div>
+                            <div class="member-status offline"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Forum Rules -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Quy tắc diễn đàn</h3>
+                    <div class="forum-rules">
+                        <ul>
+                            <li>Tôn trọng ý kiến của người khác</li>
+                            <li>Không spam hoặc quảng cáo</li>
+                            <li>Sử dụng ngôn từ lịch sự</li>
+                            <li>Đăng đúng chủ đề</li>
+                            <li>Không chia sẻ thông tin cá nhân</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- Create Post Modal -->
+<div id="createPostModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tạo bài viết mới</h3>
+                <button type="button" class="modal-close" onclick="closeCreatePostModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createPostForm">
+                    <div class="form-group">
+                        <label for="postCategory">Danh mục <span class="required">*</span></label>
+                        <select id="postCategory" name="category" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="academic">Học tập</option>
+                            <option value="campus-life">Đời sống</option>
+                            <option value="career">Nghề nghiệp</option>
+                            <option value="events">Sự kiện</option>
+                            <option value="general">Tổng hợp</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postTitle">Tiêu đề <span class="required">*</span></label>
+                        <input type="text" id="postTitle" name="title" required 
+                               placeholder="Nhập tiêu đề bài viết" maxlength="200">
+                        <small class="char-counter">0/200 ký tự</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postContent">Nội dung <span class="required">*</span></label>
+                        <textarea id="postContent" name="content" required rows="8" 
+                                  placeholder="Chia sẻ suy nghĩ, câu hỏi hoặc kinh nghiệm của bạn..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postImage">Hình ảnh (tùy chọn)</label>
+                        <div class="image-upload-area" onclick="document.getElementById('postImage').click()">
+                            <input type="file" id="postImage" name="image" accept="image/*" style="display: none;">
+                            <div class="image-upload-content">
+                                <i class="fas fa-image"></i>
+                                <p>Thêm hình ảnh</p>
+                            </div>
+                        </div>
+                        <div id="imagePreview" class="image-preview" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postTags">Thẻ (tùy chọn)</label>
+                        <input type="text" id="postTags" name="tags" 
+                               placeholder="Nhập thẻ, cách nhau bằng dấu phẩy">
+                        <small>Ví dụ: ôn thi, cuối kỳ, triết học</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeCreatePostModal()">Hủy</button>
+                <button type="submit" class="btn btn-primary" form="createPostForm">
+                    <i class="fas fa-paper-plane"></i>
+                    Đăng bài
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Forum specific JavaScript will be loaded here
+document.addEventListener('DOMContentLoaded', function() {
+    initializeForum();
+});
+</script>

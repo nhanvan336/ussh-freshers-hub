@@ -1,0 +1,109 @@
+<!-- Chatbot Widget -->
+<div class="chatbot-container" id="chatbotContainer">
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Mở chatbot">
+        <i class="fas fa-comments"></i>
+        <span class="chatbot-notification" id="chatbotNotification"></span>
+    </button>
+    
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbotWindow">
+        <!-- Chatbot Header -->
+        <div class="chatbot-header">
+            <div class="chatbot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chatbot-info">
+                <div class="chatbot-name">USSH Assistant</div>
+                <div class="chatbot-status">
+                    <span class="status-indicator online"></span>
+                    Trực tuyến
+                </div>
+            </div>
+            <button class="chatbot-minimize" id="chatbotMinimize" aria-label="Thu nhỏ chatbot">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+        
+        <!-- Chatbot Messages -->
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Welcome Message -->
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-text">
+                        Xin chào! Tôi là trợ lý AI của USSH Freshers' Hub. Tôi có thể giúp bạn:
+                        <ul>
+                            <li>🏫 Thông tin về trường học</li>
+                            <li>📚 Tìm kiếm tài liệu học tập</li>
+                            <li>🧠 Tư vấn tâm lý cơ bản</li>
+                            <li>📅 Lịch sự kiện và deadline</li>
+                            <li>❓ Trả lời các câu hỏi thường gặp</li>
+                        </ul>
+                        Bạn cần hỗ trợ gì?
+                    </div>
+                    <div class="message-time">Bây giờ</div>
+                </div>
+            </div>
+            
+            <!-- Suggested Questions -->
+            <div class="suggested-questions" id="suggestedQuestions">
+                <div class="suggestions-title">Câu hỏi gợi ý:</div>
+                <div class="suggestions-list">
+                    <button class="suggestion-btn" data-question="Phòng đào tạo ở đâu?">
+                        Phòng đào tạo ở đâu?
+                    </button>
+                    <button class="suggestion-btn" data-question="Làm sao để quản lý stress học tập?">
+                        Làm sao để quản lý stress học tập?
+                    </button>
+                    <button class="suggestion-btn" data-question="Thư viện mở cửa mấy giờ?">
+                        Thư viện mở cửa mấy giờ?
+                    </button>
+                    <button class="suggestion-btn" data-question="Có những câu lạc bộ nào trong trường?">
+                        Có những câu lạc bộ nào trong trường?
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chatbot Typing Indicator -->
+        <div class="chatbot-typing" id="chatbotTyping" style="display: none;">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chatbot Input -->
+        <div class="chatbot-input">
+            <div class="input-container">
+                <textarea 
+                    id="chatbotTextarea" 
+                    placeholder="Nhập tin nhắn của bạn..."
+                    rows="1"
+                    maxlength="500"></textarea>
+                <button id="chatbotSend" class="send-button" aria-label="Gửi tin nhắn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-footer">
+                <div class="character-count">
+                    <span id="charCount">0</span>/500
+                </div>
+                <div class="powered-by">
+                    Được hỗ trợ bởi AI
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

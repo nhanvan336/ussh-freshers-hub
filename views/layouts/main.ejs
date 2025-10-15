@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | USSH Freshers' Hub</title>
+    <meta name="description" content="Cộng đồng trực tuyến dành cho sinh viên năm nhất Trường Đại học Khoa học Xã hội và Nhân văn">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    
+    <!-- Additional page-specific CSS -->
+    <% if (typeof additionalCSS !== 'undefined') { %>
+        <% additionalCSS.forEach(css => { %>
+            <link rel="stylesheet" href="<%= css %>">
+        <% }) %>
+    <% } %>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Chuyển đến nội dung chính</a>
+    
+    <!-- Header -->
+    <%- include('../partials/header') %>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <%- body %>
+    </main>
+    
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+    
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget" class="chatbot-widget">
+        <button class="chatbot-toggle" aria-label="Mở trợ lý AI">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chatbot-container" style="display: none;">
+            <div class="chatbot-header">
+                <h4>Trợ lý AI USSH</h4>
+                <button class="chatbot-close" aria-label="Đóng trợ lý AI">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages"></div>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Nhập câu hỏi của bạn..." aria-label="Nhập câu hỏi">
+                <button type="button" aria-label="Gửi tin nhắn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="/js/main.js"></script>
+    
+    <!-- Additional page-specific JS -->
+    <% if (typeof additionalJS !== 'undefined') { %>
+        <% additionalJS.forEach(js => { %>
+            <script src="<%= js %>"></script>
+        <% }) %>
+    <% } %>
+    
+    <!-- Socket.io for real-time features -->
+    <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>

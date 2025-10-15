@@ -1,0 +1,235 @@
+<nav class="navbar">
+    <div class="navbar-container">
+        <!-- Logo and Brand -->
+        <div class="navbar-brand">
+            <a href="/" class="brand-link">
+                <img src="/images/logo/ussh-logo.png" alt="USSH Logo" class="brand-logo">
+                <span class="brand-text">
+                    <span class="brand-name">USSH Freshers' Hub</span>
+                    <span class="brand-tagline">Cộng đồng sinh viên K1</span>
+                </span>
+            </a>
+        </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <!-- Navigation Links -->
+        <div class="navbar-menu" id="navbarMenu">
+            <div class="navbar-nav">
+                <a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">
+                    <i class="fas fa-home"></i>
+                    <span>Trang chủ</span>
+                </a>
+                
+                <div class="nav-dropdown">
+                    <a href="/learning-hub" class="nav-link <%= currentPath.startsWith('/learning-hub') ? 'active' : '' %>">
+                        <i class="fas fa-book"></i>
+                        <span>Thư viện học tập</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/learning-hub" class="dropdown-item">
+                            <i class="fas fa-list"></i>
+                            Tất cả tài liệu
+                        </a>
+                        <% if (user) { %>
+                            <a href="/learning-hub/upload" class="dropdown-item">
+                                <i class="fas fa-upload"></i>
+                                Tải lên tài liệu
+                            </a>
+                            <a href="/learning-hub/my-uploads" class="dropdown-item">
+                                <i class="fas fa-folder"></i>
+                                Tài liệu của tôi
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="/forum" class="nav-link <%= currentPath.startsWith('/forum') ? 'active' : '' %>">
+                        <i class="fas fa-comments"></i>
+                        <span>Diễn đàn</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/forum" class="dropdown-item">
+                            <i class="fas fa-list"></i>
+                            Tất cả bài đăng
+                        </a>
+                        <% if (user) { %>
+                            <a href="/forum/create" class="dropdown-item">
+                                <i class="fas fa-plus"></i>
+                                Tạo bài mới
+                            </a>
+                            <a href="/forum/my-posts" class="dropdown-item">
+                                <i class="fas fa-user-edit"></i>
+                                Bài đăng của tôi
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="/wellness" class="nav-link <%= currentPath.startsWith('/wellness') ? 'active' : '' %>">
+                        <i class="fas fa-heart"></i>
+                        <span>Tư vấn tâm lý</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/wellness" class="dropdown-item">
+                            <i class="fas fa-list"></i>
+                            Tất cả bài viết
+                        </a>
+                        <% if (user) { %>
+                            <a href="/wellness/my-bookmarks" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i>
+                                Bài đã lưu
+                            </a>
+                        <% } %>
+                        <a href="/wellness/crisis-resources" class="dropdown-item">
+                            <i class="fas fa-phone"></i>
+                            Hỗ trợ khủng hoảng
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="/handbook" class="nav-link <%= currentPath.startsWith('/handbook') ? 'active' : '' %>">
+                    <i class="fas fa-map"></i>
+                    <span>Cẩm nang ĐH</span>
+                </a>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="navbar-search">
+                <form action="/search" method="GET" class="search-form">
+                    <div class="search-input-container">
+                        <input type="text" 
+                               name="q" 
+                               placeholder="Tìm kiếm..." 
+                               class="search-input"
+                               value="<%= typeof query !== 'undefined' ? query : '' %>"
+                               autocomplete="off"
+                               id="searchInput">
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </form>
+            </div>
+            
+            <!-- User Menu -->
+            <div class="navbar-user">
+                <% if (user) { %>
+                    <!-- Authenticated User Menu -->
+                    <div class="user-dropdown">
+                        <button class="user-toggle" id="userToggle">
+                            <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" 
+                                 alt="<%= user.fullName %>" 
+                                 class="user-avatar">
+                            <span class="user-name"><%= user.fullName %></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        
+                        <div class="user-menu" id="userMenu">
+                            <div class="user-info">
+                                <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" 
+                                     alt="<%= user.fullName %>" 
+                                     class="user-avatar-large">
+                                <div class="user-details">
+                                    <div class="user-name"><%= user.fullName %></div>
+                                    <div class="user-major"><%= user.major %></div>
+                                </div>
+                            </div>
+                            
+                            <div class="user-menu-divider"></div>
+                            
+                            <a href="/dashboard" class="user-menu-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                            
+                            <a href="/auth/profile" class="user-menu-item">
+                                <i class="fas fa-user"></i>
+                                Hồ sơ cá nhân
+                            </a>
+                            
+                            <% if (user.role === 'admin' || user.role === 'moderator') { %>
+                                <a href="/admin" class="user-menu-item">
+                                    <i class="fas fa-cog"></i>
+                                    Quản trị
+                                </a>
+                            <% } %>
+                            
+                            <div class="user-menu-divider"></div>
+                            
+                            <form action="/auth/logout" method="POST" style="margin: 0;">
+                                <button type="submit" class="user-menu-item logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <div class="notification-dropdown">
+                        <button class="notification-toggle" id="notificationToggle">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationBadge">0</span>
+                        </button>
+                        
+                        <div class="notification-menu" id="notificationMenu">
+                            <div class="notification-header">
+                                <h3>Thông báo</h3>
+                                <button class="mark-all-read" id="markAllRead">
+                                    Đánh dấu tất cả đã đọc
+                                </button>
+                            </div>
+                            
+                            <div class="notification-list" id="notificationList">
+                                <div class="no-notifications">
+                                    <i class="fas fa-bell-slash"></i>
+                                    <p>Không có thông báo mới</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <!-- Guest Menu -->
+                    <div class="auth-buttons">
+                        <a href="/auth/login" class="btn btn-outline btn-sm">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Đăng nhập
+                        </a>
+                        <a href="/auth/register" class="btn btn-primary btn-sm">
+                            <i class="fas fa-user-plus"></i>
+                            Đăng ký
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Search (shown when mobile menu is open) -->
+<div class="mobile-search" id="mobileSearch">
+    <form action="/search" method="GET" class="mobile-search-form">
+        <div class="mobile-search-container">
+            <input type="text" 
+                   name="q" 
+                   placeholder="Tìm kiếm..." 
+                   class="mobile-search-input"
+                   value="<%= typeof query !== 'undefined' ? query : '' %>">
+            <button type="submit" class="mobile-search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+</div>

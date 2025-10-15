@@ -1,0 +1,102 @@
+<header class="header">
+    <div class="container">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <!-- Logo and Brand -->
+            <div class="navbar-brand">
+                <a href="/" class="brand-link">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1 class="brand-name">USSH Freshers' Hub</h1>
+                        <p class="brand-tagline">Cộng đồng sinh viên năm nhất</p>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            
+            <!-- Navigation Menu -->
+            <div class="navbar-menu">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link <%= currentPage === 'home' ? 'active' : '' %>">
+                            <i class="fas fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/learning-hub" class="nav-link <%= currentPage === 'learning-hub' ? 'active' : '' %>">
+                            <i class="fas fa-book-open"></i>
+                            <span>Học tập</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/forum" class="nav-link <%= currentPage === 'forum' ? 'active' : '' %>">
+                            <i class="fas fa-users"></i>
+                            <span>Diễn đàn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/wellness" class="nav-link <%= currentPage === 'wellness' ? 'active' : '' %>">
+                            <i class="fas fa-heart"></i>
+                            <span>Sức khỏe</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/handbook" class="nav-link <%= currentPage === 'handbook' ? 'active' : '' %>">
+                            <i class="fas fa-map"></i>
+                            <span>Cẩm nang</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- User Actions -->
+                <div class="navbar-actions">
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <!-- Logged in user -->
+                        <div class="user-menu dropdown">
+                            <button class="user-toggle dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                                <div class="user-avatar">
+                                    <% if (user.avatar) { %>
+                                        <img src="<%= user.avatar %>" alt="<%= user.name %>" class="avatar-img">
+                                    <% } else { %>
+                                        <i class="fas fa-user-circle"></i>
+                                    <% } %>
+                                </div>
+                                <span class="user-name"><%= user.name %></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu user-dropdown">
+                                <a href="/profile" class="dropdown-item">
+                                    <i class="fas fa-user"></i>
+                                    Hồ sơ của tôi
+                                </a>
+                                <a href="/settings" class="dropdown-item">
+                                    <i class="fas fa-cog"></i>
+                                    Cài đặt
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="/logout" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <!-- Guest user -->
+                        <div class="auth-buttons">
+                            <a href="/login" class="btn btn-outline">Đăng nhập</a>
+                            <a href="/register" class="btn btn-primary">Đăng ký</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
