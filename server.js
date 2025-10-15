@@ -38,6 +38,9 @@ const {
 // Import passport configuration
 require('./config/passport');
 
+// Import express-ejs-layouts
+const expressLayouts = require('express-ejs-layouts');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -68,6 +71,8 @@ app.use(express.static('public'));
 // View engine
 app.set('view engine', 'ejs');
 app.set('views', './views');
+app.use(expressLayouts);
+app.set('layout', 'layouts/main');
 
 // Database connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ussh_freshers_hub';
