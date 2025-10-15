@@ -12,7 +12,7 @@ class EmailService {
     // Configure based on environment
     if (process.env.NODE_ENV === 'production') {
       // Production configuration (e.g., using SendGrid, Mailgun, etc.)
-      this.transporter = nodemailer.createTransporter({
+      this.transporter = nodemailer.createTransport({
         service: 'gmail', // or your preferred service
         auth: {
           user: process.env.EMAIL_USER,
@@ -29,7 +29,7 @@ class EmailService {
     try {
       const testAccount = await nodemailer.createTestAccount();
       
-      this.transporter = nodemailer.createTransporter({
+      this.transporter = nodemailer.createTransport({
         host: 'smtp.ethereal.email',
         port: 587,
         secure: false,
