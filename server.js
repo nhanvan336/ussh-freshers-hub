@@ -32,23 +32,17 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // === 4. CẤU HÌNH CÁC MIDDLEWARE CƠ BẢN ===
-// Phục vụ các file tĩnh (CSS, JS, Images) từ thư mục 'public'
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Xử lý dữ liệu form và JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Bảo mật và tối ưu hóa
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false })); // Tạm tắt CSP để tránh lỗi hiển thị
 app.use(compression());
 app.use(cors());
-app.use(morgan('dev')); // 'dev' format ngắn gọn hơn cho môi trường phát triển
+app.use(morgan('dev'));
 
-// === 5. CẤU HÌNH SESSION VÀ AUTHENTICATION (QUAN TRỌNG NHẤT) ===
-// Cấu hình Session phải được đặt TRƯỚC khi gọi passport và các routes
+// === 5. CẤU HÌNH SESSION VÀ AUTHENTICATION ===
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'ussh-freshers-hub-secret-key',
+    secret: process.env.SESSION_SECRET || 'a-very-strong-secret-key-that-is-long',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -56,66 +50,43 @@ app.use(session({
         collectionName: 'sessions'
     }),
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Chỉ bật secure cookie khi ở môi trường production (HTTPS)
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7 // 1 tuần
     }
 }));
 
 // Khởi tạo Passport
-require('./config/passport'); // Đảm bảo file này được require
+require('./config/passport')(passport); // Truyền passport vào file config
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Khởi tạo Flash messages (phải sau session)
+// Khởi tạo Flash messages
 app.use(flash());
 
-// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS (ĐÃ SỬA LỖI) ===
-// Gán thông tin người dùng và các thông báo flash vào res.locals
+// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS ===
 app.use((req, res, next) => {
-    // Passport sẽ tự động thêm `req.user` và `req.isAuthenticated()`
-    // Chúng ta chỉ cần gán chúng vào res.locals để EJS có thể truy cập
     res.locals.isAuthenticated = req.isAuthenticated();
-    res.locals.user = req.user; 
+    res.locals.user = req.user;
+    // express-flash sẽ tự động thêm `success_msg` và `error_msg` vào locals
     next();
 });
 
-// === 7. IMPORT VÀ SỬ DỤNG ROUTES ===
-// Import routes
-const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
-// ... (import các router khác của bạn)
-const learningHubRouter = require('./routes/learning-hub');
-const forumRouter = require('./routes/forum');
-const wellnessRouter = require('./routes/wellness');
-const handbookRouter = require('./routes/handbook');
+// === 7. ROUTES ===
+app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
+app.use('/learning-hub', require('./routes/learning-hub'));
+app.use('/forum', require('./routes/forum'));
+app.use('/wellness', require('./routes/wellness'));
+app.use('/handbook', require('./routes/handbook'));
 
-// Sử dụng routes
-app.use('/', indexRouter);
-app.use('/auth', authRouter);
-// ... (sử dụng các router khác)
-app.use('/learning-hub', learningHubRouter);
-app.use('/forum', forumRouter);
-app.use('/wellness', wellnessRouter);
-app.use('/handbook', handbookRouter);
-
-
-// === 8. XỬ LÝ LỖI 404 VÀ LỖI TOÀN CỤC ===
-// 404 handler
+// === 8. XỬ LÝ LỖI ===
 app.use((req, res, next) => {
-    res.status(404).render('pages/404', {
-        title: 'Không tìm thấy trang',
-        layout: 'layouts/main' // Đảm bảo có layout
-    });
+    res.status(404).render('pages/404', { title: 'Không tìm thấy trang' });
 });
-
-// Global error handler
 app.use((err, req, res, next) => {
     console.error("💥 GLOBAL ERROR HANDLER:", err.stack);
-    res.status(err.status || 500).render('error', {
-        title: 'Có lỗi xảy ra',
-        message: err.message || 'Đã có lỗi không mong muốn xảy ra.'
-    });
+    res.status(500).render('error', { title: 'Có lỗi xảy ra', message: 'Đã có lỗi không mong muốn xảy ra.' });
 });
 
 // === 9. KHỞI ĐỘNG SERVER ===
