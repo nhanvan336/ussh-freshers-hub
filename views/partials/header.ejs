@@ -47,10 +47,29 @@
                 </ul>
                 
                 <div class="navbar-actions">
-                    <% if (typeof user !== 'undefined' && user) { %>
+                    <% if (isAuthenticated && user) { %>
+                        <!-- *** BỔ SUNG GIAO DIỆN KHI ĐÃ ĐĂNG NHẬP VÀO ĐÂY *** -->
                         <div class="user-menu dropdown">
+                            <button class="user-toggle">
+                                <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" alt="Avatar" class="user-avatar">
+                                <span class="user-name"><%= user.fullName %></span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </button>
+                            <div class="dropdown-menu user-dropdown">
+                                <a href="/auth/profile" class="dropdown-item">
+                                    <i class="fas fa-user-circle"></i> Hồ sơ của tôi
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <!-- Nút Đăng xuất là một form để bảo mật -->
+                                <form action="/auth/logout" method="POST" style="margin:0;">
+                                    <button type="submit" class="dropdown-item logout-btn">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </button>
+                                </form>
                             </div>
+                        </div>
                     <% } else { %>
+                        <!-- Giao diện khi là khách -->
                         <div class="auth-buttons">
                             <a href="/auth/login" class="btn btn-outline">Đăng nhập</a>
                             <a href="/auth/register" class="btn btn-primary">Đăng ký</a>
