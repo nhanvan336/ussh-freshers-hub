@@ -35,18 +35,28 @@
     
     <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <div class="container">
-            <!-- BỔ SUNG CODE HIỂN THỊ THÔNG BÁO TẠI ĐÂY -->
-            <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
-                <div class="alert alert-danger mt-3"><%= messages.error[0] %></div>
+        <!-- *** TRUNG TÂM THÔNG BÁO (FLASH MESSAGES) - ĐÃ CẬP NHẬT *** -->
+        <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
+            <% if (locals.success_msg && success_msg.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success_msg %>
+                </div>
             <% } %>
-            <% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
-                <div class="alert alert-success mt-3"><%= messages.success[0] %></div>
+            <% if (locals.error_msg && error_msg.length > 0) { %>
+                 <div class="alert alert-danger" role="alert">
+                    <%= error_msg %>
+                </div>
             <% } %>
-            <!-- KẾT THÚC PHẦN BỔ SUNG -->
-
-            <%- typeof body !== 'undefined' ? body : '' %>
+             <% if (locals.error && error.length > 0) { %>
+                 <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                </div>
+            <% } %>
         </div>
+
+        <div class="container">
+            <%- typeof body !== 'undefined' ? body : '' %>
+        </div>
     </main>
     
     <!-- Footer -->
