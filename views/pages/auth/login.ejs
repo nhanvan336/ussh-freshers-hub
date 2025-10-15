@@ -3,12 +3,7 @@
         <h2 class="text-center">Chào mừng trở lại!</h2>
         <p class="auth-subtitle">Đăng nhập để kết nối với cộng đồng.</p>
         
-        <% if (messages.error && messages.error.length > 0) { %>
-            <div class="alert alert-danger" role="alert"><%= messages.error[0] %></div>
-        <% } %>
-        <% if (messages.success && messages.success.length > 0) { %>
-            <div class="alert alert-success" role="alert"><%= messages.success[0] %></div>
-        <% } %>
+        <!-- Thông báo lỗi/thành công sẽ được hiển thị bởi layout chính (main.ejs) -->
 
         <form action="/auth/login" method="POST">
             <div class="form-group">
