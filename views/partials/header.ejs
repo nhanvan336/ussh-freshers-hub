@@ -1,6 +1,15 @@
 <header class="header">
     <div class="container">
         <nav class="navbar" role="navigation" aria-label="Main navigation">
+
+            <!-- === ĐOẠN CODE KIỂM TRA LỖI - BẠN CÓ THỂ XÓA SAU KHI SỬA XONG === -->
+            <div style="background: #ffc107; color: black; padding: 10px; font-family: monospace; position: fixed; top: 80px; left: 0; width: 100%; z-index: 9999; border-bottom: 2px solid #e6a700;">
+              <p style="margin: 0; font-weight: bold;">DEBUG MODE:</p>
+              <p style="margin: 0;">isAuthenticated: <strong style="color: #d9534f;"><%= typeof isAuthenticated !== 'undefined' ? isAuthenticated : 'KHÔNG TỒN TẠI' %></strong></p>
+              <p style="margin: 0;">User Object: <strong style="color: #d9534f;"><%= typeof user !== 'undefined' ? (user ? user.email : 'NULL') : 'KHÔNG TỒN TẠI' %></strong></p>
+            </div>
+            <!-- === KẾT THÚC ĐOẠN CODE KIỂM TRA === -->
+            
             <a href="/" class="navbar-brand">
                 <img src="/images/logo-ussh.png" alt="Logo USSH" class="brand-logo">
                 <h1 class="brand-name">USSH Freshers' Hub</h1>
@@ -48,7 +57,7 @@
                 
                 <div class="navbar-actions">
                     <% if (isAuthenticated && user) { %>
-                        <!-- *** BỔ SUNG GIAO DIỆN KHI ĐÃ ĐĂNG NHẬP VÀO ĐÂY *** -->
+                        <!-- *** GIAO DIỆN KHI ĐÃ ĐĂNG NHẬP *** -->
                         <div class="user-menu dropdown">
                             <button class="user-toggle">
                                 <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" alt="Avatar" class="user-avatar">
@@ -60,7 +69,6 @@
                                     <i class="fas fa-user-circle"></i> Hồ sơ của tôi
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <!-- Nút Đăng xuất là một form để bảo mật -->
                                 <form action="/auth/logout" method="POST" style="margin:0;">
                                     <button type="submit" class="dropdown-item logout-btn">
                                         <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -69,7 +77,7 @@
                             </div>
                         </div>
                     <% } else { %>
-                        <!-- Giao diện khi là khách (giữ nguyên code của bạn) -->
+                        <!-- Giao diện khi là khách -->
                         <div class="auth-buttons">
                             <a href="/auth/login" class="btn btn-outline">Đăng nhập</a>
                             <a href="/auth/register" class="btn btn-primary">Đăng ký</a>
