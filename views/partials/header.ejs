@@ -1,22 +1,17 @@
 <header class="header">
     <div class="container">
         <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <!-- Logo and Brand - ĐÃ CẬP NHẬT -->
             <a href="/" class="navbar-brand">
-                <!-- Thay thế bằng logo USSH -->
                 <img src="/images/logo-ussh.png" alt="Logo USSH" class="brand-logo">
-                <!-- Tên trang web -->
                 <h1 class="brand-name">USSH Freshers' Hub</h1>
             </a>
             
-            <!-- Mobile Menu Toggle (Giữ nguyên) -->
             <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
             </button>
             
-            <!-- Navigation Menu (Giữ nguyên cấu trúc) -->
             <div class="navbar-menu">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -51,18 +46,14 @@
                     </li>
                 </ul>
                 
-                <!-- User Actions (Giữ nguyên logic) -->
                 <div class="navbar-actions">
                     <% if (typeof user !== 'undefined' && user) { %>
-                        <!-- Logged in user -->
                         <div class="user-menu dropdown">
-                            <!-- ... (Toàn bộ code menu người dùng của bạn giữ nguyên) ... -->
-                        </div>
+                            </div>
                     <% } else { %>
-                        <!-- Guest user -->
                         <div class="auth-buttons">
-                            <a href="/login" class="btn btn-outline">Đăng nhập</a>
-                            <a href="/register" class="btn btn-primary">Đăng ký</a>
+                            <a href="/auth/login" class="btn btn-outline">Đăng nhập</a>
+                            <a href="/auth/register" class="btn btn-primary">Đăng ký</a>
                         </div>
                     <% } %>
                 </div>
