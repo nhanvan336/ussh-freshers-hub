@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const cors = require('cors');
-const flash = require('express-flash');
+const flash = require('connect-flash'); // Sử dụng connect-flash chuẩn
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config();
@@ -17,70 +17,57 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ussh_freshers_hub';
 
-// === BỔ SUNG QUAN TRỌNG NHẤT: BẢO SERVER TIN TƯỞỞNG RENDER ===
+// === BẮT BUỘC CHO RENDER ===
 app.set('trust proxy', 1);
 
 // === 2. KẾT NỐI DATABASE ===
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('✅ Connected to MongoDB'))
-    .catch((err) => {
-        console.error('❌ MongoDB connection error:', err);
-        process.exit(1);
-    });
+    .catch(err => { console.error('❌ MongoDB Connection Error:', err); process.exit(1); });
 
-// === 3. CẤU HÌNH VIEW ENGINE ===
+// === 3. VIEW ENGINE ===
 app.use(expressLayouts);
-app.set('layout', 'layouts/main');
+app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // === 4. MIDDLEWARE CƠ BẢN ===
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(helmet({ contentSecurityPolicy: false })); // Tạm tắt CSP để tránh lỗi hiển thị
-app.use(compression());
-app.use(cors());
+app.use(express.urlencoded({ extended: false })); // Dùng false là đủ cho form đơn giản
 app.use(morgan('dev'));
 
-// === 5. MIDDLEWARE XÁC THỰC ===
+// === 5. MIDDLEWARE XÁC THỰC (THỨ TỰ CỰC KỲ QUAN TRỌNG) ===
 app.use(session({
     secret: process.env.SESSION_SECRET || 'a-very-strong-secret-key-that-is-long',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: MONGODB_URI }),
-    proxy: true, // BÁO CHO SESSION BIẾT CÓ PROXY
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 tuần
-        sameSite: 'lax' // TĂNG CƯỜNG BẢO MẬT VÀ TƯƠNG THÍCH
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
     }
 }));
-
-// Khởi tạo Passport
-require('./config/passport')(passport); // Truyền passport vào file config
+app.use(flash()); // Dùng connect-flash
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Khởi tạo Flash messages
-app.use(flash());
-
-// === 6. MIDDLEWARE TOÀN CỤC ĐỂ TRUYỀN BIẾN SANG VIEWS ===
+// === 6. MIDDLEWARE TOÀN CỤC ===
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
-    res.locals.user = req.user;
-    // express-flash sẽ tự động thêm các biến flash vào locals
+    res.locals.user = req.user || null;
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error'); // Dành cho passport
     next();
 });
 
 // === 7. ROUTES ===
+require('./config/passport')(passport); // Tải config passport sau khi đã có mọi thứ
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
-app.use('/learning-hub', require('./routes/learning-hub'));
-app.use('/forum', require('./routes/forum'));
-app.use('/wellness', require('./routes/wellness'));
-app.use('/handbook', require('./routes/handbook'));
+// ... (Các routes khác)
 
 // === 8. XỬ LÝ LỖI ===
 app.use((req, res, next) => {
@@ -95,3 +82,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`);
 });
+
