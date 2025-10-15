@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> | USSH Freshers' Hub</title>
+    <title><%= typeof title !== 'undefined' ? title : 'Trang chủ' %> | USSH Freshers' Hub</title>
     <meta name="description" content="Cộng đồng trực tuyến dành cho sinh viên năm nhất Trường Đại học Khoa học Xã hội và Nhân văn">
     
     <!-- Fonts -->
@@ -16,7 +16,9 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
-    
+    <link rel="stylesheet" href="/css/components/navbar.css">
+    <link rel="stylesheet" href="/css/chatbot.css">
+    <link rel="stylesheet" href="/css/pages.css">
     <!-- Additional page-specific CSS -->
     <% if (typeof additionalCSS !== 'undefined') { %>
         <% additionalCSS.forEach(css => { %>
@@ -33,7 +35,7 @@
     
     <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <%- body %>
+        <%- typeof body !== 'undefined' ? body : '' %>
     </main>
     
     <!-- Footer -->
