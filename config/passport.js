@@ -1,63 +1,47 @@
-const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// Local Strategy - ĐÃ NÂNG CẤP
-passport.use(new LocalStrategy({
-    // 1. Thay đổi để chấp nhận trường 'identifier' từ form đăng nhập
-    usernameField: 'identifier',
-    passwordField: 'password'
-}, async (identifier, password, done) => {
-    try {
-        // 2. Tìm người dùng bằng cả email hoặc username
-        const user = await User.findOne({
-            $or: [
-                { email: identifier.toLowerCase() },
-                { username: identifier.toLowerCase() }
-            ]
-        });
-        
-        // 3. Sử dụng thông báo chung để tăng bảo mật
-        if (!user) {
-            return done(null, false, { message: 'Tài khoản hoặc mật khẩu không chính xác.' });
+module.exports = function(passport) {
+    passport.use(
+        new LocalStrategy({ usernameField: 'identifier' }, async (identifier, password, done) => {
+            try {
+                // Tìm người dùng bằng email hoặc username
+                const query = identifier.includes('@')
+                    ? { email: identifier.toLowerCase() }
+                    : { username: identifier.toLowerCase() };
+                
+                const user = await User.findOne(query);
+
+                // Trường hợp không tìm thấy user
+                if (!user) {
+                    return done(null, false, { message: 'Tài khoản không tồn tại.' });
+                }
+
+                // So sánh mật khẩu
+                const isMatch = await bcrypt.compare(password, user.password);
+                if (isMatch) {
+                    return done(null, user); // Thành công
+                } else {
+                    return done(null, false, { message: 'Mật khẩu không chính xác.' }); // Sai mật khẩu
+                }
+            } catch (err) {
+                console.error('Passport strategy error:', err);
+                return done(err);
+            }
+        })
+    );
+
+    passport.serializeUser((user, done) => {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser(async (id, done) => {
+        try {
+            const user = await User.findById(id);
+            done(null, user);
+        } catch (err) {
+            done(err, null);
         }
-
-        // Check if user is active
-        if (!user.isActive) {
-            return done(null, false, { message: 'Tài khoản này đã bị vô hiệu hóa.' });
-        }
-
-        // 4. Sử dụng phương thức so sánh mật khẩu đã viết trong User model
-        const isMatch = await user.comparePassword(password);
-        
-        if (!isMatch) {
-            return done(null, false, { message: 'Tài khoản hoặc mật khẩu không chính xác.' });
-        }
-
-        // Update last login
-        user.lastLogin = new Date();
-        await user.save();
-
-        return done(null, user);
-    } catch (error) {
-        return done(error);
-    }
-}));
-
-// Serialize user for session (Giữ nguyên)
-passport.serializeUser((user, done) => {
-    done(null, user._id);
-});
-
-// Deserialize user from session (Giữ nguyên)
-passport.deserializeUser(async (id, done) => {
-    try {
-        // Lấy thông tin user nhưng không lấy mật khẩu
-        const user = await User.findById(id).select('-password');
-        done(null, user);
-    } catch (error) {
-        done(error);
-    }
-});
-
-module.exports = passport;
+    });
+};
