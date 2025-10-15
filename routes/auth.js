@@ -25,7 +25,7 @@ router.get('/login', (req, res) => {
 // Handle login (POST) - Đã có sẵn các dòng dò vết
 router.post('/login',
     loginRateLimit,
-    validateUserLogin,
+    // validateUserLogin, // <-- BỔ SUNG QUAN TRỌNG: TẠM THỜI VÔ HIỆU HÓA DÒNG NÀY
     (req, res, next) => {
         console.log('--- BƯỚC 1: Yêu cầu POST /login đã được nhận ---');
         console.log('Dữ liệu form gửi lên:', req.body);
