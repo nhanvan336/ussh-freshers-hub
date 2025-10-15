@@ -1,0 +1,35 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Đăng nhập</h2>
+                    
+                    <% if (messages.error && messages.error.length > 0) { %>
+                        <div class="alert alert-danger"><%= messages.error[0] %></div>
+                    <% } %>
+                    <% if (messages.success && messages.success.length > 0) { %>
+                        <div class="alert alert-success"><%= messages.success[0] %></div>
+                    <% } %>
+
+                    <form action="/auth/login" method="POST">
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">Email hoặc Tên đăng nhập</label>
+                            <input type="text" id="username" name="username" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a href="/auth/forgot-password">Quên mật khẩu?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+                    <hr>
+                    <p class="text-center">Chưa có tài khoản? <a href="/auth/register">Đăng ký ngay</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
