@@ -35,7 +35,18 @@
     
     <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <%- typeof body !== 'undefined' ? body : '' %>
+        <div class="container">
+            <!-- BỔ SUNG CODE HIỂN THỊ THÔNG BÁO TẠI ĐÂY -->
+            <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+                <div class="alert alert-danger mt-3"><%= messages.error[0] %></div>
+            <% } %>
+            <% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
+                <div class="alert alert-success mt-3"><%= messages.success[0] %></div>
+            <% } %>
+            <!-- KẾT THÚC PHẦN BỔ SUNG -->
+
+            <%- typeof body !== 'undefined' ? body : '' %>
+        </div>
     </main>
     
     <!-- Footer -->
