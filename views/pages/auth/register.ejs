@@ -18,10 +18,25 @@
                     <input type="text" id="studentId" name="studentId" class="form-control" required>
                 </div>
             </div>
+            
+            <!-- BỔ SUNG TẠI ĐÂY: Thay thế input bằng select/dropdown -->
             <div class="form-group">
                 <label for="major" class="form-label">Ngành học</label>
-                <input type="text" id="major" name="major" class="form-control" required>
+                <select id="major" name="major" class="form-control" required>
+                    <option value="" disabled selected>-- Chọn ngành của bạn --</option>
+                    <option value="Vietnamese Literature">Văn học</option>
+                    <option value="History">Lịch sử</option>
+                    <option value="Philosophy">Triết học</option>
+                    <option value="Psychology">Tâm lý học</option>
+                    <option value="Sociology">Xã hội học</option>
+                    <option value="Journalism">Báo chí</option>
+                    <option value="International Studies">Quốc tế học</option>
+                    <option value="Oriental Studies">Đông phương học</option>
+                    <option value="Library Science">Thông tin - Thư viện</option>
+                    <option value="Other">Ngành khác</option>
+                </select>
             </div>
+            
              <div class="form-group">
                 <label for="username" class="form-label">Tên đăng nhập</label>
                 <input type="text" id="username" name="username" class="form-control" required>
