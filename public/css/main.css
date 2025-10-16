@@ -1751,3 +1751,27 @@ h4 {
 .fa {
   margin-right: 8px; /* Tạo một khoảng lề 8px bên phải icon */
 }
+/* --- BỔ SUNG ĐỂ TINH CHỈNH KHOẢNG CÁCH --- */
+
+/* 1. Tăng khoảng cách giữa các khối nội dung lớn */
+/* Ví dụ: card, accordion-item, hoặc các khối div chính */
+.card, .accordion-item {
+  margin-bottom: 2rem; /* Tăng khoảng cách dưới của mỗi khối */
+}
+
+/* 2. Tăng khoảng cách giữa các dòng văn bản (p) và danh sách (ul) */
+p, ul {
+  margin-bottom: 1.25rem; /* Tăng khoảng cách dưới của các đoạn văn và danh sách */
+}
+
+/* 3. Đảm bảo các tiêu đề có khoảng cách hợp lý với nội dung bên dưới */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem; /* Khoảng cách tiêu chuẩn dưới mỗi tiêu đề */
+}
+
+/* 4. Tinh chỉnh riêng cho các mục con trong danh sách */
+.list-group-item li,
+.list-unstyled li {
+  padding-top: 0.25rem;    /* Thêm một chút khoảng đệm ở trên */
+  padding-bottom: 0.25rem; /* và ở dưới cho mỗi dòng */
+}
