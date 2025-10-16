@@ -1775,3 +1775,21 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 0.25rem;    /* Thêm một chút khoảng đệm ở trên */
   padding-bottom: 0.25rem; /* và ở dưới cho mỗi dòng */
 }
+/* --- TẠO KHOẢNG CÁCH CHO CÁC TIÊU ĐỀ BỊ SÁT LỀ TRÊN --- */
+
+/* Áp dụng cho khối page-header ở đầu mỗi trang con */
+.page-header {
+  margin-bottom: 2rem; /* Tăng khoảng cách dưới của khối tiêu đề */
+}
+
+/* Áp dụng cho các tiêu đề chính trong phần nội dung */
+.page-content h2,
+.page-content h3,
+.page-content h4 {
+  margin-top: 2rem; /* Tạo khoảng cách 2rem (~32px) phía trên các tiêu đề */
+}
+
+/* Đảm bảo tiêu đề đầu tiên trong nội dung không bị đẩy xuống quá xa */
+.page-content > *:first-child {
+  margin-top: 0;
+}
