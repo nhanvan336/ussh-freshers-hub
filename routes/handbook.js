@@ -31,7 +31,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
     const sections = [
       {
         id: 'map',
-        title: 'Bản đồ trường',
+        title: 'Bản đồ',
         description: 'Sơ đồ tương tác khuôn viên trường',
         icon: 'fas fa-map-marked-alt',
         url: '/handbook/campus-map'
@@ -99,35 +99,47 @@ router.get('/campus-map', (req, res) => {
     {
       id: 'building-a',
       name: 'Tòa nhà A',
-      description: 'Phòng hành chính, đào tạo',
-      facilities: ['Phòng Đào tạo', 'Phòng Tài chính', 'Phòng CTSV'],
-      coordinates: { x: 100, y: 150 }
+      description: 'Phòng hành chính, đào tạo khoa'
     },
     {
       id: 'building-b',
       name: 'Tòa nhà B',
-      description: 'Thư viện và phòng học',
-      facilities: ['Thư viện tổng hợp', 'Phòng học lớn', 'Phòng đọc sách'],
-      coordinates: { x: 200, y: 100 }
+      description: 'Phòng hành chính, đào tạo khoa'
     },
     {
       id: 'building-c',
       name: 'Tòa nhà C',
-      description: 'Căn tin và khu vực sinh hoạt',
-      facilities: ['Căn tin chính', 'Quán cafe', 'Cửa hàng tiện lợi'],
-      coordinates: { x: 150, y: 250 }
+      description: 'Phòng hành chính, đào tạo khoa'
     },
     {
-      id: 'dormitory',
-      name: 'Ký túc xá',
-      description: 'Khu nhà ở sinh viên',
-      facilities: ['Phòng ở sinh viên', 'Phòng sinh hoạt chung'],
-      coordinates: { x: 300, y: 200 }
+      id: 'building-bc',
+      name: 'Tòa nhà B-C',
+      description: 'Giảng đường'
+    },
+    {
+      id: 'building-g',
+      name: 'Tòa nhà G',
+      description: 'Giảng đường'
+    },
+    {
+      id: 'building-i',
+      name: 'Tòa nhà I',
+      description: 'Giảng đường'
+    },
+    {
+      id: 'building-e',
+      name: 'Tòa nhà E',
+      description: 'Khu hiệu bộ'
+    },
+    {
+      id: 'building-h',
+      name: 'Tòa nhà H',
+      description: 'Viện Đào tạo Báo chí và Truyền thông'
     }
   ];
   
   res.render('pages/handbook/campus-map', {
-    title: 'Bản đồ trường - USSH Freshers\' Hub',
+    title: "Bản đồ - USSH Freshers' Hub",
     locations,
     user: req.user
   });
