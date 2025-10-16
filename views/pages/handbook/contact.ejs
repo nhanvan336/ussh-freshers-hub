@@ -1,0 +1,78 @@
+<%# File: views/pages/handbook/contacts.ejs %>
+
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Danh bạ phòng ban</h2>
+    <p class="subtitle">Thông tin liên hệ các phòng ban, bộ phận chức năng trong trường.</p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="department-list">
+    <% if (typeof departmentsData !== 'undefined' && departmentsData.length > 0) { %>
+      <% departmentsData.forEach(group => { %>
+        <div class="card department-group-card mb-4">
+          <div class="card-header">
+            <h3><%= group.groupName %></h3>
+          </div>
+          <div class="card-body">
+            <% if (group.location && !group.departments) { %>
+              <p><i class="fas fa-map-marker-alt text-muted"></i> <strong>Địa điểm:</strong> <%= group.location %></p>
+            <% } %>
+
+            <% if (group.phone && !group.departments) { %>
+              <p><i class="fas fa-phone-alt text-muted"></i> <strong>Điện thoại:</strong>
+                <% group.phone.forEach(p => { %>
+                  <span class="d-block ms-3"><%= p %></span>
+                <% }); %>
+              </p>
+            <% } %>
+
+            <% if (group.email && !group.departments) { %>
+              <p><i class="fas fa-envelope text-muted"></i> <strong>Email:</strong>
+                <% group.email.forEach(e => { %>
+                  <span class="d-block ms-3"><%= e %></span>
+                <% }); %>
+              </p>
+            <% } %>
+
+            <% if (group.departments) { %>
+              <% group.departments.forEach((dept, index) => { %>
+                <div class="department-item <%= index < group.departments.length - 1 ? 'mb-4 pb-3 border-bottom' : '' %>">
+                  <h5 class="department-name"><%= dept.name %></h5>
+                  
+                  <% if (dept.sections) { %>
+                    <% dept.sections.forEach(section => { %>
+                      <div class="department-section ms-3 ps-3 border-start">
+                        <h6><%= section.title %></h6>
+                        <p class="mb-1"><i class="fas fa-map-marker-alt text-muted"></i> <strong>Địa điểm:</strong> <%= section.location %></p>
+                        <p class="mb-1"><i class="fas fa-phone-alt text-muted"></i> <strong>Điện thoại:</strong> <%= section.phone.join('; ') %></p>
+                        <p class="mb-1"><i class="fas fa-envelope text-muted"></i> <strong>Email:</strong> <%= section.email.join('; ') %></p>
+                      </div>
+                    <% }); %>
+                  <% } else { %>
+                    <% if (dept.location) { %><p class="mb-1"><i class="fas fa-map-marker-alt text-muted"></i> <strong>Địa điểm:</strong> <%= dept.location %></p><% } %>
+                    <% if (dept.phone) { %>
+                      <p class="mb-1"><i class="fas fa-phone-alt text-muted"></i> <strong>Điện thoại:</strong>
+                        <% dept.phone.forEach(p => { %><span class="d-block ms-4"><%= p %></span><% }); %>
+                      </p>
+                    <% } %>
+                    <% if (dept.email) { %>
+                      <p class="mb-1"><i class="fas fa-envelope text-muted"></i> <strong>Email:</strong>
+                        <% dept.email.forEach(e => { %><span class="d-block ms-4"><%= e %></span><% }); %>
+                      </p>
+                    <% } %>
+                    <% if (dept.website) { %><p class="mb-1"><i class="fas fa-globe text-muted"></i> <strong>Website:</strong> <a href="<%= dept.website %>" target="_blank"><%= dept.website %></a></p><% } %>
+                  <% } %>
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div class="alert alert-info">Chưa có dữ liệu danh bạ phòng ban.</div>
+    <% } %>
+  </div>
+</div>
