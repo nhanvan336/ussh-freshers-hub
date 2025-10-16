@@ -1,0 +1,79 @@
+<%# File: views/pages/handbook/index.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Cẩm nang Sinh viên</h1>
+        <p class="subtitle">Tất cả thông tin bạn cần biết cho một khởi đầu thuận lợi tại USSH.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row">
+        <!-- Cột Trái: Các mục chính -->
+        <div class="col-lg-8">
+            <h3 class="section-title">Khám phá Cẩm nang</h3>
+            <% if (typeof sections !== 'undefined' && sections.length > 0) { %>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <% sections.forEach(section => { %>
+                        <div class="col">
+                            <a href="<%= section.url %>" class="card handbook-card h-100">
+                                <div class="card-body">
+                                    <div class="handbook-card-icon">
+                                        <i class="<%= section.icon %> fa-2x"></i>
+                                    </div>
+                                    <div class="handbook-card-content">
+                                        <h5 class="card-title"><%= section.title %></h5>
+                                        <p class="card-text"><%= section.description %></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info">Chưa có chuyên mục nào được thêm vào.</div>
+            <% } %>
+        </div>
+
+        <!-- Cột Phải: Sự kiện sắp tới -->
+        <div class="col-lg-4">
+            <aside class="sidebar">
+                <% if (typeof upcomingEvents !== 'undefined' && upcomingEvents.length > 0) { %>
+                    <div class="sidebar-widget">
+                        <h4><i class="far fa-calendar-check"></i> Sự kiện sắp tới</h4>
+                        <ul class="list-group list-group-flush event-list">
+                            <% upcomingEvents.forEach(event => { %>
+                                <li class="list-group-item event-item">
+                                    <div class="event-date">
+                                        <span class="day"><%= moment(event.startDate).format('DD') %></span>
+                                        <span class="month">Th<%= moment(event.startDate).format('MM') %></span>
+                                    </div>
+                                    <div class="event-details">
+                                        <a href="/handbook/event/<%= event._id %>" class="event-title"><%= event.title %></a>
+                                        <small class="text-muted"><%= event.location %></small>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                         <a href="/handbook/academic-calendar" class="btn btn-outline-secondary btn-sm mt-3">Xem tất cả sự kiện</a>
+                    </div>
+                <% } %>
+                 <% if (typeof featuredEvents !== 'undefined' && featuredEvents.length > 0) { %>
+                    <div class="sidebar-widget">
+                        <h4><i class="fas fa-star"></i> Sự kiện nổi bật</h4>
+                         <div class="featured-events-condensed">
+                            <% featuredEvents.forEach(event => { %>
+                                <a href="/handbook/event/<%= event._id %>" class="card featured-event-card mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title"><%= event.title %></h6>
+                                        <small class="text-muted"><%= moment(event.startDate).format('DD/MM/YYYY') %> - <%= event.location %></small>
+                                    </div>
+                                </a>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
+            </aside>
+        </div>
+    </div>
+</div>
