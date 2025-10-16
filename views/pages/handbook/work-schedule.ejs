@@ -1,0 +1,29 @@
+<%# File: views/pages/handbook/work-schedule.ejs %>
+
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Lịch công tác <%= scheduleData.dateRange %></h2>
+    <p class="subtitle">Cập nhật lần cuối: <%= scheduleData.lastUpdated %></p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="schedule-image-container text-center">
+    <% if (scheduleData.imageUrl) { %>
+      <img src="<%= scheduleData.imageUrl %>" alt="Lịch công tác tuần" class="img-fluid rounded shadow-sm">
+    <% } else { %>
+      <div class="alert alert-warning">
+        Không tìm thấy hình ảnh lịch công tác. Vui lòng kiểm tra lại đường dẫn.
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+  .schedule-image-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+  }
+</style>
