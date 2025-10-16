@@ -1,0 +1,135 @@
+<%# File: views/pages/learning-hub/index.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Thư viện học tập</h1>
+        <p class="subtitle">Khám phá, chia sẻ và tải về hàng ngàn tài liệu học thuật giá trị.</p>
+        <% if (isAuthenticated) { %>
+            <a href="/learning-hub/upload" class="btn btn-primary">
+                <i class="fas fa-upload"></i> Tải lên tài liệu
+            </a>
+        <% } else { %>
+            <a href="/auth/login" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Đăng nhập để tải lên
+            </a>
+        <% } %>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row">
+        <!-- Cột Trái: Bộ lọc -->
+        <div class="col-lg-3">
+            <aside class="sidebar filters-sidebar">
+                <h4><i class="fas fa-filter"></i> Tìm kiếm & Lọc</h4>
+                <form action="/learning-hub" method="GET" class="filter-form">
+                    <!-- Search Input -->
+                    <div class="form-group">
+                        <label for="q">Từ khóa</label>
+                        <div class="input-group">
+                             <input type="search" id="q" name="q" class="form-control" placeholder="Tên tài liệu, môn học..." value="<%= filters.q || '' %>">
+                             <button type="submit" class="btn btn-secondary" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="category">Loại tài liệu</label>
+                        <select name="category" id="category" class="form-control">
+                            <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>Tất cả</option>
+                            <option value="lecture" <%= filters.category === 'lecture' ? 'selected' : '' %>>Bài giảng</option>
+                            <option value="ebook" <%= filters.category === 'ebook' ? 'selected' : '' %>>Giáo trình/Ebook</option>
+                            <option value="exam" <%= filters.category === 'exam' ? 'selected' : '' %>>Đề thi</option>
+                            <option value="other" <%= filters.category === 'other' ? 'selected' : '' %>>Khác</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="form-group">
+                        <label for="subject">Môn học</label>
+                        <select name="subject" id="subject" class="form-control">
+                           <option value="all" <%= filters.subject === 'all' ? 'selected' : '' %>>Tất cả</option>
+                           <option value="History" <%= filters.subject === 'History' ? 'selected' : '' %>>Lịch sử</option>
+                           <option value="Psychology" <%= filters.subject === 'Psychology' ? 'selected' : '' %>>Tâm lý học</option>
+                           <option value="Journalism" <%= filters.subject === 'Journalism' ? 'selected' : '' %>>Báo chí</option>
+                           <!-- Thêm các môn học khác tại đây -->
+                        </select>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="form-group">
+                        <label for="sort">Sắp xếp theo</label>
+                        <select name="sort" id="sort" class="form-control">
+                            <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
+                            <option value="popular" <%= filters.sort === 'popular' ? 'selected' : '' %>>Phổ biến nhất</option>
+                            <option value="rated" <%= filters.sort === 'rated' ? 'selected' : '' %>>Đánh giá cao</option>
+                            <option value="oldest" <%= filters.sort === 'oldest' ? 'selected' : '' %>>Cũ nhất</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
+                </form>
+            </aside>
+        </div>
+
+        <!-- Cột Phải: Danh sách tài liệu -->
+        <div class="col-lg-9">
+            <div class="document-list-header">
+                <p>Hiển thị <strong><%= documents.length %></strong> trong tổng số <strong><%= totalDocuments %></strong> kết quả</p>
+            </div>
+
+            <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+
+            <% if (documents.length === 0 && !error) { %>
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <h4>Không tìm thấy tài liệu nào</h4>
+                    <p>Hãy thử với từ khóa hoặc bộ lọc khác nhé!</p>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <% documents.forEach(doc => { %>
+                        <div class="col">
+                            <div class="card h-100 document-card">
+                                <a href="/learning-hub/document/<%= doc._id %>" class="card-img-top-link">
+                                    <div class="card-img-top-placeholder">
+                                        <i class="fas fa-file-alt fa-3x"></i>
+                                        <span class="file-type-badge"><%= doc.fileInfo.fileType.toUpperCase() %></span>
+                                    </div>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="/learning-hub/document/<%= doc._id %>"><%= doc.title %></a>
+                                    </h5>
+                                    <p class="card-text text-muted small"><%= doc.description.substring(0, 70) %>...</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                         <small class="text-muted"><i class="fas fa-star text-warning"></i> <%= doc.averageRating.toFixed(1) %></small>
+                                         <small class="text-muted"><i class="fas fa-download"></i> <%= doc.downloads %></small>
+                                         <small class="text-muted"><i class="fas fa-eye"></i> <%= doc.views %></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <!-- Phân trang -->
+            <% if (totalPages > 1) { %>
+                <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="/learning-hub?page=<%= i %>&sort=<%= filters.sort || 'newest' %>&q=<%= filters.q || '' %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
+    </div>
+</div>
