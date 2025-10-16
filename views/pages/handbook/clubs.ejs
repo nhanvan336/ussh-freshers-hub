@@ -1,0 +1,44 @@
+<%# File: views/pages/handbook/clubs.ejs %>
+
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Câu lạc bộ & Đoàn thể</h2>
+    <p class="subtitle">Khám phá sân chơi năng động dành cho sinh viên.</p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="club-introduction">
+    <p>Không chỉ tạo điều kiện học tập, Đoàn Thanh niên - Hội sinh viên Trường ĐHKHXH&NV còn tổ chức nhiều câu lạc bộ đáp ứng nguyện vọng, sở thích của sinh viên như câu lạc bộ võ thuật, câu lạc bộ khởi nghiệp, câu lạc bộ kỹ năng.</p>
+    <p>Có thể nói, tuy không nằm trong chương trình chính khóa song hoạt động của các CLB trong môi trường đại học đã góp phần tạo sân chơi lành mạnh, năng động cho các bạn sinh viên. Các CLB giúp tạo sức lan tỏa, thêm động lực để sinh viên học tập hiệu quả hơn. Đồng thời giúp các bạn trang bị kỹ năng mềm cần thiết, làm hành trang để tự tin bước vào công việc, sự nghiệp sau khi tốt nghiệp ra trường.</p>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="club-diagram-container text-center">
+    <h4 class="mb-3">Sơ đồ các Câu lạc bộ</h4>
+    <% if (typeof imageUrl !== 'undefined') { %>
+      <img src="<%= imageUrl %>" alt="Sơ đồ Câu lạc bộ" class="img-fluid rounded shadow-sm">
+    <% } else { %>
+      <div class="alert alert-warning" role="alert">
+        Không tìm thấy hình ảnh sơ đồ.
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+  .club-introduction p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+  .club-diagram-container img {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    border: 1px solid #ddd;
+    margin: 0 auto;
+  }
+</style>
