@@ -4,7 +4,7 @@ const { asyncHandler } = require('../middleware/error');
 const { isAuthenticated, optionalAuth, isAdmin } = require('../middleware/auth');
 const { validateEvent, validateObjectId } = require('../middleware/validation');
 const Event = require('../models/Event');
-const User = require = require('../models/User');
+const User = require('../models/User');
 
 // University Handbook main page
 router.get('/', optionalAuth, asyncHandler(async (req, res) => {
@@ -50,7 +50,6 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
         icon: 'fas fa-calendar-alt',
         url: '/handbook/academic-calendar'
       },
-      // Bổ sung mục Lịch công tác vào đây
       {
         id: 'work-schedule',
         title: 'Lịch công tác',
@@ -265,19 +264,29 @@ router.get('/contacts', (req, res) => {
   });
 });
 
-// Work Schedule (Sử dụng hình ảnh)
+// Work Schedule (Sử dụng hình ảnh, không dùng thư mục con)
 router.get('/work-schedule', (req, res) => {
-  const scheduleData = {
-    dateRange: 'từ ngày 13/10 đến ngày 19/10/2025',
-    lastUpdated: 'Thứ hai - 13/10/2025 10:14',
-    imageUrl: '/images/schedules/work-schedule-13-10-2025.png' // Đường dẫn đến hình ảnh lịch công tác
-  };
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayOfWeek = today.getDay(); 
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
 
-  res.render('pages/handbook/work-schedule', {
-    title: 'Lịch công tác tuần - USSH Freshers\' Hub',
-    scheduleData,
-    user: req.user
-  });
+    const formatDate = (date) => `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  
+    const scheduleData = {
+      dateRange: `từ ngày ${formatDate(monday)} đến ngày ${formatDate(sunday)}`,
+      lastUpdated: now.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short'}),
+      imageUrl: '/images/work-schedule.png' // Đã sửa lại đường dẫn
+    };
+
+    res.render('pages/handbook/work-schedule', {
+        title: 'Lịch công tác tuần - USSH Freshers\' Hub',
+        scheduleData,
+        user: req.user
+    });
 });
 
 // Academic Calendar
