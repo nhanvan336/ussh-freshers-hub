@@ -268,18 +268,18 @@ router.get('/contacts', (req, res) => {
 router.get('/work-schedule', (req, res) => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dayOfWeek = today.getDay(); 
+    const dayOfWeek = today.getDay();
     const monday = new Date(today);
     monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
 
     const formatDate = (date) => `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  
+
     const scheduleData = {
       dateRange: `từ ngày ${formatDate(monday)} đến ngày ${formatDate(sunday)}`,
       lastUpdated: now.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short'}),
-      imageUrl: '/images/work-schedule.png' // Đã sửa lại đường dẫn
+      imageUrl: '/images/work-schedule.png'
     };
 
     res.render('pages/handbook/work-schedule', {
