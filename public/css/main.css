@@ -1710,3 +1710,35 @@ a:focus {
 @media (prefers-color-scheme: dark) {
     /* Dark mode styles would go here if implemented */
 }
+/* --- BỔ SUNG ĐỂ THAY ĐỔI FONT VÀ CỠ CHỮ TIÊU ĐỀ --- */
+
+/* 1. Thiết lập font chữ sans-serif dễ đọc cho toàn bộ trang */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 2. Cài đặt lại font, độ đậm và kích thước cho các tiêu đề */
+h1, h2, h3, h4, h5, h6 {
+  /* Thay thế font serif cũ bằng font sans-serif hiện đại */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600; /* Giảm độ đậm một chút (mặc định thường là 700) */
+}
+
+/* 3. Điều chỉnh lại kích thước cho từng cấp độ tiêu đề */
+/* Bạn có thể thay đổi các giá trị 'rem' này để tăng/giảm độ lớn theo ý muốn */
+
+h1 { 
+  font-size: 2.25rem; /* ~36px */
+}
+
+h2 { 
+  font-size: 1.75rem; /* ~28px - Áp dụng cho "II. Phòng Khoa học..." */
+}
+
+h3 { 
+  font-size: 1.5rem; /* ~24px - Áp dụng cho "1. Bộ phận Quản lý..." */
+}
+
+h4 {
+  font-size: 1.25rem; /* ~20px */
+}
