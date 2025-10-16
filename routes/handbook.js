@@ -9,7 +9,6 @@ const User = require('../models/User');
 // University Handbook main page
 router.get('/', optionalAuth, asyncHandler(async (req, res) => {
   try {
-    // Get upcoming events
     const upcomingEvents = await Event.find({
       startDate: { $gte: new Date() },
       status: 'published',
@@ -18,7 +17,6 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       .sort({ startDate: 1 })
       .limit(5);
     
-    // Get featured events
     const featuredEvents = await Event.find({
       isFeatured: true,
       status: 'published',
@@ -27,7 +25,6 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       .sort({ startDate: 1 })
       .limit(3);
     
-    // University information sections (đã xóa work-schedule)
     const sections = [
       {
         id: 'map',
@@ -263,14 +260,12 @@ router.get('/academic-calendar', (req, res) => {
     lastUpdated: new Date().toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short' }),
     imageUrl: '/images/academic-calendar.png'
   };
-
   res.render('pages/handbook/academic-calendar', {
     title: 'Lịch năm học - USSH Freshers\' Hub',
     calendarData,
     user: req.user
   });
 });
-
 
 // Library Guide
 router.get('/library-guide', (req, res) => {
@@ -316,49 +311,11 @@ router.get('/library-guide', (req, res) => {
   });
 });
 
-// Clubs and Organizations
+// Clubs and Organizations - ĐÃ SỬA LẠI
 router.get('/clubs', (req, res) => {
-  const clubs = [
-    {
-      name: 'Câu lạc bộ Văn học',
-      description: 'Hoạt động văn học, thơ ca, sang tác',
-      contact: 'vanhoc@ussh.edu.vn',
-      activities: ['Thi viết thơ', 'Hội thảo văn học', 'Xuất bản tập chí'],
-      meeting: 'Thứ 6 hàng tuần, 15:00-17:00'
-    },
-    {
-      name: 'Câu lạc bộ Lịch sử',
-      description: 'Nghiên cứu và trao đổi kiến thức lịch sử',
-      contact: 'lichsu@ussh.edu.vn',
-      activities: ['Hội thảo chuyên đề', 'Tham quan di tích', 'Nghiên cứu sử liệu'],
-      meeting: 'Thứ 4 hàng tuần, 14:00-16:00'
-    },
-    {
-      name: 'Câu lạc bộ Tâm lý học',
-      description: 'Tìm hiểu và ứng dụng kiến thức tâm lý',
-      contact: 'tamly@ussh.edu.vn',
-      activities: ['Workshop tâm lý', 'Tư vấn đồng trang lứa tuổi', 'Game tâm lý'],
-      meeting: 'Thứ 7 hàng tuần, 9:00-11:00'
-    },
-    {
-      name: 'Câu lạc bộ Báo chí',
-      description: 'Hoạt động truyền thông và báo chí',
-      contact: 'baochi@ussh.edu.vn',
-      activities: ['Làm báo', 'Phỏng vấn', 'Workshop kỹ năng viết'],
-      meeting: 'Chủ nhật hàng tuần, 14:00-16:00'
-    },
-    {
-      name: 'Đoàn Thanh niên',
-      description: 'Hoạt động đoàn thể và tình nguyện',
-      contact: 'doan@ussh.edu.vn',
-      activities: ['Hoạt động tình nguyện', 'Chưọng trình kết nối', 'Giáo dục lý tưởng'],
-      meeting: 'Thứ 3 hàng tuần, 15:30-17:30'
-    }
-  ];
-  
   res.render('pages/handbook/clubs', {
     title: 'Câu lạc bộ & Đoàn thể - USSH Freshers\' Hub',
-    clubs,
+    imageUrl: '/images/club-diagram.png', // Truyền đường dẫn ảnh sang view
     user: req.user
   });
 });
