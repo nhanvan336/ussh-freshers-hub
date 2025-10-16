@@ -1,16 +1,126 @@
 <%# File: views/pages/wellness/index.ejs %>
 
-<div class="page-header">
-    <div class="container">
+<div class="page-header wellness-header">
+    <div class="container text-center">
         <h1>Góc Sức khỏe</h1>
-        <p class="subtitle">Chăm sóc sức khỏe tinh thần cho một khởi đầu vững chắc.</p>
+        <p class="subtitle">Chăm sóc sức khỏe tinh thần cho một khởi đầu vững chắc và trọn vẹn.</p>
+        <% if (dailyQuote) { %>
+            <blockquote class="daily-quote">
+                "<%= dailyQuote.content %>"
+                <% if (dailyQuote.author) { %>
+                    <footer>— <%= dailyQuote.author %></footer>
+                <% } %>
+            </blockquote>
+        <% } %>
     </div>
 </div>
 
 <div class="container page-content">
-    <div class="alert alert-info text-center">
-        <i class="fas fa-heart-pulse fa-3x mb-3"></i>
-        <h4>Tính năng đang được xây dựng</h4>
-        <p>Nội dung cho chuyên mục sức khỏe đang được chuẩn bị. Hãy quay lại sau nhé!</p>
+    <div class="row">
+        <!-- Cột Trái: Tương tác & Lọc -->
+        <div class="col-lg-3">
+            <aside class="sidebar">
+                <!-- Mood Tracker -->
+                <% if (isAuthenticated) { %>
+                    <div class="sidebar-widget mood-tracker-widget">
+                        <h4><i class="far fa-smile-beam"></i> Hôm nay bạn thế nào?</h4>
+                        <% if (todayMoodEntry) { %>
+                            <div class="text-center p-3">
+                                <p>Bạn đã ghi nhận tâm trạng hôm nay là:</p>
+                                <span class="mood-icon selected" title="<%= todayMoodEntry.mood %>"><i class="fas fa-3x fa-<%= todayMoodEntry.mood === 'happy' ? 'smile' : (todayMoodEntry.mood === 'sad' ? 'frown' : 'meh') %>"></i></span>
+                                <p class="small mt-2">Bạn có thể cập nhật lại bất cứ lúc nào.</p>
+                            </div>
+                        <% } else { %>
+                            <div class="mood-options">
+                                <button class="mood-icon" data-mood="very-happy" title="Rất vui"><i class="fas fa-laugh-beam"></i></button>
+                                <button class="mood-icon" data-mood="happy" title="Vui vẻ"><i class="fas fa-smile"></i></button>
+                                <button class="mood-icon" data-mood="neutral" title="Bình thường"><i class="fas fa-meh"></i></button>
+                                <button class="mood-icon" data-mood="sad" title="Buồn"><i class="fas fa-frown"></i></button>
+                                <button class="mood-icon" data-mood="very-sad" title="Rất buồn"><i class="fas fa-sad-tear"></i></button>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+                
+                <!-- Anonymous Q&A -->
+                <div class="sidebar-widget">
+                     <h4><i class="fas fa-user-secret"></i> Hỏi đáp ẩn danh</h4>
+                     <form id="anonymous-question-form">
+                         <div class="form-group">
+                             <textarea class="form-control" rows="4" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây. Mọi thông tin đều được bảo mật." required></textarea>
+                         </div>
+                         <button type="submit" class="btn btn-secondary w-100">Gửi câu hỏi</button>
+                     </form>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Cột Phải: Danh sách bài viết -->
+        <div class="col-lg-9">
+            <!-- Bài viết nổi bật -->
+            <% if (typeof featuredEntries !== 'undefined' && featuredEntries.length > 0) { %>
+                <div class="featured-section mb-5">
+                    <h3 class="section-title">Dành cho bạn</h3>
+                    <div class="row">
+                        <% featuredEntries.forEach(entry => { %>
+                            <div class="col-md-4">
+                                <div class="card wellness-card featured-card">
+                                     <a href="/wellness/entry/<%= entry._id %>">
+                                        <div class="card-img-top" style="background-image: url('<%= entry.coverImage || 'https://placehold.co/600x400/FFF1D0/A16207?text=USSH' %>');"></div>
+                                     </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Danh sách bài viết -->
+            <h3 class="section-title">Bài viết mới nhất</h3>
+            <% if (typeof entries !== 'undefined' && entries.length > 0) { %>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <% entries.forEach(entry => { %>
+                        <div class="col">
+                             <div class="card wellness-card">
+                                 <div class="row g-0">
+                                     <div class="col-md-4">
+                                         <a href="/wellness/entry/<%= entry._id %>">
+                                             <div class="card-img-side" style="background-image: url('<%= entry.coverImage || 'https://placehold.co/400x400/FFF1D0/A16207?text=USSH' %>');"></div>
+                                         </a>
+                                     </div>
+                                     <div class="col-md-8">
+                                         <div class="card-body">
+                                             <span class="card-category"><%= entry.category %></span>
+                                             <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
+                                             <p class="card-text"><%= entry.summary || entry.content.substring(0, 100) %>...</p>
+                                             <small class="text-muted"><%= moment(entry.publishDate).format('DD/MM/YYYY') %></small>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else if (!locals.error) { %>
+                <div class="alert alert-info text-center">
+                    <p>Chưa có bài viết nào trong chuyên mục này.</p>
+                </div>
+            <% } %>
+
+            <!-- Phân trang -->
+            <% if (totalPages > 1) { %>
+                <nav class="mt-5 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>"><a class="page-link" href="/wellness?page=<%= i %>"><%= i %></a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
     </div>
 </div>
+
