@@ -64,13 +64,29 @@ app.use((req, res, next) => {
 });
 
 // === 7. ROUTES ===
+console.log('--- SERVER: Đang chuẩn bị định nghĩa các routes ---');
+
 require('./config/passport')(passport); // Tải config passport sau khi đã có mọi thứ
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
-// ... (Các routes khác)
+
+// *** BỔ SUNG CÁC ROUTES CÒN THIẾU TẠI ĐÂY ***
+const learningHubRouter = require('./routes/learning-hub');
+const forumRouter = require('./routes/forum');
+const wellnessRouter = require('./routes/wellness');
+const handbookRouter = require('./routes/handbook');
+
+app.use('/learning-hub', learningHubRouter);
+app.use('/forum', forumRouter);
+app.use('/wellness', wellnessRouter);
+app.use('/handbook', handbookRouter);
+
+console.log('--- SERVER: Các routes đã được định nghĩa xong ---');
+
 
 // === 8. XỬ LÝ LỖI ===
 app.use((req, res, next) => {
+    console.log(`--- SERVER: Không tìm thấy route cho ${req.method} ${req.originalUrl}. Đang hiển thị trang 404. ---`);
     res.status(404).render('pages/404', { title: 'Không tìm thấy trang' });
 });
 app.use((err, req, res, next) => {
@@ -82,4 +98,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`);
 });
-
