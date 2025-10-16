@@ -1,37 +1,31 @@
-<%# File: views/pages/handbook/campus-map.ejs %>
+<%# File: views/pages/handbook/campus-map.ejs - Đã được cập nhật %>
 
 <div class="page-header">
     <div class="container">
         <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
-        <h1>Bản đồ Trường</h1>
+        
+        <!-- 1. ĐỔI TIÊU ĐỀ VÀ THAY H1 BẰNG H2 CHO NHỎ HƠN -->
+        <h2>Bản đồ</h2>
         <p class="subtitle">Khám phá các địa điểm quan trọng trong khuôn viên trường.</p>
     </div>
 </div>
 
 <div class="container page-content">
     <div class="map-container">
-        <!-- Ảnh bản đồ sẽ được đặt làm nền cho khu vực này -->
+        <!-- Ảnh bản đồ (giữ nguyên) -->
         <div class="campus-map-image" style="background-image: url('/images/ussh-map.png');">
             
-            <% if (typeof locations !== 'undefined' && locations.length > 0) { %>
-                <% locations.forEach(location => { %>
-                    <!-- Mỗi điểm đánh dấu là một "pin" trên bản đồ -->
-                    <div class="map-pin" style="left: <%= location.coordinates.x %>px; top: <%= location.coordinates.y %>px;" data-location-id="<%= location.id %>">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span class="pin-label"><%= location.name %></span>
-                    </div>
-                <% }) %>
-            <% } %>
+            <!-- 2. ĐÃ LOẠI BỎ CÁC ĐIỂM ĐÁNH DẤU TƯƠNG TÁC -->
 
         </div>
 
-        <!-- Chú thích cho các địa điểm -->
+        <!-- Chú thích cho các địa điểm (sẽ tự cập nhật sau khi sửa file handbook.js) -->
         <div class="map-legend">
             <h4>Chú thích</h4>
             <ul class="list-group list-group-flush">
                  <% if (typeof locations !== 'undefined' && locations.length > 0) { %>
                     <% locations.forEach(location => { %>
-                        <li class="list-group-item" data-location-id="<%= location.id %>">
+                        <li class="list-group-item">
                             <strong><%= location.name %>:</strong> <%= location.description %>
                         </li>
                     <% }) %>
@@ -43,7 +37,7 @@
     </div>
 </div>
 
-<%# Thêm một chút CSS và JS ngay tại đây để trang hoạt động mà không cần sửa file khác %>
+<%# Đã loại bỏ CSS và JS không cần thiết để trang đơn giản hơn %>
 <style>
     .map-container {
         position: relative;
@@ -51,74 +45,14 @@
     .campus-map-image {
         position: relative;
         width: 100%;
-        height: 600px; /* Bạn có thể điều chỉnh chiều cao này */
+        height: 600px;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
         border: 2px solid #eee;
         border-radius: 8px;
     }
-    .map-pin {
-        position: absolute;
-        cursor: pointer;
-        color: #A16207; /* Màu cam đậm */
-        font-size: 2rem;
-        transform: translate(-50%, -100%);
-        transition: transform 0.2s ease, color 0.2s ease;
-    }
-    .map-pin:hover {
-        transform: translate(-50%, -100%) scale(1.2);
-        color: #d97706;
-    }
-    .pin-label {
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.7);
-        color: white;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        pointer-events: none; /* Để không cản trở việc click */
-    }
-    .map-pin:hover .pin-label {
-        opacity: 1;
-    }
     .map-legend {
         margin-top: 2rem;
     }
-    .map-legend .list-group-item {
-        transition: background-color 0.2s ease;
-    }
-    .map-legend .list-group-item.highlight {
-        background-color: #FFFBEB; /* Màu vàng nhạt */
-    }
 </style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const pins = document.querySelectorAll('.map-pin');
-        const legendItems = document.querySelectorAll('.map-legend .list-group-item');
-
-        pins.forEach(pin => {
-            pin.addEventListener('mouseover', () => {
-                const locationId = pin.getAttribute('data-location-id');
-                const correspondingLegend = document.querySelector(`.map-legend .list-group-item[data-location-id="${locationId}"]`);
-                if (correspondingLegend) {
-                    correspondingLegend.classList.add('highlight');
-                }
-            });
-            pin.addEventListener('mouseout', () => {
-                const locationId = pin.getAttribute('data-location-id');
-                const correspondingLegend = document.querySelector(`.map-legend .list-group-item[data-location-id="${locationId}"]`);
-                if (correspondingLegend) {
-                    correspondingLegend.classList.remove('highlight');
-                }
-            });
-        });
-    });
-</script>
