@@ -117,6 +117,11 @@ router.get('/campus-map', (req, res) => {
       description: 'Phòng hành chính, đào tạo khoa'
     },
     {
+      id: 'building-d',
+      name: 'Tòa nhà D',
+      description: 'Phòng hành chính, đào tạo khoa'
+    },
+    {
       id: 'building-bc',
       name: 'Tòa nhà B-C',
       description: 'Giảng đường'
