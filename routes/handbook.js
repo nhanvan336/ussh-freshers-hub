@@ -266,27 +266,27 @@ router.get('/contacts', (req, res) => {
 
 // Work Schedule (Sử dụng hình ảnh, không dùng thư mục con)
 router.get('/work-schedule', (req, res) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const dayOfWeek = today.getDay();
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dayOfWeek = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
 
-    const formatDate = (date) => `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  const formatDate = (date) => `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  
+  const scheduleData = {
+    dateRange: `từ ngày ${formatDate(monday)} đến ngày ${formatDate(sunday)}`,
+    lastUpdated: now.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short' }),
+    imageUrl: '/images/work-schedule.png'
+  };
 
-    const scheduleData = {
-      dateRange: `từ ngày ${formatDate(monday)} đến ngày ${formatDate(sunday)}`,
-      lastUpdated: now.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short'}),
-      imageUrl: '/images/work-schedule.png'
-    };
-
-    res.render('pages/handbook/work-schedule', {
-        title: 'Lịch công tác tuần - USSH Freshers\' Hub',
-        scheduleData,
-        user: req.user
-    });
+  res.render('pages/handbook/work-schedule', {
+    title: 'Lịch công tác tuần - USSH Freshers\' Hub',
+    scheduleData,
+    user: req.user
+  });
 });
 
 // Academic Calendar
@@ -297,52 +297,22 @@ router.get('/academic-calendar', optionalAuth, asyncHandler(async (req, res) => 
   const selectedYear = year ? parseInt(year) : currentDate.getFullYear();
   
   try {
-    // Get events for the selected month
     const startDate = new Date(selectedYear, selectedMonth - 1, 1);
     const endDate = new Date(selectedYear, selectedMonth, 0);
-    
     const events = await Event.find({
       $or: [
-        {
-          startDate: {
-            $gte: startDate,
-            $lte: endDate
-          }
-        },
-        {
-          endDate: {
-            $gte: startDate,
-            $lte: endDate
-          }
-        }
+        { startDate: { $gte: startDate, $lte: endDate } },
+        { endDate: { $gte: startDate, $lte: endDate } }
       ],
       status: 'published',
       isPublic: true
-    })
-      .sort({ startDate: 1 });
+    }).sort({ startDate: 1 });
     
-    // Important academic dates
     const academicDates = [
-      {
-        date: '2024-09-02',
-        title: 'Khai giảng năm học 2024-2025',
-        type: 'academic'
-      },
-      {
-        date: '2024-10-15',
-        title: 'Hết hạn đăng ký môn học kỳ 1',
-        type: 'deadline'
-      },
-      {
-        date: '2024-12-20',
-        title: 'Thi cuối kỳ 1',
-        type: 'exam'
-      },
-      {
-        date: '2025-01-15',
-        title: 'Bắt đầu kỳ 2',
-        type: 'academic'
-      }
+      { date: '2024-09-02', title: 'Khai giảng năm học 2024-2025', type: 'academic' },
+      { date: '2024-10-15', title: 'Hết hạn đăng ký môn học kỳ 1', type: 'deadline' },
+      { date: '2024-12-20', title: 'Thi cuối kỳ 1', type: 'exam' },
+      { date: '2025-01-15', title: 'Bắt đầu kỳ 2', type: 'academic' }
     ];
     
     res.render('pages/handbook/academic-calendar', {
@@ -524,7 +494,6 @@ router.get('/event/:id', optionalAuth, validateObjectId('id'), asyncHandler(asyn
       });
     }
     
-    // Get related events
     const relatedEvents = await Event.find({
       _id: { $ne: event._id },
       $or: [
@@ -533,9 +502,7 @@ router.get('/event/:id', optionalAuth, validateObjectId('id'), asyncHandler(asyn
       ],
       status: 'published',
       isPublic: true
-    })
-      .sort({ startDate: 1 })
-      .limit(3);
+    }).sort({ startDate: 1 }).limit(3);
     
     res.render('pages/handbook/event', {
       title: `${event.title} - USSH Freshers\' Hub`,
@@ -554,88 +521,51 @@ router.get('/event/:id', optionalAuth, validateObjectId('id'), asyncHandler(asyn
 }));
 
 // Register for event
-router.post('/event/:id/register',
-  isAuthenticated,
-  validateObjectId('id'),
-  asyncHandler(async (req, res) => {
+router.post('/event/:id/register', isAuthenticated, validateObjectId('id'), asyncHandler(async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
       
       if (!event || event.status !== 'published' || !event.isPublic) {
-        return res.status(404).json({
-          success: false,
-          message: 'Sự kiện không tồn tại'
-        });
+        return res.status(404).json({ success: false, message: 'Sự kiện không tồn tại' });
       }
       
       if (!event.registrationRequired) {
-        return res.status(400).json({
-          success: false,
-          message: 'Sự kiện này không yêu cầu đăng ký'
-        });
+        return res.status(400).json({ success: false, message: 'Sự kiện này không yêu cầu đăng ký' });
       }
       
       try {
         event.registerUser(req.user._id);
         await event.save();
-        
-        res.json({
-          success: true,
-          message: 'Đăng ký tham gia sự kiện thành công!'
-        });
+        res.json({ success: true, message: 'Đăng ký tham gia sự kiện thành công!' });
       } catch (registrationError) {
-        res.status(400).json({
-          success: false,
-          message: registrationError.message
-        });
+        res.status(400).json({ success: false, message: registrationError.message });
       }
     } catch (error) {
       console.error('Event registration error:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Có lỗi xảy ra khi đăng ký sự kiện'
-      });
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi đăng ký sự kiện' });
     }
-  })
-);
+}));
 
 // Unregister from event
-router.post('/event/:id/unregister',
-  isAuthenticated,
-  validateObjectId('id'),
-  asyncHandler(async (req, res) => {
+router.post('/event/:id/unregister', isAuthenticated, validateObjectId('id'), asyncHandler(async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
       
       if (!event) {
-        return res.status(404).json({
-          success: false,
-          message: 'Sự kiện không tồn tại'
-        });
+        return res.status(404).json({ success: false, message: 'Sự kiện không tồn tại' });
       }
       
       try {
         event.unregisterUser(req.user._id);
         await event.save();
-        
-        res.json({
-          success: true,
-          message: 'Hủy đăng ký thành công'
-        });
+        res.json({ success: true, message: 'Hủy đăng ký thành công' });
       } catch (unregistrationError) {
-        res.status(400).json({
-          success: false,
-          message: unregistrationError.message
-        });
+        res.status(400).json({ success: false, message: unregistrationError.message });
       }
     } catch (error) {
       console.error('Event unregistration error:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Có lỗi xảy ra khi hủy đăng ký'
-      });
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi hủy đăng ký' });
     }
-  })
-);
+}));
 
 module.exports = router;
