@@ -30,7 +30,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       {
         id: 'map',
         title: 'Bản đồ',
-        description: 'Sơ đồ tương tác khuôn viên trường',
+        description: 'Sơ đồ khuôn viên trường',
         icon: 'fas fa-map-marked-alt',
         url: '/handbook/campus-map'
       },
@@ -71,7 +71,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       },
       {
         id: 'events',
-        title: 'Tất cả Sự kiện',
+        title: 'Tất cả sự kiện',
         description: 'Xem toàn bộ các sự kiện của trường',
         icon: 'fas fa-calendar-check',
         url: '/handbook/events'
