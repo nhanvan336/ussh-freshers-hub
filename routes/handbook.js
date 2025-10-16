@@ -27,7 +27,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       .sort({ startDate: 1 })
       .limit(3);
     
-    // University information sections
+    // University information sections (đã xóa work-schedule)
     const sections = [
       {
         id: 'map',
@@ -49,13 +49,6 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
         description: 'Lịch học tập và sự kiện quan trọng',
         icon: 'fas fa-calendar-alt',
         url: '/handbook/academic-calendar'
-      },
-      {
-        id: 'work-schedule',
-        title: 'Lịch công tác',
-        description: 'Lịch công tác tuần của cán bộ, giảng viên',
-        icon: 'fas fa-calendar-week',
-        url: '/handbook/work-schedule'
       },
       {
         id: 'library',
@@ -264,78 +257,20 @@ router.get('/contacts', (req, res) => {
   });
 });
 
-// Work Schedule (Sử dụng hình ảnh, không dùng thư mục con)
-router.get('/work-schedule', (req, res) => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const dayOfWeek = today.getDay();
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-
-  const formatDate = (date) => `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  
-  const scheduleData = {
-    dateRange: `từ ngày ${formatDate(monday)} đến ngày ${formatDate(sunday)}`,
-    lastUpdated: now.toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short' }),
-    imageUrl: '/images/work-schedule.png'
+// Academic Calendar
+router.get('/academic-calendar', (req, res) => {
+  const calendarData = {
+    lastUpdated: new Date().toLocaleString('vi-VN', { dateStyle: 'full', timeStyle: 'short' }),
+    imageUrl: '/images/academic-calendar.png'
   };
 
-  res.render('pages/handbook/work-schedule', {
-    title: 'Lịch công tác tuần - USSH Freshers\' Hub',
-    scheduleData,
+  res.render('pages/handbook/academic-calendar', {
+    title: 'Lịch năm học - USSH Freshers\' Hub',
+    calendarData,
     user: req.user
   });
 });
 
-// Academic Calendar
-router.get('/academic-calendar', optionalAuth, asyncHandler(async (req, res) => {
-  const { month, year } = req.query;
-  const currentDate = new Date();
-  const selectedMonth = month ? parseInt(month) : currentDate.getMonth() + 1;
-  const selectedYear = year ? parseInt(year) : currentDate.getFullYear();
-  
-  try {
-    const startDate = new Date(selectedYear, selectedMonth - 1, 1);
-    const endDate = new Date(selectedYear, selectedMonth, 0);
-    const events = await Event.find({
-      $or: [
-        { startDate: { $gte: startDate, $lte: endDate } },
-        { endDate: { $gte: startDate, $lte: endDate } }
-      ],
-      status: 'published',
-      isPublic: true
-    }).sort({ startDate: 1 });
-    
-    const academicDates = [
-      { date: '2024-09-02', title: 'Khai giảng năm học 2024-2025', type: 'academic' },
-      { date: '2024-10-15', title: 'Hết hạn đăng ký môn học kỳ 1', type: 'deadline' },
-      { date: '2024-12-20', title: 'Thi cuối kỳ 1', type: 'exam' },
-      { date: '2025-01-15', title: 'Bắt đầu kỳ 2', type: 'academic' }
-    ];
-    
-    res.render('pages/handbook/academic-calendar', {
-      title: 'Lịch năm học - USSH Freshers\' Hub',
-      events,
-      academicDates,
-      selectedMonth,
-      selectedYear,
-      user: req.user
-    });
-  } catch (error) {
-    console.error('Academic calendar error:', error);
-    res.render('pages/handbook/academic-calendar', {
-      title: 'Lịch năm học - USSH Freshers\' Hub',
-      events: [],
-      academicDates: [],
-      selectedMonth,
-      selectedYear,
-      error: 'Có lỗi xảy ra khi tải lịch học',
-      user: req.user
-    });
-  }
-}));
 
 // Library Guide
 router.get('/library-guide', (req, res) => {
