@@ -1,0 +1,15 @@
+<%# File: views/pages/handbook/work-schedule.ejs %>
+
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Lịch công tác <%= scheduleData.dateRange %></h2>
+    <p class="subtitle">Cập nhật lần cuối: <%= scheduleData.lastUpdated %></p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="schedule-image-container text-center">
+    <img src="<%= scheduleData.imageUrl %>" alt="Lịch công tác tuần" class="img-fluid rounded shadow-sm" style="border: 1px solid #ddd;">
+  </div>
+</div>
