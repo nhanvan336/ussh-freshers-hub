@@ -1,0 +1,25 @@
+<%# File: views/pages/forum/index.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Diễn đàn Cộng đồng</h1>
+        <p class="subtitle">Nơi kết nối, chia sẻ kinh nghiệm và thảo luận về mọi chủ đề.</p>
+        <% if (isAuthenticated) { %>
+            <a href="/forum/new-post" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tạo bài viết mới
+            </a>
+        <% } else { %>
+            <a href="/auth/login" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Đăng nhập để tham gia
+            </a>
+        <% } %>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="alert alert-info text-center">
+        <i class="fas fa-tools fa-3x mb-3"></i>
+        <h4>Tính năng đang được xây dựng</h4>
+        <p>Khu vực diễn đàn đang trong quá trình hoàn thiện. Hãy quay lại sau nhé!</p>
+    </div>
+</div>
