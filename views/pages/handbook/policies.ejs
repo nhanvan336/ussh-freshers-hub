@@ -1,0 +1,48 @@
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Quy định & Chính sách</h2>
+    <p class="subtitle">Những quy định quan trọng sinh viên cần nắm rõ.</p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <% if (typeof policies !== 'undefined' && policies.length > 0) { %>
+    <div class="accordion" id="policiesAccordion">
+      <% policies.forEach((policy, index) => { %>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<%= index %>">
+            <button 
+              class="accordion-button <%= index !== 0 ? 'collapsed' : '' %>" 
+              type="button" 
+              data-bs-toggle="collapse" 
+              data-bs-target="#collapse<%= index %>" 
+              aria-expanded="<%= index === 0 ? 'true' : 'false' %>" 
+              aria-controls="collapse<%= index %>"
+            >
+              <i class="fas fa-file-contract me-2"></i><strong><%= policy.title %></strong>
+            </button>
+          </h2>
+          <div 
+            id="collapse<%= index %>" 
+            class="accordion-collapse collapse <%= index === 0 ? 'show' : '' %>" 
+            aria-labelledby="heading<%= index %>" 
+            data-bs-parent="#policiesAccordion"
+          >
+            <div class="accordion-body">
+              <p class="lead"><%= policy.description %></p>
+              <hr>
+              <ul class="list-unstyled">
+                <% policy.sections.forEach(section => { %>
+                  <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i><%= section %></li>
+                <% }); %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">Chưa có thông tin về quy định & chính sách.</div>
+  <% } %>
+</div>
