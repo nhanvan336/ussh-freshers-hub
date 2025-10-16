@@ -25,6 +25,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       .sort({ startDate: 1 })
       .limit(3);
     
+    // Đã xóa 'work-schedule' và thêm 'events'
     const sections = [
       {
         id: 'map',
@@ -67,6 +68,13 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
         description: 'Các quy định quan trọng của trường',
         icon: 'fas fa-file-contract',
         url: '/handbook/policies'
+      },
+      {
+        id: 'events',
+        title: 'Tất cả Sự kiện',
+        description: 'Xem toàn bộ các sự kiện của trường',
+        icon: 'fas fa-calendar-check',
+        url: '/handbook/events'
       }
     ];
     
@@ -311,11 +319,11 @@ router.get('/library-guide', (req, res) => {
   });
 });
 
-// Clubs and Organizations - ĐÃ SỬA LẠI
+// Clubs and Organizations
 router.get('/clubs', (req, res) => {
   res.render('pages/handbook/clubs', {
     title: 'Câu lạc bộ & Đoàn thể - USSH Freshers\' Hub',
-    imageUrl: '/images/clubs.png', // Truyền đường dẫn ảnh sang view
+    imageUrl: '/images/club-diagram.png',
     user: req.user
   });
 });
@@ -371,6 +379,32 @@ router.get('/policies', (req, res) => {
     user: req.user
   });
 });
+
+// BẮT ĐẦU BỔ SUNG
+// List all events
+router.get('/events', optionalAuth, asyncHandler(async (req, res) => {
+  try {
+    const allEvents = await Event.find({
+      status: 'published',
+      isPublic: true
+    })
+      .sort({ startDate: -1 }); // Sắp xếp theo ngày bắt đầu, mới nhất lên đầu
+    
+    res.render('pages/handbook/events', {
+      title: 'Tất cả Sự kiện - USSH Freshers\' Hub',
+      events: allEvents,
+      user: req.user
+    });
+  } catch (error) {
+    console.error('Events list page error:', error);
+    res.status(500).render('pages/error', {
+      title: 'Lỗi - USSH Freshers\' Hub',
+      message: 'Có lỗi xảy ra khi tải danh sách sự kiện',
+      user: req.user
+    });
+  }
+}));
+// KẾT THÚC BỔ SUNG
 
 // View event details
 router.get('/event/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
