@@ -1,0 +1,119 @@
+<%# File: views/pages/handbook/event.ejs %>
+
+<div class="page-header" style="background-image: url('<%= event.imageUrl || '/images/default-event-bg.jpg' %>'); background-size: cover; background-position: center;">
+  <div class="container" style="background-color: rgba(0,0,0,0.5); padding: 2rem; border-radius: 8px;">
+    <a href="/handbook" class="back-link text-white"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h1 class="text-white"><%= event.title %></h1>
+    <p class="subtitle text-white"><%= event.shortDescription %></p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="event-meta mb-3">
+            <span class="d-block mb-2"><i class="fas fa-calendar-alt me-2 text-primary"></i><strong>Thời gian:</strong> <%= new Date(event.startDate).toLocaleString('vi-VN') %> - <%= new Date(event.endDate).toLocaleString('vi-VN') %></span>
+            <span class="d-block mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>Địa điểm:</strong> <%= event.location %></span>
+            <span class="d-block"><i class="fas fa-user-tie me-2 text-primary"></i><strong>Người tạo:</strong> <%= event.createdBy.fullName %></span>
+          </div>
+          <hr>
+          <div class="event-description">
+            <%- event.description %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Thông tin tham gia</h5>
+        </div>
+        <div class="card-body">
+          <% if (event.registrationRequired) { %>
+            <p>Sự kiện này yêu cầu đăng ký.</p>
+            <p><strong>Số người đã đăng ký:</strong> <%= event.participants.length %> / <%= event.participantLimit || 'Không giới hạn' %></p>
+            
+            <% if (user) { %>
+              <% const isRegistered = event.participants.some(p => p.user._id.toString() === user._id.toString()) %>
+              <% if (isRegistered) { %>
+                <button class="btn btn-secondary w-100" disabled>Đã đăng ký</button>
+                <button id="unregisterBtn" class="btn btn-outline-danger w-100 mt-2">Hủy đăng ký</button>
+              <% } else if (event.participants.length >= event.participantLimit) { %>
+                <button class="btn btn-warning w-100" disabled>Đã hết chỗ</button>
+              <% } else { %>
+                <button id="registerBtn" class="btn btn-primary w-100">Đăng ký ngay</button>
+              <% } %>
+            <% } else { %>
+              <a href="/login" class="btn btn-primary w-100">Đăng nhập để đăng ký</a>
+            <% } %>
+
+          <% } else { %>
+            <p>Sự kiện mở cửa tự do, không cần đăng ký.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <% if (relatedEvents && relatedEvents.length > 0) { %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">Sự kiện liên quan</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <% relatedEvents.forEach(related => { %>
+              <li class="list-group-item">
+                <a href="/handbook/event/<%= related._id %>"><%= related.title %></a>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script để xử lý nút đăng ký và hủy đăng ký
+  const registerBtn = document.getElementById('registerBtn');
+  const unregisterBtn = document.getElementById('unregisterBtn');
+  const eventId = '<%= event._id %>';
+
+  if (registerBtn) {
+    registerBtn.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`/handbook/event/${eventId}/register`, { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+          alert('Đăng ký thành công!');
+          location.reload(); // Tải lại trang để cập nhật trạng thái
+        } else {
+          alert('Lỗi: ' + result.message);
+        }
+      } catch (error) {
+        alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+      }
+    });
+  }
+
+  if (unregisterBtn) {
+    unregisterBtn.addEventListener('click', async () => {
+      if (!confirm('Bạn có chắc chắn muốn hủy đăng ký tham gia sự kiện này?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`/handbook/event/${eventId}/unregister`, { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+          alert('Hủy đăng ký thành công!');
+          location.reload(); // Tải lại trang để cập nhật trạng thái
+        } else {
+          alert('Lỗi: ' + result.message);
+        }
+      } catch (error) {
+        alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+      }
+    });
+  }
+</script>
