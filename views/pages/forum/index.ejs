@@ -5,7 +5,7 @@
         <h1>Diễn đàn Cộng đồng</h1>
         <p class="subtitle">Nơi kết nối, chia sẻ kinh nghiệm và thảo luận về mọi chủ đề.</p>
         <% if (isAuthenticated) { %>
-            <a href="/forum/new-post" class="btn btn-primary">
+            <a href="/forum/create" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Tạo bài viết mới
             </a>
         <% } else { %>
@@ -17,9 +17,95 @@
 </div>
 
 <div class="container page-content">
-    <div class="alert alert-info text-center">
-        <i class="fas fa-tools fa-3x mb-3"></i>
-        <h4>Tính năng đang được xây dựng</h4>
-        <p>Khu vực diễn đàn đang trong quá trình hoàn thiện. Hãy quay lại sau nhé!</p>
+    <div class="row">
+        <!-- Cột Trái: Bộ lọc & Danh mục -->
+        <div class="col-lg-3">
+            <aside class="sidebar">
+                <!-- Form Tìm kiếm & Lọc -->
+                <div class="sidebar-widget">
+                    <h4><i class="fas fa-filter"></i> Lọc bài viết</h4>
+                    <form action="/forum" method="GET" class="filter-form">
+                        <div class="form-group">
+                            <label for="q">Tìm kiếm</label>
+                            <input type="search" id="q" name="q" class="form-control" placeholder="Nhập từ khóa..." value="<%= locals.filters && filters.q ? filters.q : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="sort">Sắp xếp theo</label>
+                            <select name="sort" id="sort" class="form-control">
+                                <option value="latest" <%= locals.filters && filters.sort === 'latest' ? 'selected' : '' %>>Mới nhất</option>
+                                <option value="popular" <%= locals.filters && filters.sort === 'popular' ? 'selected' : '' %>>Nhiều lượt thích</option>
+                                <option value="discussed" <%= locals.filters && filters.sort === 'discussed' ? 'selected' : '' %>>Nhiều bình luận</option>
+                                <option value="oldest" <%= locals.filters && filters.sort === 'oldest' ? 'selected' : '' %>>Cũ nhất</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary w-100">Áp dụng</button>
+                    </form>
+                </div>
+                <!-- Danh sách danh mục -->
+                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                    <div class="sidebar-widget">
+                        <h4><i class="fas fa-tags"></i> Danh mục</h4>
+                        <ul class="list-group list-group-flush category-list">
+                            <a href="/forum" class="list-group-item d-flex justify-content-between align-items-center <%= locals.filters && (filters.category === 'all' || !filters.category) ? 'active' : '' %>">
+                                Tất cả chuyên mục
+                                <span class="badge bg-primary rounded-pill"><%= totalPosts %></span>
+                            </a>
+                            <% categories.forEach(cat => { %>
+                                <a href="/forum?category=<%= cat._id %>" class="list-group-item d-flex justify-content-between align-items-center <%= locals.filters && filters.category === cat._id ? 'active' : '' %>">
+                                    <%= cat._id %>
+                                    <span class="badge bg-secondary rounded-pill"><%= cat.count %></span>
+                                </a>
+                            <% }) %>
+                        </ul>
+                    </div>
+                <% } %>
+            </aside>
+        </div>
+
+        <!-- Cột Phải: Danh sách bài đăng -->
+        <div class="col-lg-9">
+            <% if (locals.error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+
+            <!-- Bài đăng đã ghim -->
+            <% if (typeof stickyPosts !== 'undefined' && stickyPosts.length > 0) { %>
+                <div class="post-list-section">
+                    <h4 class="section-title"><i class="fas fa-thumbtack"></i> Bài đăng đã ghim</h4>
+                    <% stickyPosts.forEach(post => { %>
+                        <%- include('../partials/forum-post-item', { post: post }) %>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <!-- Bài đăng thường -->
+            <div class="post-list-section">
+                 <h4 class="section-title"><i class="far fa-comments"></i> Thảo luận mới nhất</h4>
+                <% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+                    <% posts.forEach(post => { %>
+                        <%- include('../partials/forum-post-item', { post: post }) %>
+                    <% }) %>
+                <% } else if (!locals.error) { %>
+                     <div class="alert alert-info text-center">
+                        <i class="fas fa-box-open fa-3x mb-3"></i>
+                        <h4>Chưa có bài viết nào.</h4>
+                        <p>Hãy là người đầu tiên bắt đầu một cuộc thảo luận nhé!</p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Phân trang -->
+            <% if (totalPages > 1) { %>
+                <nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="/forum?page=<%= i %>&sort=<%= locals.filters && filters.sort ? filters.sort : 'latest' %>&q=<%= locals.filters && filters.q ? filters.q : '' %>&category=<%= locals.filters && filters.category ? filters.category : 'all' %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            <% } %>
+        </div>
     </div>
 </div>
