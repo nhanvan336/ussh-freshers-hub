@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label for="q">Từ khóa</label>
                         <div class="input-group">
-                             <input type="search" id="q" name="q" class="form-control" placeholder="Tên tài liệu, môn học..." value="<%= filters.q || '' %>">
+                             <input type="search" id="q" name="q" class="form-control" placeholder="Tên tài liệu, môn học..." value="<%= typeof filters !== 'undefined' ? filters.q : '' %>">
                              <button type="submit" class="btn btn-secondary" aria-label="Tìm kiếm"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
@@ -36,11 +36,11 @@
                     <div class="form-group">
                         <label for="category">Loại tài liệu</label>
                         <select name="category" id="category" class="form-control">
-                            <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>Tất cả</option>
-                            <option value="lecture" <%= filters.category === 'lecture' ? 'selected' : '' %>>Bài giảng</option>
-                            <option value="ebook" <%= filters.category === 'ebook' ? 'selected' : '' %>>Giáo trình/Ebook</option>
-                            <option value="exam" <%= filters.category === 'exam' ? 'selected' : '' %>>Đề thi</option>
-                            <option value="other" <%= filters.category === 'other' ? 'selected' : '' %>>Khác</option>
+                            <option value="all">Tất cả</option>
+                            <option value="lecture">Bài giảng</option>
+                            <option value="ebook">Giáo trình/Ebook</option>
+                            <option value="exam">Đề thi</option>
+                            <option value="other">Khác</option>
                         </select>
                     </div>
 
@@ -48,10 +48,10 @@
                     <div class="form-group">
                         <label for="subject">Môn học</label>
                         <select name="subject" id="subject" class="form-control">
-                           <option value="all" <%= filters.subject === 'all' ? 'selected' : '' %>>Tất cả</option>
-                           <option value="History" <%= filters.subject === 'History' ? 'selected' : '' %>>Lịch sử</option>
-                           <option value="Psychology" <%= filters.subject === 'Psychology' ? 'selected' : '' %>>Tâm lý học</option>
-                           <option value="Journalism" <%= filters.subject === 'Journalism' ? 'selected' : '' %>>Báo chí</option>
+                           <option value="all">Tất cả</option>
+                           <option value="History">Lịch sử</option>
+                           <option value="Psychology">Tâm lý học</option>
+                           <option value="Journalism">Báo chí</option>
                            <!-- Thêm các môn học khác tại đây -->
                         </select>
                     </div>
@@ -60,10 +60,10 @@
                     <div class="form-group">
                         <label for="sort">Sắp xếp theo</label>
                         <select name="sort" id="sort" class="form-control">
-                            <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
-                            <option value="popular" <%= filters.sort === 'popular' ? 'selected' : '' %>>Phổ biến nhất</option>
-                            <option value="rated" <%= filters.sort === 'rated' ? 'selected' : '' %>>Đánh giá cao</option>
-                            <option value="oldest" <%= filters.sort === 'oldest' ? 'selected' : '' %>>Cũ nhất</option>
+                            <option value="newest">Mới nhất</option>
+                            <option value="popular">Phổ biến nhất</option>
+                            <option value="rated">Đánh giá cao</option>
+                            <option value="oldest">Cũ nhất</option>
                         </select>
                     </div>
 
@@ -74,21 +74,11 @@
 
         <!-- Cột Phải: Danh sách tài liệu -->
         <div class="col-lg-9">
-            <div class="document-list-header">
-                <p>Hiển thị <strong><%= documents.length %></strong> trong tổng số <strong><%= totalDocuments %></strong> kết quả</p>
-            </div>
-
-            <% if (error) { %>
-                <div class="alert alert-danger"><%= error %></div>
-            <% } %>
-
-            <% if (documents.length === 0 && !error) { %>
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-box-open fa-3x mb-3"></i>
-                    <h4>Không tìm thấy tài liệu nào</h4>
-                    <p>Hãy thử với từ khóa hoặc bộ lọc khác nhé!</p>
+            <% if (typeof documents !== 'undefined' && documents.length > 0) { %>
+                <div class="document-list-header">
+                    <p>Hiển thị <strong><%= documents.length %></strong> trong tổng số <strong><%= totalDocuments %></strong> kết quả</p>
                 </div>
-            <% } else { %>
+
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     <% documents.forEach(doc => { %>
                         <div class="col">
@@ -116,19 +106,25 @@
                         </div>
                     <% }) %>
                 </div>
-            <% } %>
 
-            <!-- Phân trang -->
-            <% if (totalPages > 1) { %>
-                <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-center">
-                    <ul class="pagination">
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                <a class="page-link" href="/learning-hub?page=<%= i %>&sort=<%= filters.sort || 'newest' %>&q=<%= filters.q || '' %>"><%= i %></a>
-                            </li>
-                        <% } %>
-                    </ul>
-                </nav>
+                <!-- Phân trang -->
+                <% if (totalPages > 1) { %>
+                    <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-center">
+                        <ul class="pagination">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                    <a class="page-link" href="/learning-hub?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                <% } %>
+            <% } else { %>
+                <div class="alert alert-info text-center mt-4">
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <h4>Chưa có tài liệu nào được tải lên.</h4>
+                    <p>Hãy là người đầu tiên đóng góp cho thư viện nhé!</p>
+                </div>
             <% } %>
         </div>
     </div>
