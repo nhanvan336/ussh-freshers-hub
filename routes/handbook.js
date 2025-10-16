@@ -4,7 +4,7 @@ const { asyncHandler } = require('../middleware/error');
 const { isAuthenticated, optionalAuth, isAdmin } = require('../middleware/auth');
 const { validateEvent, validateObjectId } = require('../middleware/validation');
 const Event = require('../models/Event');
-const User = require('../models/User');
+const User = require = require('../models/User');
 
 // University Handbook main page
 router.get('/', optionalAuth, asyncHandler(async (req, res) => {
@@ -49,6 +49,14 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
         description: 'Lịch học tập và sự kiện quan trọng',
         icon: 'fas fa-calendar-alt',
         url: '/handbook/academic-calendar'
+      },
+      // Bổ sung mục Lịch công tác vào đây
+      {
+        id: 'work-schedule',
+        title: 'Lịch công tác',
+        description: 'Lịch công tác tuần của cán bộ, giảng viên',
+        icon: 'fas fa-calendar-week',
+        url: '/handbook/work-schedule'
       },
       {
         id: 'library',
@@ -253,6 +261,21 @@ router.get('/contacts', (req, res) => {
   res.render('pages/handbook/contacts', {
     title: 'Danh bạ phòng ban - USSH Freshers\' Hub',
     departmentsData,
+    user: req.user
+  });
+});
+
+// Work Schedule (Sử dụng hình ảnh)
+router.get('/work-schedule', (req, res) => {
+  const scheduleData = {
+    dateRange: 'từ ngày 13/10 đến ngày 19/10/2025',
+    lastUpdated: 'Thứ hai - 13/10/2025 10:14',
+    imageUrl: '/images/schedules/work-schedule-13-10-2025.png' // Đường dẫn đến hình ảnh lịch công tác
+  };
+
+  res.render('pages/handbook/work-schedule', {
+    title: 'Lịch công tác tuần - USSH Freshers\' Hub',
+    scheduleData,
     user: req.user
   });
 });
