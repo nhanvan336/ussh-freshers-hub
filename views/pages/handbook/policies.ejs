@@ -1,6 +1,6 @@
 <div class="page-header">
   <div class="container">
-    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại cẩm nang</a>
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
     <h2>Quy định & Chính sách</h2>
     <p class="subtitle">Những quy định quan trọng sinh viên cần nắm rõ.</p>
   </div>
@@ -8,39 +8,36 @@
 
 <div class="container page-content">
   <% if (typeof policies !== 'undefined' && policies.length > 0) { %>
-    <div class="accordion" id="policiesAccordion">
-      <% policies.forEach((policy, index) => { %>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading<%= index %>">
-            <button 
-              class="accordion-button <%= index !== 0 ? 'collapsed' : '' %>" 
-              type="button" 
-              data-bs-toggle="collapse" 
-              data-bs-target="#collapse<%= index %>" 
-              aria-expanded="<%= index === 0 ? 'true' : 'false' %>" 
-              aria-controls="collapse<%= index %>"
-            >
-              <i class="fas fa-file-contract me-2"></i><strong><%= policy.title %></strong>
-            </button>
-          </h2>
-          <div 
-            id="collapse<%= index %>" 
-            class="accordion-collapse collapse <%= index === 0 ? 'show' : '' %>" 
-            aria-labelledby="heading<%= index %>" 
-            data-bs-parent="#policiesAccordion"
-          >
-            <div class="accordion-body">
-              <p class="lead"><%= policy.description %></p>
-              <hr>
-              <ul class="list-unstyled">
-                <% policy.sections.forEach(section => { %>
-                  <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i><%= section %></li>
-                <% }); %>
-              </ul>
-            </div>
-          </div>
+    <div class="list-group">
+      
+      <a href="/pdfs/quy-che-dao-tao.pdf" target="_blank" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"><i class="fas fa-graduation-cap me-2"></i>Quy chế đào tạo</h5>
         </div>
-      <% }); %>
+        <p class="mb-1">Các quy định về học tập, thi cử, đánh giá.</p>
+      </a>
+
+      <a href="/pdfs/quy-dinh-noi-tru.pdf" target="_blank" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"><i class="fas fa-home me-2"></i>Quy định nội trú</h5>
+        </div>
+        <p class="mb-1">Các quy định dành cho sinh viên ở ký túc xá.</p>
+      </a>
+
+      <a href="/pdfs/quy-dinh-hoc-bong.pdf" target="_blank" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"><i class="fas fa-award me-2"></i>Quy định về học bổng</h5>
+        </div>
+        <p class="mb-1">Tiêu chí và thủ tục xin học bổng.</p>
+      </a>
+
+      <a href="/pdfs/quy-dinh-thu-vien.pdf" target="_blank" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"><i class="fas fa-book me-2"></i>Quy định sử dụng thư viện</h5>
+        </div>
+        <p class="mb-1">Hướng dẫn sử dụng dịch vụ thư viện.</p>
+      </a>
+
     </div>
   <% } else { %>
     <div class="alert alert-info">Chưa có thông tin về quy định & chính sách.</div>
