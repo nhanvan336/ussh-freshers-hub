@@ -1,0 +1,63 @@
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Hướng dẫn Thư viện</h2>
+    <p class="subtitle">Tất cả những gì bạn cần biết để sử dụng thư viện hiệu quả.</p>
+  </div>
+</div>
+
+<div class="container page-content">
+  <% if (typeof libraryInfo !== 'undefined') { %>
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-clock me-2"></i>Giờ Mở Cửa</h4>
+      </div>
+      <div class="card-body">
+        <p><strong>Ngày thường (Thứ 2 - Thứ 7):</strong> <%= libraryInfo.hours.weekdays %></p>
+        <p><strong>Cuối tuần (Chủ nhật):</strong> <%= libraryInfo.hours.weekends %></p>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-info text-white">
+        <h4 class="mb-0"><i class="fas fa-layer-group me-2"></i>Sơ đồ các tầng</h4>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% libraryInfo.floors.forEach(floor => { %>
+          <li class="list-group-item">
+            <h5 class="mb-1"><%= floor.floor %></h5>
+            <p class="mb-0 text-muted"><%= floor.sections.join(' | ') %></p>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0"><i class="fas fa-concierge-bell me-2"></i>Các dịch vụ chính</h4>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <% libraryInfo.services.forEach(service => { %>
+            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><%= service %></li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-warning text-dark">
+        <h4 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Một số nội quy quan trọng</h4>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <% libraryInfo.rules.forEach(rule => { %>
+            <li class="mb-2"><i class="fas fa-gavel text-warning me-2"></i><%= rule %></li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">Không có thông tin hướng dẫn thư viện.</div>
+  <% } %>
+</div>
