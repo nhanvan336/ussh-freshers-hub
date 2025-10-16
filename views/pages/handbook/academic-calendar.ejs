@@ -1,0 +1,23 @@
+<%# File: views/pages/handbook/academic-calendar.ejs %>
+
+<div class="page-header">
+  <div class="container">
+    <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
+    <h2>Lịch năm học</h2>
+    <% if (typeof calendarData !== 'undefined') { %>
+      <p class="subtitle">Cập nhật lần cuối: <%= calendarData.lastUpdated %></p>
+    <% } %>
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="calendar-image-container text-center">
+    <% if (typeof calendarData !== 'undefined' && calendarData.imageUrl) { %>
+      <img src="<%= calendarData.imageUrl %>" alt="Lịch năm học" class="img-fluid rounded shadow-sm" style="border: 1px solid #ddd;">
+    <% } else { %>
+      <div class="alert alert-warning" role="alert">
+        Không tìm thấy hình ảnh lịch năm học.
+      </div>
+    <% } %>
+  </div>
+</div>
