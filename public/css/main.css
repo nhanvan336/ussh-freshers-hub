@@ -1742,3 +1742,12 @@ h3 {
 h4 {
   font-size: 1.25rem; /* ~20px */
 }
+/* --- TẠO KHOẢNG CÁCH GIỮA ICON VÀ CHỮ --- */
+
+/* Áp dụng cho tất cả icon của Font Awesome */
+.fas,
+.far,
+.fab,
+.fa {
+  margin-right: 8px; /* Tạo một khoảng lề 8px bên phải icon */
+}
