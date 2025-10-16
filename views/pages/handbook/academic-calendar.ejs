@@ -1,19 +1,21 @@
-<%# File: views/pages/handbook/academic-calendar.ejs %>
-
 <div class="page-header">
   <div class="container">
     <a href="/handbook" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Cẩm nang</a>
-    <h2>Lịch năm học</h2>
+
     <% if (typeof calendarData !== 'undefined') { %>
+      <h2>Lịch năm học</h2>
       <p class="subtitle">Cập nhật lần cuối: <%= calendarData.lastUpdated %></p>
+    <% } else { %>
+      <h2>Lịch năm học</h2>
+      <p class="subtitle">Không thể tải dữ liệu lịch.</p>
     <% } %>
   </div>
 </div>
 
 <div class="container page-content">
-  <div class="calendar-image-container text-center">
+  <div class="calendar-image-container">
     <% if (typeof calendarData !== 'undefined' && calendarData.imageUrl) { %>
-      <img src="<%= calendarData.imageUrl %>" alt="Lịch năm học" class="img-fluid rounded shadow-sm" style="border: 1px solid #ddd;">
+      <img src="<%= calendarData.imageUrl %>" alt="Lịch năm học" class="resizable-image">
     <% } else { %>
       <div class="alert alert-warning" role="alert">
         Không tìm thấy hình ảnh lịch năm học.
@@ -21,3 +23,21 @@
     <% } %>
   </div>
 </div>
+
+<style>
+  .calendar-image-container {
+    width: 100%; /* Chiếm toàn bộ chiều rộng của khung chứa ngoài */
+    max-width: 900px; /* Chiều rộng tối đa của ảnh là 900px */
+    height: 600px; /* Chiều cao cố định là 600px */
+    margin: 0 auto; /* Tự động căn giữa */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Ẩn phần ảnh thừa đi */
+  }
+
+  .resizable-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Phóng to/thu nhỏ để lấp đầy khung, có thể cắt bớt ảnh */
+  }
+</style>
