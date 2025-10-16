@@ -147,52 +147,112 @@ router.get('/campus-map', (req, res) => {
 
 // Department Contacts
 router.get('/contacts', (req, res) => {
-  const departments = [
+  const departmentsData = [
     {
-      name: 'Phòng Đào tạo',
-      location: 'Tầng 2, Tòa A',
-      phone: '024-3833-4057',
-      email: 'daotao@ussh.edu.vn',
-      hours: '8:00-17:00 (Thứ 2-6)',
-      services: ['Đăng ký môn học', 'Bảng điểm', 'Giấy xác nhận']
+      groupName: 'I. Phòng Đào tạo và Công tác người học',
+      departments: [
+        {
+          name: '1. Bộ phận Tuyển sinh',
+          sections: [
+            {
+              title: 'Tuyển sinh đại học chính quy, tuyển sinh THPT chuyên:',
+              location: 'Phòng 101 nhà C',
+              phone: ['(024) 385 83957', '086 2155299'],
+              email: ['tuyensinh@ussh.edu.vn']
+            },
+            {
+              title: 'Tuyển sinh sau đại học, vừa làm vừa học:',
+              location: 'Phòng 102 nhà C',
+              phone: ['(024) 355 88053', '039 2628299'],
+              email: ['tuyensinhsdh@ussh.edu.vn', 'daotaovlvh@ussh.edu.vn']
+            }
+          ]
+        },
+        {
+          name: '2. Bộ phận Đào tạo chính quy',
+          location: 'Phòng 103 nhà E',
+          phone: ['(024) 355 75892', '(024) 385 85237'],
+          email: ['phongdaotao@sv.ussh.edu.vn']
+        },
+        {
+          name: '3. Bộ phận Đào tạo Thạc sĩ',
+          location: 'Phòng 105 nhà E',
+          email: ['daotaosdh@ussh.edu.vn']
+        },
+        {
+          name: '4. Bộ phận Đào tạo Tiến sĩ, Chương trình đào tạo, Truyền thông',
+          location: 'Phòng 101 nhà E',
+          phone: ['(024) 38585239'],
+          email: [
+            'Bộ phận Đào tạo tiến sĩ: tanltk@vnu.edu.vn',
+            'Bộ phận Chương trình đào tạo: chuongtrinhdaotao@ussh.edu.vn',
+            'Bộ phận Truyền thông: ccit@ussh.edu.vn'
+          ]
+        },
+        {
+          name: '5. Bộ phận Công tác người học',
+          location: 'Phòng 102, nhà E',
+          phone: ['(024) 35576371', '(024) 38583800', '(024) 38585242'],
+          email: ['ctsv@sv.ussh.edu.vn']
+        }
+      ]
     },
     {
-      name: 'Phòng Tài chính - Kế toán',
-      location: 'Tầng 1, Tòa A',
-      phone: '024-3833-4060',
-      email: 'taichinh@ussh.edu.vn',
-      hours: '8:00-17:00 (Thứ 2-6)',
-      services: ['Nộp học phí', 'Học bổng', 'Hóa đơn']
+      groupName: 'II. Phòng Khoa học, Đối ngoại và Tạp chí',
+      departments: [
+        {
+          name: '1. Bộ phận Quản lý Nghiên cứu khoa học',
+          location: 'Phòng 608, 610 nhà E',
+          phone: ['(024) 38588342', '(024) 38584278'],
+          email: ['phongkhoahoc@ussh.edu.vn']
+        },
+        {
+          name: '2. Bộ phận Đối ngoại',
+          location: 'Phòng 611 nhà E',
+          phone: ['(024) 335851282'],
+          email: ['ico@ussh.edu.vn']
+        },
+        {
+          name: '3. Tạp chí Khoa học Xã hội và Nhân văn',
+          location: 'Phòng 604 và 606 nhà E',
+          phone: ['(024).3558.1984'],
+          email: ['tckhxhnv@ussh.edu.vn', 'jossh@ussh.edu.vn', 'tckhxhnv@vnu.edu.vn'],
+          website: 'https://jossh.ussh.edu.vn/'
+        }
+      ]
     },
     {
-      name: 'Phòng Công tác Sinh viên',
-      location: 'Tầng 3, Tòa A',
-      phone: '024-3833-4055',
-      email: 'ctsv@ussh.edu.vn',
-      hours: '8:00-17:00 (Thứ 2-6)',
-      services: ['Ký túc xá', 'Hỗ trợ sinh viên', 'Hoạt động đoàn thể']
+      groupName: 'III. Phòng Thanh tra, Pháp chế và Đảm bảo chất lượng',
+      location: 'Phòng 404, 406, 408, nhà E',
+      departments: [
+        { name: 'Bộ phận Thanh tra – Pháp chế', phone: ['(024) 385 85241'], email: ['thanhtraphapche@ussh.edu.vn'] },
+        { name: 'Bộ phận Đảm bảo Chất lượng', phone: ['(024) 35574515', '(024) 355 88051'], email: ['dbcl@ussh.edu.vn'] },
+        { name: 'Lãnh đạo phòng', phone: ['(024) 355 80805'] }
+      ]
     },
     {
-      name: 'Thư viện',
-      location: 'Tầng 1-3, Tòa B',
-      phone: '024-3833-4065',
-      email: 'thuvien@ussh.edu.vn',
-      hours: '7:30-21:30 (Thứ 2-7), 8:00-17:00 (Chủ nhật)',
-      services: ['Mượn sách', 'Tìm kiếm tài liệu', 'Phòng đọc riêng']
+      groupName: 'IV. Phòng Tổ chức cán bộ',
+      location: 'Phòng 602, 603, nhà E',
+      phone: ['(024) 38585246'],
+      email: ['tccb.xhnv@gmail.com']
     },
     {
-      name: 'Phòng CNTT',
-      location: 'Tầng 4, Tòa A',
-      phone: '024-3833-4070',
-      email: 'cntt@ussh.edu.vn',
-      hours: '8:00-17:00 (Thứ 2-6)',
-      services: ['Hỗ trợ kỹ thuật', 'WiFi', 'Email sinh viên']
+      groupName: 'V. Phòng Hành chính - Tổng hợp',
+      location: 'Phòng 401, 105 nhà E',
+      phone: ['(024) 38583799'],
+      email: ['hcth.xhnv@gmail.com']
+    },
+    {
+      groupName: 'VI. Phòng Kế hoạch - Tài chính',
+      location: 'Phòng 405, 407, 410 nhà E',
+      phone: ['(024)355 76122', '(024) 355 81927'],
+      email: ['kehoachtaichinh.ussh@gmail.com']
     }
   ];
   
   res.render('pages/handbook/contacts', {
     title: 'Danh bạ phòng ban - USSH Freshers\' Hub',
-    departments,
+    departmentsData,
     user: req.user
   });
 });
