@@ -1,32 +1,35 @@
-<%# File: views/pages/wellness/bookmarks.ejs %>
+<div class="container my-5">
+  <div class="page-header text-center mb-5">
+    <h1><i class="fas fa-bookmark me-2"></i>Bài viết đã lưu</h1>
+    <p class="lead text-muted">Nơi lưu giữ những bài viết tâm đắc của bạn.</p>
+  </div>
 
-<div class="page-header">
-    <div class="container">
-        <h1>Bài viết đã lưu</h1>
-        <p class="subtitle">Những bài viết bạn quan tâm, lưu lại để đọc sau.</p>
-    </div>
-</div>
-
-<div class="container page-content">
-    <% if (locals.entries && entries.length > 0) { %>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <% entries.forEach(entry => { %>
-                <div class="col">
-                    <div class="card wellness-card h-100">
-                         <a href="/wellness/entry/<%= entry._id %>">
-                            <div class="card-img-top" style="background-image: url('<%= entry.coverImage || `https://placehold.co/600x400/FFF1D0/A16207?text=${encodeURIComponent(entry.category)}` %>');"></div>
-                         </a>
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
-                            <p class="card-text text-muted small"><%= entry.summary %></p>
-                        </div>
-                    </div>
+  <div class="row">
+    <% if (entries && entries.length > 0) { %>
+      <% entries.forEach(entry => { %>
+        <div class="col-md-12 mb-4">
+          <div class="card">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="<%= entry.imageUrl || '/images/default-bookmark.jpg' %>" class="img-fluid rounded-start" alt="<%= entry.title %>" style="height: 100%; object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title"><%= entry.title %></h5>
+                  <p class="card-text"><%= entry.summary %></p>
+                  <p class="card-text"><small class="text-muted">Đã lưu vào ngày <%= new Date().toLocaleDateString('vi-VN') %></small></p>
+                  <a href="/wellness/entry/<%= entry._id %>" class="btn btn-primary">Đọc lại</a>
                 </div>
-            <% }) %>
+              </div>
+            </div>
+          </div>
         </div>
+      <% }); %>
     <% } else { %>
-        <div class="alert alert-info text-center">
-            <p>Bạn chưa lưu bài viết nào.</p>
-        </div>
+      <div class="text-center">
+        <p>Bạn chưa lưu bài viết nào.</p>
+        <a href="/wellness" class="btn btn-outline-primary">Khám phá các bài viết</a>
+      </div>
     <% } %>
+  </div>
 </div>
