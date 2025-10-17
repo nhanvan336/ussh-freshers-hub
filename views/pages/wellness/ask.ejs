@@ -3,16 +3,61 @@
   
   <div class="text-center mb-5">
     <h1><i class="fas fa-question-circle text-primary"></i> Hỏi đáp ẩn danh</h1>
-    <p class="lead text-muted">Mọi thông tin bạn chia sẻ đều được bảo mật.</p>
+    <p class="lead text-muted">Mọi câu hỏi đều đáng được lắng nghe. Mọi thông tin bạn chia sẻ đều được bảo mật.</p>
   </div>
   
-  <div class="card p-4 mx-auto" style="max-width: 700px;">
-    <form id="anonymous-question-form">
+  <div class="card p-4 mb-5 mx-auto" style="max-width: 800px;">
+    <form action="/wellness/ask" method="POST">
       <div class="mb-3">
-        <label for="question-content" class="form-label">Câu hỏi của bạn</label>
-        <textarea class="form-control" id="question-content" rows="5" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required></textarea>
+        <label for="question-content" class="form-label fw-bold">Gửi câu hỏi mới</label>
+        <textarea class="form-control" name="questionContent" rows="4" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Gửi câu hỏi</button>
+      <button type="submit" class="btn btn-primary">Gửi câu hỏi ẩn danh</button>
     </form>
+  </div>
+
+  <div class="discussion-list mx-auto" style="max-width: 800px;">
+    <h3 class="mb-4">Cùng nhau thảo luận</h3>
+    <% if (questions && questions.length > 0) { %>
+      <% questions.forEach(question => { %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <p class="card-text fs-5"><%= question.content %></p>
+            <small class="text-muted">Đã hỏi vào lúc <%= new Date(question.createdAt).toLocaleString('vi-VN') %></small>
+          </div>
+
+          <div class="replies-section px-3 pb-3">
+            <% if (question.replies && question.replies.length > 0) { %>
+              <% question.replies.forEach(reply => { %>
+                <div class="d-flex mt-3">
+                  <div class="flex-shrink-0">
+                    <img src="<%= reply.user.avatar || '/images/default-avatar.png' %>" alt="avatar" class="rounded-circle" width="40" height="40">
+                  </div>
+                  <div class="ms-3 flex-grow-1">
+                    <div class="bg-light p-2 rounded">
+                      <strong><%= reply.user.fullName %></strong>
+                      <p class="mb-0"><%= reply.content %></p>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="text-muted ps-3">Chưa có câu trả lời nào cho câu hỏi này.</p>
+            <% } %>
+          </div>
+
+          <% if (user) { %>
+            <div class="card-footer">
+              <form action="/wellness/ask/<%= question._id %>/reply" method="POST" class="d-flex">
+                <input type="text" class="form-control me-2" name="replyContent" placeholder="Viết câu trả lời của bạn..." required>
+                <button type="submit" class="btn btn-secondary btn-sm">Gửi</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p class="text-center text-muted">Chưa có câu hỏi nào được gửi.</p>
+    <% } %>
   </div>
 </div>
