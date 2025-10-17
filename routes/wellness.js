@@ -5,115 +5,59 @@ const { isAuthenticated, optionalAuth } = require('../middleware/auth');
 const { validateObjectId } = require('../middleware/validation');
 const WellnessEntry = require('../models/WellnessEntry');
 const User = require('../models/User');
+const AnonymousQuestion = require('../models/AnonymousQuestion'); // <--- THÊM DÒNG NÀY
 
-// Mental Wellness Corner main page
-router.get('/', optionalAuth, asyncHandler(async (req, res) => {
-  const { category = 'all', type = 'all', page = 1, q } = req.query;
-  const limit = 9;
-  const skip = (page - 1) * limit;
-  
-  // Build filter query
-  let filter = { isPublished: true };
-  
-  if (category && category !== 'all') {
-    filter.category = category;
-  }
-  
-  if (type && type !== 'all') {
-    filter.type = type;
-  }
-  
-  if (q) {
-    filter.$text = { $search: q };
-  }
-  
-  try {
-    const [entries, totalEntries, featuredEntries, categories, dailyQuote] = await Promise.all([
-      WellnessEntry.find(filter)
-        .sort({ isFeatured: -1, publishDate: -1 })
-        .skip(skip)
-        .limit(limit),
-      
-      WellnessEntry.countDocuments(filter),
-      
-      // Featured entries
-      WellnessEntry.find({ isFeatured: true, isPublished: true })
-        .sort({ publishDate: -1 })
-        .limit(3),
-      
-      // Category statistics
-      WellnessEntry.aggregate([
-        { $match: { isPublished: true } },
-        { $group: { _id: '$category', count: { $sum: 1 } } },
-        { $sort: { count: -1 } }
-      ]),
-      
-      // Daily motivational quote
-      WellnessEntry.findOne({
-        type: 'quote',
-        isPublished: true
-      }).sort({ publishDate: -1 })
-    ]);
-    
-    const totalPages = Math.ceil(totalEntries / limit);
-    
-    // Get user's mood entry for today if authenticated
-    let todayMoodEntry = null;
-    if (req.user) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      
-      const userMoodEntries = req.user.moodEntries.filter(entry => 
-        entry.date >= today && entry.date < tomorrow
-      );
-      
-      if (userMoodEntries.length > 0) {
-        todayMoodEntry = userMoodEntries[userMoodEntries.length - 1];
-      }
-    }
-    
-    res.render('pages/wellness/index', {
-      title: 'Tư vấn tâm lý - USSH Freshers\' Hub',
-      entries,
-      featuredEntries,
-      categories,
-      dailyQuote,
-      todayMoodEntry,
-      currentPage: parseInt(page),
-      totalPages,
-      totalEntries,
-      filters: { category, type, q },
-      user: req.user
-    });
-  } catch (error) {
-    console.error('Wellness page error:', error);
-    res.render('pages/wellness/index', {
-      title: 'Tư vấn tâm lý - USSH Freshers\' Hub',
-      entries: [],
-      featuredEntries: [],
-      categories: [],
-      dailyQuote: null,
-      todayMoodEntry: null,
-      currentPage: 1,
-      totalPages: 0,
-      totalEntries: 0,
-      filters: {},
-      error: 'Có lỗi xảy ra khi tải nội dung tư vấn',
-      user: req.user
-    });
-  }
-}));
-
-// BẮT ĐẦU BỔ SUNG
-// Trang Hỏi đáp ẩn danh
-router.get('/ask', (req, res) => {
-  res.render('pages/wellness/ask', {
-    title: 'Hỏi đáp ẩn danh - USSH Freshers\' Hub',
+// Mental Wellness Corner main page - ĐÃ ĐƠN GIẢN HÓA
+router.get('/', optionalAuth, (req, res) => {
+  res.render('pages/wellness/index', {
+    title: 'Tư vấn tâm lý - USSH Freshers\' Hub',
     user: req.user
   });
 });
+
+// BẮT ĐẦU SỬA VÀ BỔ SUNG LOGIC CHO HỎI ĐÁP
+// Trang Hỏi đáp ẩn danh (GET - Hiển thị form và danh sách câu hỏi)
+router.get('/ask', optionalAuth, asyncHandler(async (req, res) => {
+  const questions = await AnonymousQuestion.find()
+    .sort({ createdAt: -1 })
+    .populate('replies.user', 'fullName avatar'); // Lấy thông tin người trả lời
+
+  res.render('pages/wellness/ask', {
+    title: 'Hỏi đáp ẩn danh - USSH Freshers\' Hub',
+    questions: questions,
+    user: req.user
+  });
+}));
+
+// Xử lý khi người dùng gửi câu hỏi mới (POST)
+router.post('/ask', asyncHandler(async (req, res) => {
+  const { questionContent } = req.body;
+  if (!questionContent || questionContent.trim() === '') {
+    return res.redirect('/wellness/ask');
+  }
+  const newQuestion = new AnonymousQuestion({
+    content: questionContent
+  });
+  await newQuestion.save();
+  res.redirect('/wellness/ask');
+}));
+
+// Xử lý khi người dùng gửi câu trả lời (POST)
+router.post('/ask/:questionId/reply', isAuthenticated, asyncHandler(async (req, res) => {
+  const { replyContent } = req.body;
+  const question = await AnonymousQuestion.findById(req.params.questionId);
+
+  if (question && replyContent) {
+    question.replies.push({
+      user: req.user._id,
+      content: replyContent
+    });
+    question.isAnswered = true;
+    await question.save();
+  }
+  res.redirect('/wellness/ask');
+}));
+// KẾT THÚC SỬA VÀ BỔ SUNG
 
 // Trang danh sách bài viết
 router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
@@ -126,7 +70,6 @@ router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
     user: req.user
   });
 }));
-// KẾT THÚC BỔ SUNG
 
 // View wellness entry details
 router.get('/entry/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
