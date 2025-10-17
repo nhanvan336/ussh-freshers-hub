@@ -59,7 +59,7 @@
           </div>
           <div class="card-footer">
             <% if (user) { %>
-              <form action="/wellness/ask/<%= question._id %>/reply" method="POST" class="d-flex">
+              <form action="/wellness/ask/<%= question.id %>/reply" method="POST" class="d-flex">
                 <input type="text" class="form-control me-2" name="replyContent" placeholder="Viết câu trả lời của bạn..." required>
                 <button type="submit" class="btn btn-outline-primary btn-sm">Gửi</button>
               </form>
@@ -70,7 +70,7 @@
             <% } %>
           </div>
         </div>
-      <% }); %>
+        <% }); %>
     <% } else { %>
       <p class="text-center text-muted">Chưa có câu hỏi nào được gửi. Hãy là người đầu tiên đặt câu hỏi!</p>
     <% } %>
@@ -98,18 +98,12 @@
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
     const textarea = document.getElementById('auto-resize-textarea');
-
     if (textarea) {
-      // Hàm để điều chỉnh chiều cao
       const autoResize = () => {
-        textarea.style.height = 'auto'; // Reset chiều cao
-        textarea.style.height = textarea.scrollHeight + 'px'; // Đặt chiều cao mới bằng chiều cao nội dung
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
       };
-
-      // Gọi hàm khi người dùng gõ
       textarea.addEventListener('input', autoResize);
-
-      // Gọi lần đầu để đảm bảo nó đúng kích thước nếu có nội dung sẵn
       autoResize();
     }
   });
