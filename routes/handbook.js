@@ -290,7 +290,7 @@ router.get('/library-guide', (req, res) => {
     floors: [
       {
         floor: 'Tầng 1',
-        sections: ['Quầy tiếp nhận', 'Sách giáo trình', 'Báo chí tạp chí']
+        sections: ['Quầy tiếp nhận', 'Sách giáo trình', 'Báo chí,tạp chí']
       },
       {
         floor: 'Tầng 2',
@@ -312,7 +312,7 @@ router.get('/library-guide', (req, res) => {
       'Xuất trình thẻ sinh viên khi vào thư viện',
       'Giữ yên lặng trong khu vực đọc sách',
       'Không mang thức ăn vào thư viện',
-      'Tắt tiếng điện thoại hoặc để chế độ rùng',
+      'Tắt tiếng điện thoại hoặc để chế độ rung',
       'Trả sách đúng hạn để tránh phạt'
     ]
   };
