@@ -57,7 +57,6 @@ router.post('/ask/:questionId/reply', isAuthenticated, asyncHandler(async (req, 
   }
   res.redirect('/wellness/ask');
 }));
-// KẾT THÚC SỬA VÀ BỔ SUNG
 
 // Trang danh sách bài viết
 router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
@@ -70,6 +69,7 @@ router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
     user: req.user
   });
 }));
+// KẾT THÚC SỬA VÀ BỔ SUNG
 
 // View wellness entry details
 router.get('/entry/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
