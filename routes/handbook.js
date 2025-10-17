@@ -328,7 +328,7 @@ router.get('/library-guide', (req, res) => {
 router.get('/clubs', (req, res) => {
   res.render('pages/handbook/clubs', {
     title: 'Câu lạc bộ & Đoàn thể - USSH Freshers\' Hub',
-    imageUrl: '/images/club-diagram.png', // Sửa lại tên file ảnh
+    imageUrl: '/images/clubs.png', // Sửa lại tên file ảnh
     user: req.user
   });
 });
