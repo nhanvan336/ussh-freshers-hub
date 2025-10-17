@@ -71,7 +71,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
       },
       {
         id: 'events',
-        title: 'Tất cả sự kiện',
+        title: 'Sự kiện nổi bật',
         description: 'Xem toàn bộ các sự kiện của trường',
         icon: 'fas fa-calendar-check',
         url: '/handbook/events'
@@ -328,7 +328,7 @@ router.get('/library-guide', (req, res) => {
 router.get('/clubs', (req, res) => {
   res.render('pages/handbook/clubs', {
     title: 'Câu lạc bộ & Đoàn thể - USSH Freshers\' Hub',
-    imageUrl: '/images/clubs.png',
+    imageUrl: '/images/club-diagram.png', // Sửa lại tên file ảnh
     user: req.user
   });
 });
@@ -385,31 +385,35 @@ router.get('/policies', (req, res) => {
   });
 });
 
-// BẮT ĐẦU BỔ SUNG
-// List all events
-router.get('/events', optionalAuth, asyncHandler(async (req, res) => {
-  try {
-    const allEvents = await Event.find({
-      status: 'published',
-      isPublic: true
-    })
-      .sort({ startDate: -1 }); // Sắp xếp theo ngày bắt đầu, mới nhất lên đầu
-    
-    res.render('pages/handbook/events', {
-      title: 'Tất cả Sự kiện - USSH Freshers\' Hub',
-      events: allEvents,
-      user: req.user
-    });
-  } catch (error) {
-    console.error('Events list page error:', error);
-    res.status(500).render('pages/error', {
-      title: 'Lỗi - USSH Freshers\' Hub',
-      message: 'Có lỗi xảy ra khi tải danh sách sự kiện',
-      user: req.user
-    });
-  }
-}));
-// KẾT THÚC BỔ SUNG
+// ĐÃ SỬA LẠI ROUTE /EVENTS THÀNH DẠNG TĨNH
+router.get('/events', (req, res) => {
+  const featuredEvents = [
+    {
+      title: 'Cuộc thi Tài sắc Nhân văn - USSH Gralent 2025',
+      description: 'Tỏa sáng vẻ đẹp Nhân văn.',
+      imageUrl: '/images/event-ussh-gralent.png',
+      externalUrl: 'https://www.facebook.com/ussh.gralent/'
+    },
+    {
+      title: 'Chào mừng 80 năm truyền thống Đại học Văn Khoa và 30 năm phát triển của Trường Đại học Khoa học Xã hội và Nhân văn!',
+      description: '80 năm truyền thống - 30 năm phát triển.',
+      imageUrl: '/images/event-80-nam.png',
+      externalUrl: 'https://ussh.vnu.edu.vn/vi/news/su-kien-sap-dien-ra/chuoi-su-kien-chao-mung-ky-niem-80-nam-ngay-truyen-thong-truong-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-1945-2025-26339.html'
+    },
+    {
+      title: 'Talkshow Yêu lành đừng yêu liều',
+      description: 'Dự án lan tỏa những giá trị tích cực về sức khỏe tinh thần.',
+      imageUrl: '/images/event-yeu-lanh.png',
+      externalUrl: 'https://www.facebook.com/yeulanh.ussh/'
+    }
+  ];
+
+  res.render('pages/handbook/events', {
+    title: 'Sự kiện nổi bật - USSH Freshers\' Hub',
+    events: featuredEvents, // Sửa tên biến cho nhất quán
+    user: req.user
+  });
+});
 
 // View event details
 router.get('/event/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
