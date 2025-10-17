@@ -398,13 +398,13 @@ router.get('/events', (req, res) => {
       title: 'Chào mừng 80 năm truyền thống Đại học Văn Khoa và 30 năm phát triển của Trường Đại học Khoa học Xã hội và Nhân văn!',
       description: '80 năm truyền thống - 30 năm phát triển.',
       imageUrl: '/images/event-80-nam.png',
-      externalUrl: 'https://ussh.vnu.edu.vn/vi/news/su-kien-sap-dien-ra/chuoi-su-kien-chao-mung-ky-niem-80-nam-ngay-truyen-thong-truong-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-1945-2025-26339.html'
+      externalUrl: 'https://ussh.vnu.edu.vn/vi/ky-niem-80-nam/'
     },
     {
       title: 'Talkshow Yêu lành đừng yêu liều',
       description: 'Dự án lan tỏa những giá trị tích cực về sức khỏe tinh thần.',
       imageUrl: '/images/event-yeu-lanh.png',
-      externalUrl: 'https://www.facebook.com/yeulanh.ussh/'
+      externalUrl: 'https://www.facebook.com/ussh.vnu/posts/1266121835556801/'
     }
   ];
 
