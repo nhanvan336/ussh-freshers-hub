@@ -8,23 +8,66 @@
 
   <div class="row">
     <% if (entries && entries.length > 0) { %>
+      <%# Vòng lặp này sẽ hoạt động khi bạn có bài viết trong cơ sở dữ liệu %>
       <% entries.forEach(entry => { %>
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card h-100">
+          <div class="card h-100 shadow-sm">
             <a href="/wellness/entry/<%= entry._id %>">
               <img src="<%= entry.imageUrl || '/images/default-wellness.jpg' %>" class="card-img-top" alt="<%= entry.title %>">
             </a>
-            <div class="card-body">
+            <div class="card-body d-flex flex-column">
               <h5 class="card-title">
                 <a href="/wellness/entry/<%= entry._id %>" class="text-decoration-none text-dark"><%= entry.title %></a>
               </h5>
-              <p class="card-text text-muted"><%= entry.summary %></p>
+              <p class="card-text text-muted mb-4"><%= entry.summary %></p>
+              <a href="/wellness/entry/<%= entry._id %>" class="btn btn-outline-success mt-auto">Xem chi tiết</a>
             </div>
           </div>
         </div>
       <% }); %>
     <% } else { %>
-      <p class="text-center">Chưa có bài viết nào.</p>
+      <%# --- PHẦN BỔ SUNG CỦA TÔI BẮT ĐẦU TỪ ĐÂY --- %>
+      <%# Khi chưa có bài viết nào từ database, các bài viết mẫu sau sẽ được hiển thị %>
+
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" class="card-img-top" alt="Giảm căng thẳng">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <a href="https://vnexpress.net/10-cach-giam-cang-thang-cho-sinh-vien-3940379.html" target="_blank" class="text-decoration-none text-dark">10+ Phương Pháp Giảm Căng Thẳng Hiệu Quả Cho Sinh Viên</a>
+            </h5>
+            <p class="card-text text-muted mb-4">Khám phá những cách đơn giản để quản lý căng thẳng, từ tập thể dục, hít thở sâu đến kết nối bạn bè, giúp bạn tìm lại sự cân bằng.</p>
+            <a href="https://vnexpress.net/10-cach-giam-cang-thang-cho-sinh-vien-3940379.html" target="_blank" class="btn btn-success mt-auto">Xem chi tiết bên ngoài</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1576075796007-423c5e608f69?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" class="card-img-top" alt="Chống Burnout">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <a href="https://www.prudential.com.vn/vi/blog-nhip-song-khoe/bi-quyet-tranh-xa-hoi-chung-chay-sach/" target="_blank" class="text-decoration-none text-dark">Nhận Diện Hội Chứng "Cháy Sạch" (Burnout) Ở Sinh Viên</a>
+            </h5>
+            <p class="card-text text-muted mb-4">Cảm thấy cạn kiệt năng lượng và mất động lực? Bài viết này giúp bạn nhận diện các dấu hiệu và cung cấp giải pháp để vượt qua tình trạng này.</p>
+            <a href="https://www.prudential.com.vn/vi/blog-nhip-song-khoe/bi-quyet-tranh-xa-hoi-chung-chay-sach/" target="_blank" class="btn btn-success mt-auto">Xem chi tiết bên ngoài</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" class="card-img-top" alt="Kết bạn">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <a href="https://studentjob.vn/blog/cach-lam-quen-ban-moi-o-dai-hoc" target="_blank" class="text-decoration-none text-dark">Bí Quyết Kết Bạn Và Xây Dựng Mối Quan Hệ Ở Đại Học</a>
+            </h5>
+            <p class="card-text text-muted mb-4">Tìm hiểu những cách chủ động làm quen, tham gia câu lạc bộ và duy trì tình bạn để quãng đời sinh viên của bạn thêm phần ý nghĩa.</p>
+            <a href="https://studentjob.vn/blog/cach-lam-quen-ban-moi-o-dai-hoc" target="_blank" class="btn btn-success mt-auto">Xem chi tiết bên ngoài</a>
+          </div>
+        </div>
+      </div>
+
     <% } %>
   </div>
 </div>
