@@ -5,9 +5,9 @@ const { isAuthenticated, optionalAuth } = require('../middleware/auth');
 const { validateObjectId } = require('../middleware/validation');
 const WellnessEntry = require('../models/WellnessEntry');
 const User = require('../models/User');
-const AnonymousQuestion = require('../models/AnonymousQuestion'); // <--- THÊM DÒNG NÀY
+const AnonymousQuestion = require('../models/AnonymousQuestion');
 
-// Mental Wellness Corner main page - ĐÃ ĐƠN GIẢN HÓA
+// Mental Wellness Corner main page
 router.get('/', optionalAuth, (req, res) => {
   res.render('pages/wellness/index', {
     title: 'Tư vấn tâm lý - USSH Freshers\' Hub',
@@ -15,8 +15,7 @@ router.get('/', optionalAuth, (req, res) => {
   });
 });
 
-// BẮT ĐẦU SỬA VÀ BỔ SUNG LOGIC CHO HỎI ĐÁP
-// Trang Hỏi đáp ẩn danh (GET - Hiển thị form và danh sách câu hỏi CÓ PHÂN TRANG)
+// Trang Hỏi đáp ẩn danh (GET - có phân trang)
 router.get('/ask', optionalAuth, asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 5;
@@ -40,7 +39,7 @@ router.get('/ask', optionalAuth, asyncHandler(async (req, res) => {
   });
 }));
 
-// Xử lý khi người dùng gửi câu hỏi mới (POST)
+// Xử lý gửi câu hỏi mới (POST)
 router.post('/ask', asyncHandler(async (req, res) => {
   const { questionContent } = req.body;
   if (!questionContent || questionContent.trim() === '') {
@@ -53,7 +52,7 @@ router.post('/ask', asyncHandler(async (req, res) => {
   res.redirect('/wellness/ask');
 }));
 
-// Xử lý khi người dùng gửi câu trả lời (POST)
+// Xử lý gửi câu trả lời (POST)
 router.post('/ask/:questionId/reply', isAuthenticated, asyncHandler(async (req, res) => {
   const { replyContent } = req.body;
   const question = await AnonymousQuestion.findById(req.params.questionId);
@@ -69,6 +68,59 @@ router.post('/ask/:questionId/reply', isAuthenticated, asyncHandler(async (req, 
   res.redirect('/wellness/ask');
 }));
 
+// --- BẮT ĐẦU BỔ SUNG LOGIC LIKE/DISLIKE ---
+// Xử lý LIKE một câu hỏi
+router.post('/ask/:questionId/like', isAuthenticated, asyncHandler(async (req, res) => {
+    const question = await AnonymousQuestion.findById(req.params.questionId);
+    if (!question) return res.status(404).send('Không tìm thấy câu hỏi');
+
+    const userId = req.user._id;
+    const userLikeIndex = question.likes.findIndex(like => like.user.equals(userId));
+    const userDislikeIndex = question.dislikes.findIndex(dislike => dislike.user.equals(userId));
+
+    // Nếu đang dislike thì bỏ dislike
+    if (userDislikeIndex > -1) {
+        question.dislikes.splice(userDislikeIndex, 1);
+    }
+
+    // Nếu chưa like thì like, nếu đã like thì bỏ like
+    if (userLikeIndex === -1) {
+        question.likes.push({ user: userId });
+    } else {
+        question.likes.splice(userLikeIndex, 1);
+    }
+
+    await question.save();
+    res.redirect('/wellness/ask'); 
+}));
+
+// Xử lý DISLIKE một câu hỏi
+router.post('/ask/:questionId/dislike', isAuthenticated, asyncHandler(async (req, res) => {
+    const question = await AnonymousQuestion.findById(req.params.questionId);
+    if (!question) return res.status(404).send('Không tìm thấy câu hỏi');
+
+    const userId = req.user._id;
+    const userLikeIndex = question.likes.findIndex(like => like.user.equals(userId));
+    const userDislikeIndex = question.dislikes.findIndex(dislike => dislike.user.equals(userId));
+
+    // Nếu đang like thì bỏ like
+    if (userLikeIndex > -1) {
+        question.likes.splice(userLikeIndex, 1);
+    }
+
+    // Nếu chưa dislike thì dislike, nếu đã dislike thì bỏ dislike
+    if (userDislikeIndex === -1) {
+        question.dislikes.push({ user: userId });
+    } else {
+        question.dislikes.splice(userDislikeIndex, 1);
+    }
+
+    await question.save();
+    res.redirect('/wellness/ask');
+}));
+// --- KẾT THÚC BỔ SUNG ---
+
+
 // Trang danh sách bài viết
 router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
   const entries = await WellnessEntry.find({ isPublished: true })
@@ -80,7 +132,6 @@ router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
     user: req.user
   });
 }));
-// KẾT THÚC SỬA VÀ BỔ SUNG
 
 // View wellness entry details
 router.get('/entry/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
@@ -129,6 +180,7 @@ router.get('/entry/:id', optionalAuth, validateObjectId('id'), asyncHandler(asyn
   }
 }));
 
+// Các route còn lại được giữ nguyên...
 // Like/Unlike wellness entry
 router.post('/entry/:id/like',
   isAuthenticated,
@@ -295,7 +347,6 @@ router.post('/mood-tracker',
       
       const user = await User.findById(req.user._id);
       
-      // Check if user already has mood entry for today
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const tomorrow = new Date(today);
@@ -306,12 +357,10 @@ router.post('/mood-tracker',
       );
       
       if (existingMoodIndex > -1) {
-        // Update existing mood entry
         user.moodEntries[existingMoodIndex].mood = mood;
         user.moodEntries[existingMoodIndex].note = note.trim();
         user.moodEntries[existingMoodIndex].date = new Date();
       } else {
-        // Add new mood entry
         user.moodEntries.push({
           mood,
           note: note.trim(),
@@ -391,10 +440,6 @@ router.post('/anonymous-question',
         });
       }
       
-      // In a real implementation, you might save this to a separate model
-      // For now, we'll just simulate saving and return success
-      
-      // TODO: Implement AnonymousQuestion model and save logic
       console.log('Anonymous question received:', {
         question: question.trim(),
         category,
