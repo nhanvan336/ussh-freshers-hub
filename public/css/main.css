@@ -1799,3 +1799,8 @@ h1, h2, h3, h4, h5, h6 {
   position: relative; /* Đặt thuộc tính vị trí */
   z-index: 2;         /* Đảm bảo nó nằm ở lớp trên */
 }
+.article-card-img {
+  width: 100%;       /* Chiều rộng luôn bằng 100% khung chứa */
+  height: 200px;     /* Đặt một chiều cao cố định (bạn có thể thay đổi số 200) */
+  object-fit: cover; /* Đây là thuộc tính quan trọng nhất */
+}
