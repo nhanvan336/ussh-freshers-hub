@@ -7,77 +7,35 @@
   <div class="row text-center">
     <div class="col-lg-4 col-md-6 mb-4">
       <div class="card h-100">
-        <div class="card-body">
+        <div class="card-body d-flex flex-column">
           <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
           <h5 class="card-title">Hỏi đáp ẩn danh</h5>
-          <p class="card-text">Gửi câu hỏi của bạn và nhận câu trả lời từ các chuyên gia. Mọi thông tin đều được bảo mật.</p>
-          <a href="#anonymous-question-section" class="btn btn-primary">Gửi câu hỏi ngay</a>
+          <p class="card-text flex-grow-1">Gửi câu hỏi của bạn và nhận câu trả lời từ các chuyên gia. Mọi thông tin đều được bảo mật.</p>
+          <a href="/wellness/ask" class="btn btn-primary mt-auto">Gửi câu hỏi ngay</a>
         </div>
       </div>
     </div>
 
     <div class="col-lg-4 col-md-6 mb-4">
       <div class="card h-100">
-        <div class="card-body">
+        <div class="card-body d-flex flex-column">
           <i class="fas fa-newspaper fa-3x text-success mb-3"></i>
           <h5 class="card-title">Bài viết & Kiến thức</h5>
-          <p class="card-text">Khám phá các bài viết chuyên sâu về sức khỏe tinh thần, kỹ năng sống và phát triển bản thân.</p>
-          <a href="#latest-articles-section" class="btn btn-success">Xem bài viết mới</a>
+          <p class="card-text flex-grow-1">Khám phá các bài viết chuyên sâu về sức khỏe tinh thần, kỹ năng sống và phát triển bản thân.</p>
+          <a href="/wellness/articles" class="btn btn-success mt-auto">Xem tất cả bài viết</a>
         </div>
       </div>
     </div>
 
     <div class="col-lg-4 col-md-6 mb-4">
       <div class="card h-100">
-        <div class="card-body">
+        <div class="card-body d-flex flex-column">
           <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
           <h5 class="card-title">Hỗ trợ khẩn cấp</h5>
-          <p class="card-text">Nếu bạn đang gặp khủng hoảng, hãy liên hệ ngay với các nguồn hỗ trợ chuyên nghiệp.</p>
-          <a href="/wellness/crisis-resources" class="btn btn-danger">Tìm sự giúp đỡ</a>
+          <p class="card-text flex-grow-1">Nếu bạn đang gặp khủng hoảng, hãy liên hệ ngay với các nguồn hỗ trợ chuyên nghiệp.</p>
+          <a href="/wellness/crisis-resources" class="btn btn-danger mt-auto">Tìm sự giúp đỡ</a>
         </div>
       </div>
-    </div>
-  </div>
-
-  <hr class="my-5">
-
-  <div id="anonymous-question-section" class="mb-5">
-    <h2 class="text-center mb-4">Gửi câu hỏi ẩn danh</h2>
-    <div class="card p-4 mx-auto" style="max-width: 700px;">
-      <form id="anonymous-question-form">
-        <div class="mb-3">
-          <label for="question-content" class="form-label">Câu hỏi của bạn</label>
-          <textarea class="form-control" id="question-content" rows="4" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Gửi đi</button>
-      </form>
-    </div>
-  </div>
-
-  <hr class="my-5">
-
-  <div id="latest-articles-section">
-    <h2 class="text-center mb-4">Bài viết mới nhất</h2>
-    <div class="row">
-      <% if (entries && entries.length > 0) { %>
-        <% entries.forEach(entry => { %>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100">
-              <a href="/wellness/entry/<%= entry._id %>">
-                <img src="<%= entry.imageUrl || '/images/default-wellness.jpg' %>" class="card-img-top" alt="<%= entry.title %>" style="height: 200px; object-fit: cover;">
-              </a>
-              <div class="card-body">
-                <h5 class="card-title">
-                  <a href="/wellness/entry/<%= entry._id %>" class="text-decoration-none text-dark"><%= entry.title %></a>
-                </h5>
-                <p class="card-text text-muted"><%= entry.summary %></p>
-              </div>
-            </div>
-          </div>
-        <% }); %>
-      <% } else { %>
-        <p class="text-center">Chưa có bài viết nào.</p>
-      <% } %>
     </div>
   </div>
 </div>
