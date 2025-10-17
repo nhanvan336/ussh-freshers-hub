@@ -1,34 +1,29 @@
-<%# File: views/pages/wellness/crisis-resources.ejs %>
+<div class="container my-5">
+  <div class="page-header text-center mb-5 text-danger">
+    <h1><i class="fas fa-heartbeat me-2"></i>Nguồn hỗ trợ khẩn cấp</h1>
+    <p class="lead">Nếu bạn đang gặp khủng hoảng, đừng ngần ngại tìm kiếm sự giúp đỡ. Bạn không đơn độc.</p>
+  </div>
 
-<div class="page-header">
-    <div class="container">
-        <h1>Hỗ trợ Khẩn cấp</h1>
-        <p class="subtitle">Khi bạn cần sự giúp đỡ ngay lập tức, đừng ngần ngại liên hệ.</p>
-    </div>
-</div>
-
-<div class="container page-content">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="alert alert-warning" role="alert">
-                <h4 class="alert-heading">Bạn không đơn độc!</h4>
-                <p>Nếu bạn đang cảm thấy khủng hoảng, hãy tìm kiếm sự giúp đỡ. Dưới đây là các nguồn lực bạn có thể liên hệ ngay lập tức.</p>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <% if (crisisResources && crisisResources.length > 0) { %>
+        <% crisisResources.forEach(resource => { %>
+          <div class="card text-center mb-4">
+            <div class="card-header">
+              <h4 class="mb-0"><%= resource.name %></h4>
             </div>
-            
-            <% if (locals.crisisResources && crisisResources.length > 0) { %>
-                <ul class="list-group">
-                    <% crisisResources.forEach(resource => { %>
-                        <li class="list-group-item">
-                            <h5><%= resource.name %></h5>
-                            <p class="mb-1"><%= resource.description %></p>
-                            <p class="mb-1"><strong>Liên hệ:</strong> <%= resource.phone %></p>
-                            <small class="text-muted"><strong>Thời gian:</strong> <%= resource.available %></small>
-                        </li>
-                    <% }) %>
-                </ul>
-            <% } else { %>
-                <p>Không có thông tin hỗ trợ khẩn cấp.</p>
-            <% } %>
-        </div>
+            <div class="card-body">
+              <h5 class="card-title display-6"><i class="fas fa-phone-alt me-2"></i><%= resource.phone %></h5>
+              <p class="card-text"><%= resource.description %></p>
+            </div>
+            <div class="card-footer text-muted">
+              Hoạt động: <%= resource.available %>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="text-center">Không có thông tin về nguồn hỗ trợ.</p>
+      <% } %>
     </div>
+  </div>
 </div>
