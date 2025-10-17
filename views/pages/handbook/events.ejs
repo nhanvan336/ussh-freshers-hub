@@ -49,7 +49,11 @@
   }
   .card-event .card-img-top {
     height: 220px;
-    object-fit: cover;
+    object-fit: contain; /* <--- ĐÃ SỬA: Đảm bảo ảnh nằm gọn trong khung */
+    width: 100%;        /* <--- ĐÃ THÊM: Chiều rộng 100% của khung */
+    display: block;     /* <--- ĐÃ THÊM: Để dễ dàng căn giữa */
+    margin: 0 auto;     /* <--- ĐÃ THÊM: Căn giữa theo chiều ngang */
+    padding: 15px;      /* <--- ĐÃ THÊM: Tạo đệm quanh ảnh để không bị sát mép */
   }
   .card-event .card-footer {
     background-color: #f8f9fa;
