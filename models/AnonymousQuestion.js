@@ -25,6 +25,14 @@ const anonymousQuestionSchema = new mongoose.Schema({
     maxlength: 2000
   },
   replies: [replySchema],
+  // --- BẮT ĐẦU BỔ SUNG ---
+  likes: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  }],
+  dislikes: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  }],
+  // --- KẾT THÚC BỔ SUNG ---
   isAnswered: {
     type: Boolean,
     default: false
