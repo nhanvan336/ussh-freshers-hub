@@ -1,82 +1,83 @@
 <div class="container my-5">
-  <div class="text-center p-5 rounded-3" style="background-color: #28a745; color: white;">
+  <div class="text-center p-5 mb-5 rounded-3" style="background-color: #28a745; color: white;">
     <h1 class="display-4">Góc Sức khỏe</h1>
     <p class="lead">Chăm sóc sức khỏe tinh thần cho một khởi đầu vững chắc và trọn vẹn.</p>
   </div>
 
-  <div class="row mt-5">
-    <div class="col-lg-8">
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Hỏi đáp ẩn danh</h5>
-        </div>
+  <div class="row text-center">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card h-100">
         <div class="card-body">
-          <p class="card-text">Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây. Mọi thông tin đều được bảo mật.</p>
-          <form id="anonymous-question-form">
-            <div class="mb-3">
-              <textarea class="form-control" id="question-content" rows="3" placeholder="Nhập câu hỏi của bạn..." required></textarea>
-              <div class="form-text">Trường này là bắt buộc</div>
-            </div>
-            <button type="submit" class="btn btn-primary">Gửi câu hỏi</button>
-          </form>
+          <i class="fas fa-question-circle fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Hỏi đáp ẩn danh</h5>
+          <p class="card-text">Gửi câu hỏi của bạn và nhận câu trả lời từ các chuyên gia. Mọi thông tin đều được bảo mật.</p>
+          <a href="#anonymous-question-section" class="btn btn-primary">Gửi câu hỏi ngay</a>
         </div>
-      </div>
-      
-      <h3 class="mb-4">Bài viết mới nhất</h3>
-      <div class="row">
-        <% if (entries && entries.length > 0) { %>
-          <% entries.forEach(entry => { %>
-            <div class="col-md-6 mb-4">
-              <div class="card h-100">
-                <% if (entry.imageUrl) { %>
-                  <img src="<%= entry.imageUrl %>" class="card-img-top" alt="<%= entry.title %>" style="height: 200px; object-fit: cover;">
-                <% } %>
-                <div class="card-body">
-                  <h5 class="card-title"><%= entry.title %></h5>
-                  <p class="card-text text-muted"><%= entry.summary %></p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                  <a href="/wellness/entry/<%= entry._id %>" class="btn btn-outline-primary">Đọc thêm</a>
-                </div>
-              </div>
-            </div>
-          <% }); %>
-        <% } else { %>
-          <p>Chưa có bài viết nào.</p>
-        <% } %>
       </div>
     </div>
 
-    <div class="col-lg-4">
-      <% if (dailyQuote) { %>
-        <div class="card text-white bg-secondary mb-4">
-          <div class="card-body">
-            <blockquote class="blockquote mb-0">
-              <p><i class="fas fa-quote-left"></i> <%= dailyQuote.content %> <i class="fas fa-quote-right"></i></p>
-              <% if (dailyQuote.author) { %>
-                <footer class="blockquote-footer text-white-50"><%= dailyQuote.author %></footer>
-              <% } %>
-            </blockquote>
-          </div>
-        </div>
-      <% } %>
-
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="mb-0">Các chủ đề</h5>
-        </div>
-        <div class="list-group list-group-flush">
-          <a href="/wellness" class="list-group-item list-group-item-action">Tất cả</a>
-          <% if (categories && categories.length > 0) { %>
-            <% categories.forEach(cat => { %>
-              <a href="/wellness?category=<%= cat._id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %>
-                <span class="badge bg-primary rounded-pill"><%= cat.count %></span>
-              </a>
-            <% }); %>
-          <% } %>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <i class="fas fa-newspaper fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Bài viết & Kiến thức</h5>
+          <p class="card-text">Khám phá các bài viết chuyên sâu về sức khỏe tinh thần, kỹ năng sống và phát triển bản thân.</p>
+          <a href="#latest-articles-section" class="btn btn-success">Xem bài viết mới</a>
         </div>
       </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
+          <h5 class="card-title">Hỗ trợ khẩn cấp</h5>
+          <p class="card-text">Nếu bạn đang gặp khủng hoảng, hãy liên hệ ngay với các nguồn hỗ trợ chuyên nghiệp.</p>
+          <a href="/wellness/crisis-resources" class="btn btn-danger">Tìm sự giúp đỡ</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div id="anonymous-question-section" class="mb-5">
+    <h2 class="text-center mb-4">Gửi câu hỏi ẩn danh</h2>
+    <div class="card p-4 mx-auto" style="max-width: 700px;">
+      <form id="anonymous-question-form">
+        <div class="mb-3">
+          <label for="question-content" class="form-label">Câu hỏi của bạn</label>
+          <textarea class="form-control" id="question-content" rows="4" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Gửi đi</button>
+      </form>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <div id="latest-articles-section">
+    <h2 class="text-center mb-4">Bài viết mới nhất</h2>
+    <div class="row">
+      <% if (entries && entries.length > 0) { %>
+        <% entries.forEach(entry => { %>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+              <a href="/wellness/entry/<%= entry._id %>">
+                <img src="<%= entry.imageUrl || '/images/default-wellness.jpg' %>" class="card-img-top" alt="<%= entry.title %>" style="height: 200px; object-fit: cover;">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="/wellness/entry/<%= entry._id %>" class="text-decoration-none text-dark"><%= entry.title %></a>
+                </h5>
+                <p class="card-text text-muted"><%= entry.summary %></p>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="text-center">Chưa có bài viết nào.</p>
+      <% } %>
     </div>
   </div>
 </div>
