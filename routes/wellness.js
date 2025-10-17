@@ -106,6 +106,28 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
   }
 }));
 
+// BẮT ĐẦU BỔ SUNG
+// Trang Hỏi đáp ẩn danh
+router.get('/ask', (req, res) => {
+  res.render('pages/wellness/ask', {
+    title: 'Hỏi đáp ẩn danh - USSH Freshers\' Hub',
+    user: req.user
+  });
+});
+
+// Trang danh sách bài viết
+router.get('/articles', optionalAuth, asyncHandler(async (req, res) => {
+  const entries = await WellnessEntry.find({ isPublished: true })
+    .sort({ publishDate: -1 });
+    
+  res.render('pages/wellness/articles', {
+    title: 'Bài viết & Kiến thức - USSH Freshers\' Hub',
+    entries,
+    user: req.user
+  });
+}));
+// KẾT THÚC BỔ SUNG
+
 // View wellness entry details
 router.get('/entry/:id', optionalAuth, validateObjectId('id'), asyncHandler(async (req, res) => {
   try {
