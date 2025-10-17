@@ -3,14 +3,14 @@
   
   <div class="text-center mb-5">
     <h1><i class="fas fa-question-circle text-primary"></i> Hỏi đáp ẩn danh</h1>
-    <p class="lead text-muted">Mọi câu hỏi đều đáng được lắng nghe. Mọi thông tin bạn chia sẻ đều được bảo mật.</p>
+    <p class="lead text-muted">Mọi câu hỏi đều đáng được lắng nghe, mọi thông tin bạn chia sẻ đều được bảo mật.</p>
   </div>
   
   <div class="card p-4 mb-5 mx-auto shadow-sm" style="max-width: 800px;">
     <h5 class="card-title mb-3">Gửi câu hỏi mới</h5>
     <form action="/wellness/ask" method="POST">
       <div class="mb-3">
-        <textarea id="auto-resize-textarea" class="form-control" name="questionContent" rows="3" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required style="font-size: 1.1rem;"></textarea>
+        <textarea id="auto-resize-textarea" class="form-control" name="questionContent" rows="3" placeholder="Bạn có điều gì băn khoăn về sức khỏe? Hãy chia sẻ ở đây..." required style="font-size: 1.1rem;"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">
         <i class="fas fa-paper-plane me-2"></i>Gửi câu hỏi ẩn danh
@@ -24,16 +24,25 @@
     <% if (questions && questions.length > 0) { %>
       <% questions.forEach(question => { %>
         <div class="card mb-4 bg-light">
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-              <i class="fas fa-user-secret fa-2x text-muted me-3"></i>
-              <div>
-                <strong>Người hỏi ẩn danh #<%= question.anonymousId %></strong>
-                <div class="text-muted small">
-                  <%= new Date(question.createdAt).toLocaleString('vi-VN') %>
-                </div>
+          <div class="card-header bg-white d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                  <i class="fas fa-user-secret fa-2x text-muted me-3"></i>
+                  <div>
+                      <strong>Người hỏi ẩn danh #<%= question.anonymousId %></strong>
+                      <div class="text-muted small">
+                          <%= new Date(question.createdAt).toLocaleString('vi-VN') %>
+                      </div>
+                  </div>
               </div>
-            </div>
+              <% if (user && user.isAdmin) { %>
+                  <form action="/wellness/ask/<%= question.id %>/delete?page=<%= currentPage %>" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?');">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">
+                          <i class="fas fa-trash-alt"></i>
+                      </button>
+                  </form>
+              <% } %>
+          </div>
+          <div class="card-body">
             <p class="card-text fs-5 ps-1"><%= question.content %></p>
             
             <div class="d-flex align-items-center mt-3 text-muted small">
@@ -110,18 +119,7 @@
     <% if (totalPages > 1) { %>
       <nav aria-label="Page navigation" class="mt-4">
         <ul class="pagination justify-content-center">
-          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-            <a class="page-link" href="/wellness/ask?page=<%= currentPage - 1 %>">Trước</a>
-          </li>
-          <% for (let i = 1; i <= totalPages; i++) { %>
-            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-              <a class="page-link" href="/wellness/ask?page=<%= i %>"><%= i %></a>
-            </li>
-          <% } %>
-          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-            <a class="page-link" href="/wellness/ask?page=<%= currentPage + 1 %>">Sau</a>
-          </li>
-        </ul>
+          </ul>
       </nav>
     <% } %>
   </div>
