@@ -1,1 +1,30 @@
+<div class="container my-5">
+  <a href="/wellness" class="back-link mb-4 d-inline-block"><i class="fas fa-arrow-left"></i> Quay lại Góc sức khỏe</a>
 
+  <div class="text-center mb-5">
+    <h1><i class="fas fa-newspaper text-success"></i> Bài viết & Kiến thức</h1>
+    <p class="lead text-muted">Khám phá các bài viết chuyên sâu về sức khỏe tinh thần.</p>
+  </div>
+
+  <div class="row">
+    <% if (entries && entries.length > 0) { %>
+      <% entries.forEach(entry => { %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <a href="/wellness/entry/<%= entry._id %>">
+              <img src="<%= entry.imageUrl || '/images/default-wellness.jpg' %>" class="card-img-top" alt="<%= entry.title %>">
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="/wellness/entry/<%= entry._id %>" class="text-decoration-none text-dark"><%= entry.title %></a>
+              </h5>
+              <p class="card-text text-muted"><%= entry.summary %></p>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p class="text-center">Chưa có bài viết nào.</p>
+    <% } %>
+  </div>
+</div>
