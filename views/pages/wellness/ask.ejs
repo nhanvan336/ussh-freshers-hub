@@ -1,16 +1,25 @@
+<style>
+  /* Add this style to make the discussion cards stand out */
+  .discussion-wrapper {
+    background-color: #f8f9fa; /* A light grey background */
+    padding: 2rem;
+    border-radius: .5rem;
+  }
+</style>
+
 <div class="container my-5">
   <a href="/wellness" class="back-link mb-4 d-inline-block"><i class="fas fa-arrow-left"></i> Quay lại Góc sức khỏe</a>
   
   <div class="text-center mb-5">
     <h1><i class="fas fa-question-circle text-primary"></i> Hỏi đáp ẩn danh</h1>
-    <p class="lead text-muted">Mọi câu hỏi đều đáng được lắng nghe, mọi thông tin bạn chia sẻ đều được bảo mật.</p>
+    <p class="lead text-muted">Mọi câu hỏi đều đáng được lắng nghe. Mọi thông tin bạn chia sẻ đều được bảo mật.</p>
   </div>
   
   <div class="card p-4 mb-5 mx-auto shadow-sm" style="max-width: 800px;">
     <h5 class="card-title mb-3">Gửi câu hỏi mới</h5>
     <form action="/wellness/ask" method="POST">
       <div class="mb-3">
-        <textarea id="auto-resize-textarea" class="form-control" name="questionContent" rows="3" placeholder="Bạn có điều gì băn khoăn về sức khỏe? Hãy chia sẻ ở đây..." required style="font-size: 1.1rem;"></textarea>
+        <textarea id="auto-resize-textarea" class="form-control" name="questionContent" rows="3" placeholder="Bạn có điều gì băn khoăn? Hãy chia sẻ ở đây..." required style="font-size: 1.1rem;"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">
         <i class="fas fa-paper-plane me-2"></i>Gửi câu hỏi ẩn danh
@@ -18,12 +27,13 @@
     </form>
   </div>
 
-  <div class="discussion-list mx-auto" style="max-width: 800px;">
-    <h3 class="mb-4">Cùng nhau thảo luận</h3>
+  <div class="discussion-wrapper mx-auto" style="max-width: 800px;">
+    <h3 class="mb-4 text-center">Cùng nhau thảo luận</h3>
+    
     <% if (questions && questions.length > 0) { %>
       <% questions.forEach(question => { %>
-        <div class="card mb-4">
-          <div class="card-header bg-light">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-white">
             <div class="d-flex align-items-center">
               <i class="fas fa-user-secret fa-2x text-muted me-3"></i>
               <div>
@@ -37,7 +47,8 @@
           <div class="card-body">
             <p class="card-text fs-5"><%= question.content %></p>
           </div>
-          <div class="replies-section px-4 pb-3">
+
+          <div class="card-body pt-0">
             <% if (question.replies && question.replies.length > 0) { %>
               <h6 class="mb-3">Các câu trả lời:</h6>
               <% question.replies.forEach(reply => { %>
@@ -57,6 +68,7 @@
               <p class="text-muted small ps-1">Chưa có câu trả lời nào.</p>
             <% } %>
           </div>
+
           <div class="card-footer">
             <% if (user) { %>
               <form action="/wellness/ask/<%= question.id %>/reply" method="POST" class="d-flex">
@@ -70,13 +82,13 @@
             <% } %>
           </div>
         </div>
-        <% }); %>
+      <% }); %>
     <% } else { %>
       <p class="text-center text-muted">Chưa có câu hỏi nào được gửi. Hãy là người đầu tiên đặt câu hỏi!</p>
     <% } %>
 
     <% if (totalPages > 1) { %>
-      <nav aria-label="Page navigation">
+      <nav aria-label="Page navigation" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
             <a class="page-link" href="/wellness/ask?page=<%= currentPage - 1 %>">Trước</a>
