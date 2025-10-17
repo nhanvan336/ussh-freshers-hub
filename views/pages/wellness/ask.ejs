@@ -23,9 +23,9 @@
     
     <% if (questions && questions.length > 0) { %>
       <% questions.forEach(question => { %>
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-white">
-            <div class="d-flex align-items-center">
+        <div class="card mb-4 bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
               <i class="fas fa-user-secret fa-2x text-muted me-3"></i>
               <div>
                 <strong>Người hỏi ẩn danh #<%= question.anonymousId %></strong>
@@ -34,12 +34,10 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <p class="card-text fs-5"><%= question.content %></p>
+            <p class="card-text fs-5 ps-1"><%= question.content %></p>
           </div>
 
-          <div class="card-body pt-0">
+          <div class="mx-3 mb-3 bg-white p-3 rounded">
             <% if (question.replies && question.replies.length > 0) { %>
               <h6 class="mb-3">Các câu trả lời:</h6>
               <% question.replies.forEach(reply => { %>
@@ -48,7 +46,7 @@
                     <img src="<%= reply.user.avatar || '/images/default-avatar.png' %>" alt="avatar" class="rounded-circle" width="40" height="40">
                   </div>
                   <div class="ms-3 flex-grow-1">
-                    <div class="bg-light p-2 rounded">
+                    <div>
                       <strong><%= reply.user.fullName %></strong>
                       <p class="mb-0 small"><%= reply.content %></p>
                     </div>
@@ -56,11 +54,10 @@
                 </div>
               <% }); %>
             <% } else { %>
-              <p class="text-muted small ps-1">Chưa có câu trả lời nào.</p>
+              <p class="text-muted small ps-1 mb-0">Chưa có câu trả lời nào.</p>
             <% } %>
-          </div>
 
-          <div class="card-footer">
+            <hr class="my-3">
             <% if (user) { %>
               <form action="/wellness/ask/<%= question.id %>/reply" method="POST" class="d-flex">
                 <input type="text" class="form-control me-2" name="replyContent" placeholder="Viết câu trả lời của bạn..." required>
