@@ -16,15 +16,26 @@ router.get('/', optionalAuth, (req, res) => {
 });
 
 // BẮT ĐẦU SỬA VÀ BỔ SUNG LOGIC CHO HỎI ĐÁP
-// Trang Hỏi đáp ẩn danh (GET - Hiển thị form và danh sách câu hỏi)
+// Trang Hỏi đáp ẩn danh (GET - Hiển thị form và danh sách câu hỏi CÓ PHÂN TRANG)
 router.get('/ask', optionalAuth, asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 5;
+  const skip = (page - 1) * limit;
+
   const questions = await AnonymousQuestion.find()
     .sort({ createdAt: -1 })
-    .populate('replies.user', 'fullName avatar'); // Lấy thông tin người trả lời
+    .skip(skip)
+    .limit(limit)
+    .populate('replies.user', 'fullName avatar');
+
+  const totalQuestions = await AnonymousQuestion.countDocuments();
+  const totalPages = Math.ceil(totalQuestions / limit);
 
   res.render('pages/wellness/ask', {
     title: 'Hỏi đáp ẩn danh - USSH Freshers\' Hub',
     questions: questions,
+    currentPage: page,
+    totalPages: totalPages,
     user: req.user
   });
 }));
