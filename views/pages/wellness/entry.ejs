@@ -1,0 +1,35 @@
+<%# File: views/pages/wellness/entry.ejs %>
+
+<div class="container page-content entry-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <article class="wellness-entry-content">
+                <header class="entry-header">
+                    <a href="/wellness" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Góc Sức khỏe</a>
+                    <p class="entry-category"><%= entry.category %></p>
+                    <h1><%= entry.title %></h1>
+                    <p class="text-muted">Ngày đăng: <%= moment(entry.publishDate).format('DD/MM/YYYY') %></p>
+                </header>
+                
+                <% if (entry.coverImage) { %>
+                    <img src="<%= entry.coverImage %>" alt="<%= entry.title %>" class="img-fluid rounded mb-4">
+                <% } %>
+                
+                <div class="entry-body">
+                    <%- entry.content %>
+                </div>
+
+                <footer class="entry-footer mt-5">
+                    <div class="entry-actions">
+                        <button class="btn btn-outline-secondary" id="like-btn" data-id="<%= entry._id %>">
+                            <i class="far fa-heart"></i> Thích (<span id="likes-count"><%= entry.likes.length %></span>)
+                        </button>
+                        <button class="btn btn-outline-secondary" id="bookmark-btn" data-id="<%= entry._id %>">
+                            <i class="far fa-bookmark"></i> Lưu (<span id="bookmarks-count"><%= entry.bookmarks.length %></span>)
+                        </button>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>
