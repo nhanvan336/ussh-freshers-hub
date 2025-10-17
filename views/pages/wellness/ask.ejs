@@ -37,14 +37,31 @@
             <p class="card-text fs-5 ps-1"><%= question.content %></p>
             
             <div class="d-flex align-items-center mt-3 text-muted small">
-              <a href="#" class="text-muted text-decoration-none me-3">
-                <i class="fas fa-thumbs-up"></i> Thích (<%= question.likes.length %>)
-              </a>
-              <a href="#" class="text-muted text-decoration-none me-3">
-                <i class="fas fa-thumbs-down"></i> Không thích (<%= question.dislikes.length %>)
-              </a>
-              <a href="#" class="text-muted text-decoration-none">
-                <i class="fas fa-reply"></i> Trả lời
+              <% if (user) { %>
+                <% 
+                  const hasLiked = question.likes.some(like => like.user.equals(user._id));
+                  const hasDisliked = question.dislikes.some(dislike => dislike.user.equals(user._id));
+                %>
+                <form action="/wellness/ask/<%= question.id %>/like?page=<%= currentPage %>" method="POST" class="me-3">
+                  <button type="submit" class="btn btn-link text-decoration-none p-0 d-flex align-items-center <%= hasLiked ? 'text-primary' : 'text-muted' %>">
+                    <i class="fas fa-thumbs-up me-1"></i> 
+                    <span>Thích (<%= question.likes.length %>)</span>
+                  </button>
+                </form>
+                <form action="/wellness/ask/<%= question.id %>/dislike?page=<%= currentPage %>" method="POST" class="me-3">
+                  <button type="submit" class="btn btn-link text-decoration-none p-0 d-flex align-items-center <%= hasDisliked ? 'text-danger' : 'text-muted' %>">
+                    <i class="fas fa-thumbs-down me-1"></i> 
+                    <span>Không thích (<%= question.dislikes.length %>)</span>
+                  </button>
+                </form>
+              <% } else { %>
+                <span class="me-3"><i class="fas fa-thumbs-up me-1"></i> Thích (<%= question.likes.length %>)</span>
+                <span class="me-3"><i class="fas fa-thumbs-down me-1"></i> Không thích (<%= question.dislikes.length %>)</span>
+              <% } %>
+              
+              <a href="#reply-form-<%= question.id %>" class="text-muted text-decoration-none d-flex align-items-center">
+                <i class="fas fa-reply me-1"></i> 
+                <span>Trả lời</span>
               </a>
             </div>
             </div>
@@ -71,7 +88,7 @@
 
             <hr class="my-3">
             <% if (user) { %>
-              <form action="/wellness/ask/<%= question.id %>/reply" method="POST" class="d-flex">
+              <form id="reply-form-<%= question.id %>" action="/wellness/ask/<%= question.id %>/reply" method="POST" class="d-flex">
                 <input type="text" class="form-control me-2" name="replyContent" placeholder="Viết câu trả lời của bạn..." required>
                 <button type="submit" class="btn btn-outline-primary btn-sm">Gửi</button>
               </form>
