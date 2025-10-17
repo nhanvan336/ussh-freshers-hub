@@ -4,7 +4,7 @@
     <div class="container text-center">
         <h1>Góc Sức khỏe</h1>
         <p class="subtitle">Chăm sóc sức khỏe tinh thần cho một khởi đầu vững chắc và trọn vẹn.</p>
-        <% if (dailyQuote) { %>
+        <% if (locals.dailyQuote) { %>
             <blockquote class="daily-quote">
                 "<%= dailyQuote.content %>"
                 <% if (dailyQuote.author) { %>
@@ -24,10 +24,10 @@
                 <% if (isAuthenticated) { %>
                     <div class="sidebar-widget mood-tracker-widget">
                         <h4><i class="far fa-smile-beam"></i> Hôm nay bạn thế nào?</h4>
-                        <% if (todayMoodEntry) { %>
+                        <% if (locals.todayMoodEntry) { %>
                             <div class="text-center p-3">
                                 <p>Bạn đã ghi nhận tâm trạng hôm nay là:</p>
-                                <span class="mood-icon selected" title="<%= todayMoodEntry.mood %>"><i class="fas fa-3x fa-<%= todayMoodEntry.mood === 'happy' ? 'smile' : (todayMoodEntry.mood === 'sad' ? 'frown' : 'meh') %>"></i></span>
+                                <span class="mood-icon selected" title="<%= todayMoodEntry.mood %>"><i class="fas fa-3x fa-<%= { 'very-happy': 'laugh-beam', 'happy': 'smile', 'neutral': 'meh', 'sad': 'frown', 'very-sad': 'sad-tear' }[todayMoodEntry.mood] %>"></i></span>
                                 <p class="small mt-2">Bạn có thể cập nhật lại bất cứ lúc nào.</p>
                             </div>
                         <% } else { %>
@@ -58,7 +58,7 @@
         <!-- Cột Phải: Danh sách bài viết -->
         <div class="col-lg-9">
             <!-- Bài viết nổi bật -->
-            <% if (typeof featuredEntries !== 'undefined' && featuredEntries.length > 0) { %>
+            <% if (locals.featuredEntries && featuredEntries.length > 0) { %>
                 <div class="featured-section mb-5">
                     <h3 class="section-title">Dành cho bạn</h3>
                     <div class="row">
@@ -66,7 +66,7 @@
                             <div class="col-md-4">
                                 <div class="card wellness-card featured-card">
                                      <a href="/wellness/entry/<%= entry._id %>">
-                                        <div class="card-img-top" style="background-image: url('<%= entry.coverImage || 'https://placehold.co/600x400/FFF1D0/A16207?text=USSH' %>');"></div>
+                                        <div class="card-img-top" style="background-image: url('<%= entry.coverImage || `https://placehold.co/600x400/FFF1D0/A16207?text=${encodeURIComponent(entry.category)}` %>');"></div>
                                      </a>
                                     <div class="card-body">
                                         <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
@@ -80,30 +80,26 @@
 
             <!-- Danh sách bài viết -->
             <h3 class="section-title">Bài viết mới nhất</h3>
-            <% if (typeof entries !== 'undefined' && entries.length > 0) { %>
-                <div class="row row-cols-1 row-cols-md-2 g-4">
-                    <% entries.forEach(entry => { %>
-                        <div class="col">
-                             <div class="card wellness-card">
-                                 <div class="row g-0">
-                                     <div class="col-md-4">
-                                         <a href="/wellness/entry/<%= entry._id %>">
-                                             <div class="card-img-side" style="background-image: url('<%= entry.coverImage || 'https://placehold.co/400x400/FFF1D0/A16207?text=USSH' %>');"></div>
-                                         </a>
-                                     </div>
-                                     <div class="col-md-8">
-                                         <div class="card-body">
-                                             <span class="card-category"><%= entry.category %></span>
-                                             <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
-                                             <p class="card-text"><%= entry.summary || entry.content.substring(0, 100) %>...</p>
-                                             <small class="text-muted"><%= moment(entry.publishDate).format('DD/MM/YYYY') %></small>
-                                         </div>
-                                     </div>
+            <% if (locals.entries && entries.length > 0) { %>
+                <% entries.forEach(entry => { %>
+                     <div class="card wellness-card list-item-card mb-3">
+                         <div class="row g-0">
+                             <div class="col-md-4">
+                                 <a href="/wellness/entry/<%= entry._id %>">
+                                     <div class="card-img-side" style="background-image: url('<%= entry.coverImage || `https://placehold.co/400x400/FFF1D0/A16207?text=${encodeURIComponent(entry.category)}` %>');"></div>
+                                 </a>
+                             </div>
+                             <div class="col-md-8">
+                                 <div class="card-body">
+                                     <span class="card-category"><%= entry.category %></span>
+                                     <h5 class="card-title"><a href="/wellness/entry/<%= entry._id %>"><%= entry.title %></a></h5>
+                                     <p class="card-text text-muted"><%= entry.summary || (entry.content ? entry.content.substring(0, 100) : '') %>...</p>
+                                     <small class="text-muted"><%= moment(entry.publishDate).format('DD/MM/YYYY') %></small>
                                  </div>
-                            </div>
-                        </div>
-                    <% }) %>
-                </div>
+                             </div>
+                         </div>
+                    </div>
+                <% }) %>
             <% } else if (!locals.error) { %>
                 <div class="alert alert-info text-center">
                     <p>Chưa có bài viết nào trong chuyên mục này.</p>
@@ -111,7 +107,7 @@
             <% } %>
 
             <!-- Phân trang -->
-            <% if (totalPages > 1) { %>
+            <% if (locals.totalPages && totalPages > 1) { %>
                 <nav class="mt-5 d-flex justify-content-center">
                     <ul class="pagination">
                         <% for (let i = 1; i <= totalPages; i++) { %>
@@ -123,4 +119,3 @@
         </div>
     </div>
 </div>
-
