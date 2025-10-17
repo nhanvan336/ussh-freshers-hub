@@ -1,0 +1,34 @@
+<%# File: views/pages/wellness/crisis-resources.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Hỗ trợ Khẩn cấp</h1>
+        <p class="subtitle">Khi bạn cần sự giúp đỡ ngay lập tức, đừng ngần ngại liên hệ.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Bạn không đơn độc!</h4>
+                <p>Nếu bạn đang cảm thấy khủng hoảng, hãy tìm kiếm sự giúp đỡ. Dưới đây là các nguồn lực bạn có thể liên hệ ngay lập tức.</p>
+            </div>
+            
+            <% if (locals.crisisResources && crisisResources.length > 0) { %>
+                <ul class="list-group">
+                    <% crisisResources.forEach(resource => { %>
+                        <li class="list-group-item">
+                            <h5><%= resource.name %></h5>
+                            <p class="mb-1"><%= resource.description %></p>
+                            <p class="mb-1"><strong>Liên hệ:</strong> <%= resource.phone %></p>
+                            <small class="text-muted"><strong>Thời gian:</strong> <%= resource.available %></small>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>Không có thông tin hỗ trợ khẩn cấp.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
