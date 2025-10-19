@@ -45,13 +45,15 @@
             <div class="list-group">
                 <% if (stickyPosts && stickyPosts.length > 0 && currentPage === 1 && !filters.q) { %>
                     <% stickyPosts.forEach(post => { %>
-                        <%- include('../partials/_postListItem', { post: post, isSticky: true }) %>
+                        <%# SỬA LỖI ĐƯỜNG DẪN: ../../partials/ %>
+                        <%- include('../../partials/_postListItem', { post: post, isSticky: true }) %>
                     <% }); %>
                 <% } %>
                 
                 <% if (posts && posts.length > 0) { %>
                     <% posts.forEach(post => { %>
-                        <%- include('../partials/_postListItem', { post: post, isSticky: false }) %>
+                        <%# SỬA LỖI ĐƯỜNG DẪN: ../../partials/ %>
+                        <%- include('../../partials/_postListItem', { post: post, isSticky: false }) %>
                     <% }); %>
                 <% } else if ((!stickyPosts || stickyPosts.length === 0) && (!posts || posts.length === 0)) { %>
                     <div class="text-center p-5 border rounded bg-light">
@@ -62,7 +64,8 @@
             </div>
 
             <!-- Pagination -->
-            <%- include('../partials/pagination', {
+            <%# SỬA LỖI ĐƯỜNG DẪN: ../../partials/ %>
+            <%- include('../../partials/pagination', {
                 currentPage: currentPage,
                 totalPages: totalPages,
                 baseUrl: `/forum?sort=${filters.sort}&category=${filters.category}&q=${filters.q || ''}`
@@ -71,7 +74,9 @@
 
         <!-- Sidebar -->
         <div class="col-lg-3">
-            <%- include('../partials/_forumSidebar', { categories, filters, totalPosts, user }) %>
+            <%# SỬA LỖI ĐƯỜNG DẪN: ../../partials/ %>
+            <%- include('../../partials/_forumSidebar', { categories, filters, totalPosts, user }) %>
         </div>
     </div>
 </div>
+
