@@ -82,7 +82,7 @@
                             <div class="input-group">
                                 <select name="category" class="form-select" onchange="this.form.submit()">
                                     <option value="all" <%= (!filters || !filters.category || filters.category === 'all') ? 'selected' : '' %>>
-                                        Tất cả bài đăng (<%= totalPosts || 10 %>)
+                                        Tất cả bài đăng (<%= totalPosts === 0 ? 10 : totalPosts %>)
                                     </option>
                                     <% if (categories && categories.length > 0) { %>
                                         <% categories.forEach(cat => { if (cat && cat._id) { %>
@@ -205,7 +205,7 @@
                 <% const totalSamplePages = Math.ceil(filteredSamplePosts.length / 5); %>
                 <% if (totalSamplePages > 1) { %>
                     <%- include('../../partials/pagination', {
-                        currentPage: currentPage, totalPages: totalSamplePages,
+                        currentPage: currentPage, totalPages: totalPages,
                         baseUrl: `/forum?sort=${(filters && filters.sort) || ''}&category=${(filters && filters.category) || 'all'}&q=${(filters && filters.q) || ''}`
                     }) %>
                 <% } %>
