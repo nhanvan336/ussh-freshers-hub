@@ -1,20 +1,20 @@
-<div class="sticky-top" style="top: 2rem;">
+<div class="sidebar">
     <% if (user) { %>
-        <!-- Nút Tạo bài đăng khi đã đăng nhập -->
+        <!-- Nút tạo bài đăng khi đã đăng nhập -->
         <div class="d-grid mb-4">
-            <a href="/forum/create" class="btn btn-primary btn-lg p-3">
-                <i class="fas fa-plus-circle me-2"></i> Tạo bài đăng mới
+            <a href="/forum/create" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus-circle"></i> Tạo bài đăng
             </a>
         </div>
     <% } else { %>
-        <!-- Nút Đăng nhập khi chưa đăng nhập -->
+        <!-- Nút đăng nhập khi chưa đăng nhập -->
         <div class="card text-center mb-4">
             <div class="card-body">
                 <h5 class="card-title">Tham gia thảo luận</h5>
-                <p class="card-text small text-muted">Đăng nhập để bắt đầu đăng bài và bình luận cùng cộng đồng.</p>
-                <!-- [SỬA LỖI] Đã sửa link trỏ đến /login -->
-                <a href="/login" class="btn btn-primary w-100">
-                    <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập để đăng bài
+                <p class="card-text">Đăng nhập để bắt đầu đăng bài và bình luận cùng cộng đồng.</p>
+                <!-- [SỬA 5] Sửa link đăng nhập -->
+                <a href="/auth/login" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Đăng nhập để đăng bài
                 </a>
             </div>
         </div>
