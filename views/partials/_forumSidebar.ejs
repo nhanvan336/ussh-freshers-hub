@@ -1,41 +1,32 @@
-<!-- Create Post Button for Mobile -->
-<!-- Search Form -->
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Tìm kiếm</h5>
-        <form action="/forum" method="GET">
-            <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Nhập từ khóa..." value="<%= filters.q || '' %>">
-                <input type="hidden" name="sort" value="<%= filters.sort || 'latest' %>">
-                <input type="hidden" name="category" value="<%= filters.category || 'all' %>">
-                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Categories List -->
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Danh mục</h5>
-        <div class="list-group list-group-flush">
-            <a href="/forum?sort=<%= filters.sort || 'latest' %>&q=<%= filters.q || '' %>&category=all" 
-               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= filters.category === 'all' ? 'active' : '' %>">
-                Tất cả bài đăng
-                <span class="badge bg-secondary rounded-pill"><%= totalPosts || 0 %></span>
+<div class="sticky-top" style="top: 20px;">
+    <!-- Nút Tạo bài đăng -->
+    <div class="d-grid mb-4">
+        <% if (locals.user) { %>
+            <a href="/forum/create" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus-circle"></i> Tạo bài đăng
             </a>
-            <% if (categories && categories.length > 0) { %>
-                <% categories.forEach(cat => { %>
-                    <%# LỚP BẢO VỆ: Chỉ hiển thị nếu category ID là một chuỗi hợp lệ %>
-                    <% if (cat && typeof cat._id === 'string' && cat._id.trim() !== '') { %>
-                        <a href="/forum?sort=<%= filters.sort || 'latest' %>&q=<%= filters.q || '' %>&category=<%= cat._id %>" 
-                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= filters.category === cat._id ? 'active' : '' %>">
-                            <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %>
-                            <span class="badge bg-secondary rounded-pill"><%= cat.count || 0 %></span>
-                        </a>
-                    <% } %>
-                <% }); %>
-            <% } %>
+        <% } else { %>
+            <a href="/login" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt"></i> Đăng nhập để đăng bài
+            </a>
+        <% } %>
+    </div>
+
+    <!-- Thống kê Diễn đàn -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Thống kê</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <span>Chủ đề</span>
+                <strong><%= locals.totalPosts ? totalPosts : 'N/A' %></strong>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <span>Thành viên</span>
+                <strong>N/A</strong> <!-- Sẽ cập nhật sau -->
+            </div>
         </div>
     </div>
 </div>
