@@ -1809,3 +1809,14 @@ h1, h2, h3, h4, h5, h6 {
   border-left: 4px solid #ffc107;
   padding-left: 20px; /* Thêm dòng này để tạo khoảng cách */
 }
+/* ============================================= */
+/* CẤU TRÚC LAYOUT CHUNG               */
+/* ============================================= */
+
+/* Thêm khoảng đệm trên cho nội dung chính 
+  để không bị header (với position: fixed) che mất.
+  Đây là giải pháp cho toàn bộ trang web.
+*/
+.main-content {
+  padding-top: 5rem; /* Bạn có thể điều chỉnh giá trị này (vd: 4.5rem, 80px) */
+}
