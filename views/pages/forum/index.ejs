@@ -65,7 +65,7 @@
                             <li class="nav-item">
                                 <a class="nav-link <%= (!filters || !filters.category || filters.category === 'all') ? 'active' : '' %>" href="?sort=<%= (filters && filters.sort) ? filters.sort : 'latest' %>&category=all">Tất cả bài đăng</a>
                             </li>
-                            <% if (locals.categories && categories.length > 0) { %>
+                            <% if (categories && categories.length > 0) { %>
                                 <% categories.forEach(cat => { %>
                                     <% if (cat && cat._id) { %>
                                         <li class="nav-item">
@@ -157,7 +157,7 @@
                             { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam' }, category: 'ky-nang', likesCount: 88, commentsCount: 35, views: 1500, lastActivity: new Date('2025-10-18T16:00:00Z'), externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' }
                         ];
 
-                        const sortType = (locals.filters && filters.sort) ? filters.sort : 'latest';
+                        const sortType = (filters && filters.sort) ? filters.sort : 'latest';
                         if (sortType === 'popular') {
                             samplePosts.sort((a, b) => b.likesCount - a.likesCount);
                         } else if (sortType === 'discussed') {
