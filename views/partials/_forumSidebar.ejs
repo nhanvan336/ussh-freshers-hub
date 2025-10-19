@@ -2,32 +2,18 @@
     <!-- Nút Tạo bài đăng -->
     <div class="d-grid mb-4">
         <% if (locals.user) { %>
+            <!-- Nếu người dùng đã đăng nhập, hiển thị nút này -->
             <a href="/forum/create" class="btn btn-primary btn-lg">
                 <i class="fas fa-plus-circle"></i> Tạo bài đăng
             </a>
         <% } else { %>
+            <!-- Nếu chưa đăng nhập, hiển thị nút này -->
             <a href="/login" class="btn btn-primary btn-lg">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập để đăng bài
             </a>
         <% } %>
     </div>
 
-    <!-- Thống kê Diễn đàn -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Thống kê</h5>
-        </div>
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <span>Chủ đề</span>
-                <strong><%= locals.totalPosts ? totalPosts : 'N/A' %></strong>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between">
-                <span>Thành viên</span>
-                <strong>N/A</strong> <!-- Sẽ cập nhật sau -->
-            </div>
-        </div>
-    </div>
+    <!-- [XÓA] Phần thống kê đã được loại bỏ -->
 </div>
 
