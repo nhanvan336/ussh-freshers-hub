@@ -1,0 +1,32 @@
+<% if(post) { %>
+<a href="/forum/post/<%= post._id %>" class="list-group-item list-group-item-action post-item <%= isSticky ? 'sticky-post' : '' %>">
+    <div class="d-flex w-100">
+        <!-- Author Avatar -->
+        <div class="flex-shrink-0 me-3">
+            <img src="<%= post.author && post.author.avatar ? post.author.avatar : '/images/default-avatar.png' %>" alt="avatar" class="rounded-circle post-avatar">
+        </div>
+
+        <!-- Post Info -->
+        <div class="flex-grow-1">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><%= post.title %></h5>
+                <small class="text-muted"><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></small>
+            </div>
+            <p class="mb-1 text-muted small">
+                <% if (isSticky) { %>
+                    <span class="badge bg-warning text-dark me-2"><i class="fas fa-thumbtack"></i> Ghim</span>
+                <% } %>
+                <span class="badge bg-info-subtle text-info-emphasis me-2"><%= post.category %></span>
+                bởi <strong><%= post.author ? post.author.username : 'Người dùng đã xóa' %></strong>
+            </p>
+            
+            <!-- Stats -->
+            <div class="d-flex gap-3 small text-muted mt-2">
+                <span><i class="fas fa-thumbs-up"></i> <%= post.likesCount || 0 %></span>
+                <span><i class="fas fa-comment-alt"></i> <%= post.commentsCount || 0 %></span>
+                <span><i class="fas fa-eye"></i> <%= post.views || 0 %></span>
+            </div>
+        </div>
+    </div>
+</a>
+<% } %>
