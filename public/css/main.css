@@ -1804,3 +1804,8 @@ h1, h2, h3, h4, h5, h6 {
   height: 200px;     /* Đặt một chiều cao cố định (bạn có thể thay đổi số 200) */
   object-fit: cover; /* Đây là thuộc tính quan trọng nhất */
 }
+.sticky-post {
+  background-color: #fffbe6;
+  border-left: 4px solid #ffc107;
+  padding-left: 20px; /* Thêm dòng này để tạo khoảng cách */
+}
