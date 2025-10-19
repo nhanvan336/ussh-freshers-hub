@@ -1,0 +1,52 @@
+<% if (posts && posts.length > 0) { %>
+    <%# --- PHẦN NÀY DÀNH CHO DỮ LIỆU THẬT TỪ DATABASE --- %>
+    <% if (stickyPosts && stickyPosts.length > 0 && currentPage === 1 && (!filters || !filters.q)) { %>
+        <% stickyPosts.forEach(post => { %>
+            <%- include('./_postListItem', { post: post, isSticky: true }) %>
+        <% }); %>
+    <% } %>
+    <% posts.forEach(post => { %>
+        <%- include('./_postListItem', { post: post, isSticky: false }) %>
+    <% }); %>
+<% } else { %>
+    <%# --- PHẦN BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
+    <%
+        const sampleStickyPosts = [{
+            _id: 'sticky1', title: 'Nội quy diễn đàn và hướng dẫn cho thành viên mới',
+            author: { username: 'Admin' }, category: 'thong-bao', likesCount: 150, commentsCount: 25, views: 2500,
+            lastActivity: new Date('2025-10-18T10:00:00Z'),
+            externalUrl: 'https://kenh14.vn/netizen-la-gi-va-van-hoa-ung-xu-tren-mang-xa-hoi-20220908122435733.chn'
+        }];
+
+        let samplePosts = [
+            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet cho sinh viên', author: { username: 'maianh' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, lastActivity: new Date('2025-10-19T14:00:00Z'), externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
+            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, lastActivity: new Date('2025-10-19T11:30:00Z'), externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
+            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, lastActivity: new Date('2025-10-19T15:00:00Z'), externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
+            { _id: 'sample4', title: 'Tìm nhà trọ gần trường: Những điều cần lưu ý!', author: { username: 'minhduc' }, category: 'doi-song', likesCount: 30, commentsCount: 18, views: 950, lastActivity: new Date('2025-10-18T09:00:00Z'), externalUrl: 'https://thanhnien.vn/bi-kip-tim-phong-tro-cho-tan-sinh-vien-post1492520.html' },
+            { _id: 'sample5', title: 'Tổng hợp các quán ăn vặt ngon-bổ-rẻ quanh khu vực trường', author: { username: 'foodlover' }, category: 'giai-tri', likesCount: 125, commentsCount: 58, views: 2100, lastActivity: new Date('2025-10-19T08:00:00Z'), externalUrl: 'https://toplist.vn/top-list/quan-an-vat-ngon-gan-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-tp-hcm-41808.htm' },
+            { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam' }, category: 'ky-nang', likesCount: 88, commentsCount: 35, views: 1500, lastActivity: new Date('2025-10-18T16:00:00Z'), externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' }
+        ];
+
+        const sortType = (locals.filters && filters.sort) ? filters.sort : 'latest';
+        if (sortType === 'popular') {
+            samplePosts.sort((a, b) => b.likesCount - a.likesCount);
+        } else if (sortType === 'discussed') {
+            samplePosts.sort((a, b) => b.commentsCount - a.commentsCount);
+        } else {
+            samplePosts.sort((a, b) => b.lastActivity - a.lastActivity);
+        }
+    %>
+
+    <% if (sampleStickyPosts.length > 0) { %>
+        <% sampleStickyPosts.forEach(post => { %>
+            <%- include('./_postListItem', { post: post, isSticky: true }) %>
+        <% }); %>
+    <% } %>
+
+    <% if (samplePosts.length > 0) { %>
+        <% samplePosts.forEach(post => { %>
+            <%- include('./_postListItem', { post: post, isSticky: false }) %>
+        <% }); %>
+    <% } %>
+<% } %>
+
