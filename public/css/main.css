@@ -1820,3 +1820,7 @@ h1, h2, h3, h4, h5, h6 {
 .main-content {
   padding-top: 5rem; /* Bạn có thể điều chỉnh giá trị này (vd: 4.5rem, 80px) */
 }
+/* Thêm khoảng đệm cho phần thân của thẻ tài liệu để chữ không bị sát viền */
+.document-card .card-body {
+  padding: 1.25rem; /* rem là đơn vị co giãn theo kích thước font gốc */
+}
