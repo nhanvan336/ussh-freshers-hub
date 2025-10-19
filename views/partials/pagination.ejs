@@ -1,10 +1,10 @@
-<% if (locals.totalPages && totalPages > 1) { %>
+<% if (totalPages && totalPages > 1) { %>
 <nav aria-label="Page navigation" class="mt-5">
   <ul class="pagination justify-content-center">
     
     <!-- Previous Page Button -->
-    <li class="page-item <%= locals.currentPage && currentPage === 1 ? 'disabled' : '' %>">
-      <a class="page-link" href="<%= locals.baseUrl %>&page=<%= currentPage - 1 %>" aria-label="Previous">
+    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= baseUrl %>&page=<%= currentPage - 1 %>" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
@@ -26,7 +26,7 @@
     <% } %>
 
     <!-- Next Page Button -->
-    <li class="page-item <%= locals.currentPage && currentPage === totalPages ? 'disabled' : '' %>">
+    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
       <a class="page-link" href="<%= baseUrl %>&page=<%= currentPage + 1 %>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
@@ -35,3 +35,4 @@
   </ul>
 </nav>
 <% } %>
+
