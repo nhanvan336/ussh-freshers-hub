@@ -34,23 +34,8 @@
     <%- include('../partials/header') %>
     
     <!-- Main Content -->
-    <main id="main-content" class="main-content">
-        <!-- [SỬA] Container này sẽ căn giữa toàn bộ nội dung của trang -->
-        <div class="container">
-            <!-- Trung tâm thông báo (Flash Messages) -->
-            <% if (locals.success_msg && success_msg.length > 0) { %>
-                <div class="alert alert-success" role="alert"><%= success_msg %></div>
-            <% } %>
-            <% if (locals.error_msg && error_msg.length > 0) { %>
-                <div class="alert alert-danger" role="alert"><%= error_msg %></div>
-            <% } %>
-            <% if (locals.error && error.length > 0) { %>
-                <div class="alert alert-danger" role="alert"><%= error %></div>
-            <% } %>
-
-            <!-- Nội dung của từng trang sẽ được chèn vào đây -->
-            <%- typeof body !== 'undefined' ? body : '' %>
-        </div>
+    <main id="main-content">
+        <%- body %>
     </main>
     
     <!-- Footer -->
@@ -64,12 +49,16 @@
         <div class="chatbot-container" style="display: none;">
             <div class="chatbot-header">
                 <h4>Trợ lý AI USSH</h4>
-                <button class="chatbot-close" aria-label="Đóng trợ lý AI"><i class="fas fa-times"></i></button>
+                <button class="chatbot-close" aria-label="Đóng trợ lý AI">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="chatbot-messages"></div>
             <div class="chatbot-input">
                 <input type="text" placeholder="Nhập câu hỏi của bạn..." aria-label="Nhập câu hỏi">
-                <button type="button" aria-label="Gửi tin nhắn"><i class="fas fa-paper-plane"></i></button>
+                <button type="button" aria-label="Gửi tin nhắn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -77,6 +66,9 @@
     <!-- JavaScript -->
     <script src="/js/main.js"></script>
     
+    <!-- [THÊM MỚI] Bootstrap JS Bundle (bao gồm Popper) - Cần cho Dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Additional page-specific JS -->
     <% if (typeof additionalJS !== 'undefined') { %>
         <% additionalJS.forEach(js => { %>
