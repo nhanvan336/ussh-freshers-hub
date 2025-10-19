@@ -1,0 +1,37 @@
+<% if (locals.totalPages && totalPages > 1) { %>
+<nav aria-label="Page navigation" class="mt-5">
+  <ul class="pagination justify-content-center">
+    
+    <!-- Previous Page Button -->
+    <li class="page-item <%= locals.currentPage && currentPage === 1 ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= locals.baseUrl %>&page=<%= currentPage - 1 %>" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+
+    <%# Page Numbers Logic %>
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <% const showPage = Math.abs(i - currentPage) < 3 || i === 1 || i === totalPages; %>
+      <% const showEllipsis = Math.abs(i - currentPage) === 3 && totalPages > 5 && i !== 1 && i !== totalPages; %>
+      
+      <% if (showEllipsis) { %>
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+      <% } %>
+
+      <% if (showPage) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="<%= baseUrl %>&page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    <% } %>
+
+    <!-- Next Page Button -->
+    <li class="page-item <%= locals.currentPage && currentPage === totalPages ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= baseUrl %>&page=<%= currentPage + 1 %>" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+<% } %>
