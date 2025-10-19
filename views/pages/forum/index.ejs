@@ -11,16 +11,16 @@
     
     /* [SỬA] Tăng kích thước thanh tìm kiếm và thay đổi giao diện */
     .search-form-custom {
-        border-radius: 0.5rem; /* Bo tròn hơn */
+        border-radius: 0.5rem;
         border: 1px solid #dee2e6;
-        padding: 0.25rem; /* Giảm padding ngoài */
+        padding: 0.25rem;
         background-color: #fff;
         display: flex;
         width: 100%;
-        max-width: 350px; /* Giới hạn chiều rộng tối đa */
+        max-width: 350px;
     }
     .search-form-custom .form-control {
-        padding-top: 0.75rem; /* Tăng padding trong để thanh to hơn */
+        padding-top: 0.75rem;
         padding-bottom: 0.75rem;
     }
 
@@ -49,7 +49,7 @@
 </style>
 
 <!-- [SỬA] Thêm my-5 để tạo khoảng cách với header -->
-<div class="container-fluid px-lg-5 my-5"> 
+<div class="container-fluid px-lg-5 my-5">
     <div class="row">
         <!-- Cột Nội Dung Chính -->
         <div class="col-lg-9">
@@ -93,13 +93,40 @@
 
             <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-danger"><%= error %></div><% } %>
             
-            <!-- Phần hiển thị bài đăng (đã được gộp vào đây) -->
+            <!-- [KHÔI PHỤC] Toàn bộ phần hiển thị bài đăng -->
             <div class="list-group">
-                 <% if (posts && posts.length > 0) { %>
+                <% if (posts && posts.length > 0) { %>
                     <%# --- CODE HIỂN THỊ DỮ LIỆU THẬT --- %>
+                    <p>Hiển thị dữ liệu thật ở đây</p>
                 <% } else { %>
                     <%# --- CODE HIỂN THỊ BÀI ĐĂNG MẪU --- %>
-                <% } %>
+                    <%
+                        const sampleStickyPosts = [{_id: 'sticky1', title: 'Nội quy diễn đàn và hướng dẫn cho thành viên mới', author: { username: 'Admin' }, category: 'thong-bao', likesCount: 150, commentsCount: 25, views: 2500, lastActivity: new Date('2025-10-18T10:00:00Z'), externalUrl: 'https://kenh14.vn/netizen-la-gi-va-van-hoa-ung-xu-tren-mang-xa-hoi-20220908122435733.chn'}];
+                        let samplePosts = [
+                            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet cho sinh viên', author: { username: 'maianh' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, lastActivity: new Date('2025-10-19T14:00:00Z'), externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
+                            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, lastActivity: new Date('2025-10-19T11:30:00Z'), externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
+                            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, lastActivity: new Date('2025-10-19T15:00:00Z'), externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
+                        ];
+                        const sortType = (locals.filters && filters.sort) ? filters.sort : 'latest';
+                        if (sortType === 'popular') { samplePosts.sort((a, b) => b.likesCount - a.likesCount); } 
+                        else if (sortType === 'discussed') { samplePosts.sort((a, b) => b.commentsCount - a.commentsCount); } 
+                        else { samplePosts.sort((a, b) => b.lastActivity - a.lastActivity); }
+
+                        sampleStickyPosts.forEach(post => { %>
+                            <div class="list-group-item list-group-item-action post-item sticky-post">
+                                <a href="<%= post.externalUrl %>" class="text-decoration-none text-dark stretched-link" target="_blank"><h5 class="mb-1 topic-title"><%= post.title %></h5></a>
+                                <div class="topic-details">Ghim bởi <strong><%= post.author.username %></strong> &middot; <%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></div>
+                                <div class="d-flex gap-3 text-muted mt-2"><span class="post-meta-item"><i class="far fa-thumbs-up"></i><%= post.likesCount %></span><span class="post-meta-item"><i class="far fa-comments"></i><%= post.commentsCount %></span><span class="post-meta-item"><i class="far fa-eye"></i><%= post.views %></span></div>
+                            </div>
+                        <% });
+                        samplePosts.forEach(post => { %>
+                            <div class="list-group-item list-group-item-action post-item">
+                                <a href="<%= post.externalUrl %>" class="text-decoration-none text-dark stretched-link" target="_blank"><h5 class="mb-1 topic-title"><%= post.title %></h5></a>
+                                <div class="topic-details">bởi <strong><%= post.author.username %></strong> &middot; <%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></div>
+                                <div class="d-flex gap-3 text-muted mt-2"><span class="post-meta-item"><i class="far fa-thumbs-up"></i><%= post.likesCount %></span><span class="post-meta-item"><i class="far fa-comments"></i><%= post.commentsCount %></span><span class="post-meta-item"><i class="far fa-eye"></i><%= post.views %></span></div>
+                            </div>
+                        <% }); %>
+                    <% } %>
             </div>
             
             <!-- Pagination -->
