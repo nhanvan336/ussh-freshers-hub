@@ -24,7 +24,7 @@
     }
 </style>
 
-<!-- [XÓA] Thẻ div container-fluid đã được loại bỏ -->
+<!-- Thẻ div container-fluid đã được loại bỏ để khớp với layout chính -->
 <div class="row">
     <!-- Cột Nội Dung Chính -->
     <div class="col-lg-9">
@@ -66,7 +66,7 @@
                         <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'discussed') ? 'active' : '' %>" href="?sort=discussed&category=<%= (filters && filters.category) ? filters.category : 'all' %>">Thảo luận nhiều</a></li>
                     </ul>
                     
-                    <!-- Form tìm kiếm Dropdown -->
+                    <!-- [CẬP NHẬT] Form tìm kiếm Dropdown -->
                     <div class="dropdown">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <% if (filters && filters.q) { %>
