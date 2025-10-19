@@ -34,29 +34,11 @@
     <%- include('../partials/header') %>
     
     <!-- Main Content -->
+    <!-- [QUAN TRỌNG] Class 'main-content' sẽ được sử dụng trong file main.css -->
     <main id="main-content" class="main-content">
-        <!-- *** TRUNG TÂM THÔNG BÁO (FLASH MESSAGES) - ĐÃ CẬP NHẬT *** -->
-        <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
-            <% if (locals.success_msg && success_msg.length > 0) { %>
-                <div class="alert alert-success" role="alert">
-                    <%= success_msg %>
-                </div>
-            <% } %>
-            <% if (locals.error_msg && error_msg.length > 0) { %>
-                 <div class="alert alert-danger" role="alert">
-                    <%= error_msg %>
-                </div>
-            <% } %>
-             <% if (locals.error && error.length > 0) { %>
-                 <div class="alert alert-danger" role="alert">
-                    <%= error %>
-                </div>
-            <% } %>
-        </div>
-
-        <div class="container">
-            <%- typeof body !== 'undefined' ? body : '' %>
-        </div>
+        <!-- *** TRUNG TÂM THÔNG BÁO VÀ NỘI DUNG CHÍNH *** -->
+        <!-- Logic mới: Các trang con sẽ quyết định dùng 'container' hay 'container-fluid' -->
+        <%- body %>
     </main>
     
     <!-- Footer -->
