@@ -1,19 +1,23 @@
-<div class="sticky-top" style="top: 20px;">
-    <!-- Nút Tạo bài đăng -->
-    <div class="d-grid mb-4">
-        <% if (locals.user) { %>
-            <!-- Nếu người dùng đã đăng nhập, hiển thị nút này -->
-            <a href="/forum/create" class="btn btn-primary btn-lg">
-                <i class="fas fa-plus-circle"></i> Tạo bài đăng
+<div class="sticky-top" style="top: 2rem;">
+    <% if (user) { %>
+        <!-- Nút Tạo bài đăng khi đã đăng nhập -->
+        <div class="d-grid mb-4">
+            <a href="/forum/create" class="btn btn-primary btn-lg p-3">
+                <i class="fas fa-plus-circle me-2"></i> Tạo bài đăng mới
             </a>
-        <% } else { %>
-            <!-- Nếu chưa đăng nhập, hiển thị nút này -->
-            <a href="/login" class="btn btn-primary btn-lg">
-                <i class="fas fa-sign-in-alt"></i> Đăng nhập để đăng bài
-            </a>
-        <% } %>
-    </div>
-
-    <!-- [XÓA] Phần thống kê đã được loại bỏ -->
+        </div>
+    <% } else { %>
+        <!-- Nút Đăng nhập khi chưa đăng nhập -->
+        <div class="card text-center mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Tham gia thảo luận</h5>
+                <p class="card-text small text-muted">Đăng nhập để bắt đầu đăng bài và bình luận cùng cộng đồng.</p>
+                <!-- [SỬA LỖI] Đã sửa link trỏ đến /login -->
+                <a href="/login" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập để đăng bài
+                </a>
+            </div>
+        </div>
+    <% } %>
 </div>
 
