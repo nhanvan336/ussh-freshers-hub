@@ -11,9 +11,9 @@
         <h5 class="card-title">Tìm kiếm</h5>
         <form action="/forum" method="GET">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Nhập từ khóa..." value="<%= locals.filters && filters.q ? filters.q : '' %>">
-                <input type="hidden" name="sort" value="<%= locals.filters ? filters.sort : 'latest' %>">
-                <input type="hidden" name="category" value="<%= locals.filters ? filters.category : 'all' %>">
+                <input type="text" name="q" class="form-control" placeholder="Nhập từ khóa..." value="<%= filters.q || '' %>">
+                <input type="hidden" name="sort" value="<%= filters.sort %>">
+                <input type="hidden" name="category" value="<%= filters.category %>">
                 <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
             </div>
         </form>
@@ -25,21 +25,18 @@
     <div class="card-body">
         <h5 class="card-title">Danh mục</h5>
         <div class="list-group list-group-flush">
-            <% const currentFilterCategory = locals.filters ? filters.category : 'all'; %>
-            <a href="/forum?sort=<%= locals.filters ? filters.sort : 'latest' %>&q=<%= locals.filters && filters.q ? filters.q : '' %>&category=all" 
-               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= currentFilterCategory === 'all' ? 'active' : '' %>">
+            <a href="/forum?sort=<%= filters.sort %>&q=<%= filters.q || '' %>&category=all" 
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= filters.category === 'all' ? 'active' : '' %>">
                 Tất cả bài đăng
-                <span class="badge bg-secondary rounded-pill"><%= locals.totalPosts || 0 %></span>
+                <span class="badge bg-secondary rounded-pill"><%= totalPosts %></span>
             </a>
-            <% if(locals.categories && categories.length > 0) { %>
+            <% if(categories && categories.length > 0) { %>
                 <% categories.forEach(cat => { %>
-                    <% if (cat && cat._id) { %>
-                        <a href="/forum?sort=<%= locals.filters ? filters.sort : 'latest' %>&q=<%= locals.filters && filters.q ? filters.q : '' %>&category=<%= cat._id %>" 
-                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= currentFilterCategory === cat._id ? 'active' : '' %>">
-                            <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %>
-                            <span class="badge bg-secondary rounded-pill"><%= cat.count || 0 %></span>
-                        </a>
-                    <% } %>
+                    <a href="/forum?sort=<%= filters.sort %>&q=<%= filters.q || '' %>&category=<%= cat._id %>" 
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <%= filters.category === cat._id ? 'active' : '' %>">
+                        <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %>
+                        <span class="badge bg-secondary rounded-pill"><%= cat.count %></span>
+                    </a>
                 <% }); %>
             <% } %>
         </div>
