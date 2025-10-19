@@ -1,28 +1,23 @@
-<% if(locals.post) { %>
-<a href="/forum/post/<%= post._id %>" class="list-group-item list-group-item-action post-item <%= locals.isSticky ? 'sticky-post' : '' %>">
+<% if(post) { %>
+<a href="/forum/post/<%= post._id %>" class="list-group-item list-group-item-action post-item <%= isSticky ? 'sticky-post' : '' %>">
     <div class="d-flex w-100">
         <!-- Author Avatar -->
         <div class="flex-shrink-0 me-3">
-            <% const avatarUrl = post.author && post.author.avatar ? post.author.avatar : '/images/default-avatar.png'; %>
-            <img src="<%= avatarUrl %>" alt="avatar" class="rounded-circle post-avatar">
+            <img src="<%= post.author && post.author.avatar ? post.author.avatar : '/images/default-avatar.png' %>" alt="avatar" class="rounded-circle post-avatar">
         </div>
 
         <!-- Post Info -->
         <div class="flex-grow-1">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><%= post.title || 'Bài viết không có tiêu đề' %></h5>
-                <small class="text-muted">
-                    <%= post.lastActivity ? new Date(post.lastActivity).toLocaleDateString('vi-VN') : '' %>
-                </small>
+                <h5 class="mb-1"><%= post.title %></h5>
+                <small class="text-muted"><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></small>
             </div>
             <p class="mb-1 text-muted small">
-                <% if (locals.isSticky) { %>
+                <% if (isSticky) { %>
                     <span class="badge bg-warning text-dark me-2"><i class="fas fa-thumbtack"></i> Ghim</span>
                 <% } %>
-                <% if(post.category) { %>
-                    <span class="badge bg-info-subtle text-info-emphasis me-2"><%= post.category %></span>
-                <% } %>
-                bởi <strong><%= post.author ? post.author.username : 'Người dùng ẩn danh' %></strong>
+                <span class="badge bg-info-subtle text-info-emphasis me-2"><%= post.category %></span>
+                bởi <strong><%= post.author ? post.author.username : 'Người dùng đã xóa' %></strong>
             </p>
             
             <!-- Stats -->
