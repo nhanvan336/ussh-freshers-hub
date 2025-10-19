@@ -4,12 +4,12 @@
     <div class="container">
         <h1>Thư viện học tập</h1>
         <p class="subtitle">Khám phá, chia sẻ và tải về hàng ngàn tài liệu học thuật giá trị.</p>
-        <% if (isAuthenticated) { %>
+        <% if (user) { %>
             <a href="/learning-hub/upload" class="btn btn-primary">
                 <i class="fas fa-upload"></i> Tải lên tài liệu
             </a>
         <% } else { %>
-            <a href="/auth/login" class="btn btn-primary">
+            <a href="/login" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập để tải lên
             </a>
         <% } %>
@@ -37,10 +37,10 @@
                         <label for="category">Loại tài liệu</label>
                         <select name="category" id="category" class="form-control">
                             <option value="all">Tất cả</option>
-                            <option value="lecture">Bài giảng</option>
-                            <option value="ebook">Giáo trình/Ebook</option>
-                            <option value="exam">Đề thi</option>
-                            <option value="other">Khác</option>
+                            <option value="lecture" <%= (filters && filters.category === 'lecture') ? 'selected' : '' %>>Bài giảng</option>
+                            <option value="ebook" <%= (filters && filters.category === 'ebook') ? 'selected' : '' %>>Giáo trình/Ebook</option>
+                            <option value="exam" <%= (filters && filters.category === 'exam') ? 'selected' : '' %>>Đề thi</option>
+                            <option value="other" <%= (filters && filters.category === 'other') ? 'selected' : '' %>>Khác</option>
                         </select>
                     </div>
 
@@ -49,10 +49,11 @@
                         <label for="subject">Môn học</label>
                         <select name="subject" id="subject" class="form-control">
                            <option value="all">Tất cả</option>
-                           <option value="History">Lịch sử</option>
-                           <option value="Psychology">Tâm lý học</option>
-                           <option value="Journalism">Báo chí</option>
-                           <!-- Thêm các môn học khác tại đây -->
+                           <option value="History" <%= (filters && filters.subject === 'History') ? 'selected' : '' %>>Lịch sử</option>
+                           <option value="Psychology" <%= (filters && filters.subject === 'Psychology') ? 'selected' : '' %>>Tâm lý học</option>
+                           <option value="Journalism" <%= (filters && filters.subject === 'Journalism') ? 'selected' : '' %>>Báo chí</option>
+                           <option value="Law" <%= (filters && filters.subject === 'Law') ? 'selected' : '' %>>Luật</option>
+                           <option value="Economics" <%= (filters && filters.subject === 'Economics') ? 'selected' : '' %>>Kinh tế</option>
                         </select>
                     </div>
 
@@ -60,10 +61,10 @@
                     <div class="form-group">
                         <label for="sort">Sắp xếp theo</label>
                         <select name="sort" id="sort" class="form-control">
-                            <option value="newest">Mới nhất</option>
-                            <option value="popular">Phổ biến nhất</option>
-                            <option value="rated">Đánh giá cao</option>
-                            <option value="oldest">Cũ nhất</option>
+                            <option value="newest" <%= (filters && filters.sort === 'newest') ? 'selected' : '' %>>Mới nhất</option>
+                            <option value="popular" <%= (filters && filters.sort === 'popular') ? 'selected' : '' %>>Phổ biến nhất</option>
+                            <option value="rated" <%= (filters && filters.sort === 'rated') ? 'selected' : '' %>>Đánh giá cao</option>
+                            <option value="oldest" <%= (filters && filters.sort === 'oldest') ? 'selected' : '' %>>Cũ nhất</option>
                         </select>
                     </div>
 
@@ -75,6 +76,7 @@
         <!-- Cột Phải: Danh sách tài liệu -->
         <div class="col-lg-9">
             <% if (typeof documents !== 'undefined' && documents.length > 0) { %>
+                <%# --- PHẦN NÀY DÀNH CHO DỮ LIỆU THẬT TỪ DATABASE --- %>
                 <div class="document-list-header">
                     <p>Hiển thị <strong><%= documents.length %></strong> trong tổng số <strong><%= totalDocuments %></strong> kết quả</p>
                 </div>
@@ -109,23 +111,56 @@
 
                 <!-- Phân trang -->
                 <% if (totalPages > 1) { %>
-                    <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-center">
-                        <ul class="pagination">
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                    <a class="page-link" href="/learning-hub?page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } %>
-                        </ul>
-                    </nav>
+                    <%- include('../../partials/pagination', { currentPage: currentPage, totalPages: totalPages, baseUrl: `/learning-hub?sort=${filters.sort}&category=${filters.category}&subject=${filters.subject}&q=${filters.q || ''}` }) %>
                 <% } %>
             <% } else { %>
-                <div class="alert alert-info text-center mt-4">
-                    <i class="fas fa-box-open fa-3x mb-3"></i>
-                    <h4>Chưa có tài liệu nào được tải lên.</h4>
-                    <p>Hãy là người đầu tiên đóng góp cho thư viện nhé!</p>
+                <%# --- PHẦN BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
+                <div class="document-list-header">
+                    <p>Hiển thị <strong>10</strong> tài liệu mẫu</p>
+                </div>
+                <%
+                    const sampleDocuments = [
+                        { _id: 'sample1', title: 'Đề cương ôn tập Lịch sử Đảng', description: 'Tổng hợp kiến thức và câu hỏi trắc nghiệm quan trọng.', fileInfo: { fileType: 'PDF' }, averageRating: 4.8, downloads: 152, views: 830, uploader: { username: 'thanhmai' }, externalUrl: 'https://hoatieu.vn/tai-lieu/de-cuong-on-tap-lich-su-dang-209224' },
+                        { _id: 'sample2', title: 'Giáo trình Tâm lý học đại cương', description: 'Bản Ebook đầy đủ của NXB Đại học Quốc gia.', fileInfo: { fileType: 'PDF' }, averageRating: 4.9, downloads: 210, views: 1200, uploader: { username: 'minhquan' }, externalUrl: 'https://tailieumienphi.vn/doc/giao-trinh-tam-ly-hoc-dai-cuong-dh-quoc-gia-ha-noi-ts-nguyen-quang-uan-chu-bien-3v4ptq.html' },
+                        { _id: 'sample3', title: 'Slide bài giảng môn Báo chí truyền thông', description: 'Tổng hợp slide bài giảng của ThS. Nguyễn Thị A.', fileInfo: { fileType: 'PPTX' }, averageRating: 4.5, downloads: 95, views: 640, uploader: { username: 'hoangan' }, externalUrl: 'https://lrc.tnu.edu.vn/download/slide-bai-giang-bao-chi-hoc-dai-cuong-chuong-i-TS-Do-Thi-Thu-Hang-28345.html' },
+                        { _id: 'sample4', title: 'Đề thi cuối kỳ Luật đại cương (có đáp án)', description: 'Tổng hợp đề thi các năm gần đây kèm đáp án tham khảo.', fileInfo: { fileType: 'DOCX' }, averageRating: 4.7, downloads: 180, views: 950, uploader: { username: 'bichphuong' }, externalUrl: 'https://dethiluat.com/de-thi-ket-thuc-hoc-phan-mon-ly-luan-chung-ve-nha-nuoc-va-phap-luat/' },
+                        { _id: 'sample5', title: 'Ebook Kinh tế vi mô cho người bắt đầu', description: 'Giáo trình dễ hiểu, có ví dụ minh họa thực tế.', fileInfo: { fileType: 'PDF' }, averageRating: 4.6, downloads: 130, views: 780, uploader: { username: 'giabao' }, externalUrl: 'https://123docz.net/document/2704155-giao-trinh-kinh-te-vi-mo-nguyen-van-ngoc.htm' },
+                        { _id: 'sample6', title: 'Các dạng bài tập Tâm lý học hành vi', description: 'Bài tập vận dụng và nghiên cứu tình huống thực tế.', fileInfo: { fileType: 'PDF' }, averageRating: 4.8, downloads: 88, views: 520, uploader: { username: 'thuychi' }, externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-van-lang/tam-li-hoc-hanh-vi/bai-tap-trac-nghiem-tam-li-hoc-hanh-vi/29969562' },
+                        { _id: 'sample7', title: 'Tổng hợp bài giảng Lịch sử Văn minh Thế giới', description: 'Slide chi tiết, nhiều hình ảnh minh họa.', fileInfo: { fileType: 'PPTX' }, averageRating: 4.9, downloads: 115, views: 880, uploader: { username: 'namphong' }, externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-dai-hoc-quoc-gia-ha-noi/lich-su-van-minh-the-gioi/lich-su-van-minh-the-gioi-slide-powerpoint/46824982' },
+                        { _id: 'sample8', title: 'Cẩm nang kỹ năng viết tin báo chí', description: 'Tài liệu hướng dẫn cách viết tin, bài phản ánh.', fileInfo: { fileType: 'DOCX' }, averageRating: 4.7, downloads: 75, views: 450, uploader: { username: 'hongnhung' }, externalUrl: 'https://ajc.hcma.vn/UserControls/Upload/files/2021/8/sach%20ky%20nang%20nghe%20bao.pdf' },
+                        { _id: 'sample9', title: 'Đề thi giữa kỳ Kinh tế lượng', description: 'Đề thi của học kỳ 1 năm học 2024-2025.', fileInfo: { fileType: 'PDF' }, averageRating: 4.4, downloads: 60, views: 390, uploader: { username: 'quanghuy' }, externalUrl: 'https://doc.edu.vn/tai-lieu/de-thi-giua-ky-mon-kinh-te-luong-co-dap-an-chi-tiet-53907/' },
+                        { _id: 'sample10', title: 'Tuyển tập các bài nghiên cứu về Truyền thông đa phương tiện', description: 'Các bài báo khoa học và luận văn hay.', fileInfo: { fileType: 'PDF' }, averageRating: 4.9, downloads: 92, views: 610, uploader: { username: 'admin' }, externalUrl: 'https://ajc.hcma.vn/Pages/nghien-cuu-khoa-hoc-chi-tiet.aspx?ItemID=2373' },
+                    ];
+                %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <% sampleDocuments.forEach(doc => { %>
+                        <div class="col">
+                            <div class="card h-100 document-card">
+                                <a href="<%= doc.externalUrl %>" class="card-img-top-link" target="_blank">
+                                    <div class="card-img-top-placeholder">
+                                        <i class="fas fa-file-alt fa-3x"></i>
+                                        <span class="file-type-badge"><%= doc.fileInfo.fileType.toUpperCase() %></span>
+                                    </div>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="<%= doc.externalUrl %>" target="_blank"><%= doc.title %></a>
+                                    </h5>
+                                    <p class="card-text text-muted small"><%= doc.description.substring(0, 70) %>...</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                         <small class="text-muted"><i class="fas fa-star text-warning"></i> <%= doc.averageRating.toFixed(1) %></small>
+                                         <small class="text-muted"><i class="fas fa-download"></i> <%= doc.downloads %></small>
+                                         <small class="text-muted"><i class="fas fa-eye"></i> <%= doc.views %></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
                 </div>
             <% } %>
         </div>
     </div>
 </div>
+
