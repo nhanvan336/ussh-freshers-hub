@@ -1,5 +1,5 @@
 <%- include('../../partials/header') %>
-<%- include('../../partials/navbar', { user: locals.user }) %>
+<%- include('../../partials/navbar', { user: user }) %>
 
 <style>
     .filter-nav .nav-link { color: #6c757d; border-bottom: 3px solid transparent; padding-bottom: 0.5rem; }
@@ -27,39 +27,36 @@
             <div class="card mb-4">
                 <div class="card-body p-2">
                     <ul class="nav nav-pills filter-nav">
-                        <% const currentSort = locals.filters ? filters.sort : 'latest'; %>
-                        <% const currentCategory = locals.filters ? filters.category : 'all'; %>
-                        <% const currentQuery = locals.filters && filters.q ? filters.q : ''; %>
                         <li class="nav-item">
-                            <a class="nav-link <%= currentSort === 'latest' ? 'active' : '' %>" href="?sort=latest&category=<%= currentCategory %>&q=<%= currentQuery %>">Mới nhất</a>
+                            <a class="nav-link <%= filters.sort === 'latest' ? 'active' : '' %>" href="?sort=latest&category=<%= filters.category %>&q=<%= filters.q || '' %>">Mới nhất</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= currentSort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= currentCategory %>&q=<%= currentQuery %>">Nổi bật</a>
+                            <a class="nav-link <%= filters.sort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= filters.category %>&q=<%= filters.q || '' %>">Nổi bật</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= currentSort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= currentCategory %>&q=<%= currentQuery %>">Thảo luận nhiều</a>
+                            <a class="nav-link <%= filters.sort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= filters.category %>&q=<%= filters.q || '' %>">Thảo luận nhiều</a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <% if (locals.error) { %>
+            <% if (error) { %>
                 <div class="alert alert-danger"><%= error %></div>
             <% } %>
 
             <!-- Posts List -->
             <div class="list-group">
-                <% if (locals.stickyPosts && stickyPosts.length > 0 && (!locals.currentPage || currentPage === 1) && (!locals.filters || !filters.q)) { %>
+                <% if (stickyPosts && stickyPosts.length > 0 && currentPage === 1 && !filters.q) { %>
                     <% stickyPosts.forEach(post => { %>
                         <%- include('../../partials/_postListItem', { post: post, isSticky: true }) %>
                     <% }); %>
                 <% } %>
                 
-                <% if (locals.posts && posts.length > 0) { %>
+                <% if (posts && posts.length > 0) { %>
                     <% posts.forEach(post => { %>
                         <%- include('../../partials/_postListItem', { post: post, isSticky: false }) %>
                     <% }); %>
-                <% } else if (!locals.stickyPosts || stickyPosts.length === 0) { %>
+                <% } else if (!stickyPosts || stickyPosts.length === 0) { %>
                     <div class="text-center p-5 border rounded bg-light">
                         <h4><i class="fas fa-search"></i> Không tìm thấy bài đăng nào</h4>
                         <p class="text-muted">Chưa có bài đăng nào. Hãy là người đầu tiên tạo một chủ đề mới!</p>
@@ -69,20 +66,15 @@
 
             <!-- Pagination -->
             <%- include('../../partials/pagination', {
-                currentPage: locals.currentPage || 1,
-                totalPages: locals.totalPages || 0,
-                baseUrl: `/forum?sort=${locals.filters ? filters.sort : 'latest'}&category=${locals.filters ? filters.category : 'all'}&q=${locals.filters && filters.q ? filters.q : ''}`
+                currentPage: currentPage,
+                totalPages: totalPages,
+                baseUrl: `/forum?sort=${filters.sort}&category=${filters.category}&q=${filters.q || ''}`
             }) %>
         </div>
 
         <!-- Sidebar -->
         <div class="col-lg-3">
-            <%- include('../../partials/_forumSidebar', { 
-                categories: locals.categories || [], 
-                filters: locals.filters || { category: 'all', sort: 'latest' }, 
-                totalPosts: locals.totalPosts || 0,
-                user: locals.user
-            }) %>
+            <%- include('../../partials/_forumSidebar', { categories, filters, totalPosts, user }) %>
         </div>
     </div>
 </div>
