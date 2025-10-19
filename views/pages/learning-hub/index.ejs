@@ -112,7 +112,7 @@
                     <% }) %>
                 </div>
 
-                <!-- Phân trang -->
+                <!-- Phân trang cho dữ liệu thật -->
                 <% if (totalPages > 1) { %>
                     <%- include('../../partials/pagination', { currentPage: currentPage, totalPages: totalPages, baseUrl: `/learning-hub?sort=${filters.sort}&category=${filters.category}&subject=${filters.subject}&q=${filters.q || ''}` }) %>
                 <% } %>
@@ -137,20 +137,20 @@
                         { _id: 'sample15', title: 'Kỹ năng quản lý thời gian hiệu quả', description: 'Sách hướng dẫn các phương pháp quản lý thời gian.', category: 'ebook', subject: 'Ngành-khác', fileInfo: { fileType: 'PDF' }, averageRating: 4.8, downloads: 250, views: 1500, uploader: { username: 'admin' }, externalUrl: 'https://www.sachhayonline.com/tua-sach/ky-nang-quan-ly-thoi-gian-hieu-qua/96' }
                     ];
 
-                    let sampleDocuments = allSampleDocuments;
+                    let filteredDocuments = allSampleDocuments;
 
                     // Lọc theo Category
                     if (filters && filters.category && filters.category !== 'all') {
-                        sampleDocuments = sampleDocuments.filter(doc => doc.category === filters.category);
+                        filteredDocuments = filteredDocuments.filter(doc => doc.category === filters.category);
                     }
                     // Lọc theo Subject
                     if (filters && filters.subject && filters.subject !== 'all') {
-                        sampleDocuments = sampleDocuments.filter(doc => doc.subject === filters.subject.replace(/\s/g, '-'));
+                        filteredDocuments = filteredDocuments.filter(doc => doc.subject === filters.subject.replace(/\s/g, '-'));
                     }
                     // Lọc theo từ khóa tìm kiếm
                     if (filters && filters.q) {
                         const query = filters.q.toLowerCase();
-                        sampleDocuments = sampleDocuments.filter(doc =>
+                        filteredDocuments = filteredDocuments.filter(doc =>
                             doc.title.toLowerCase().includes(query) ||
                             doc.description.toLowerCase().includes(query)
                         );
@@ -159,22 +159,29 @@
                     // Sắp xếp kết quả
                     const sortType = (filters && filters.sort) ? filters.sort : 'newest';
                     if (sortType === 'popular') {
-                        sampleDocuments.sort((a, b) => b.downloads - a.downloads);
+                        filteredDocuments.sort((a, b) => b.downloads - a.downloads);
                     } else if (sortType === 'rated') {
-                        sampleDocuments.sort((a, b) => b.averageRating - a.averageRating);
+                        filteredDocuments.sort((a, b) => b.averageRating - a.averageRating);
                     } else if (sortType === 'oldest') {
-                        sampleDocuments.sort((a, b) => parseInt(a._id.replace('sample', '')) - parseInt(b._id.replace('sample', '')));
+                        filteredDocuments.sort((a, b) => parseInt(a._id.replace('sample', '')) - parseInt(b._id.replace('sample', '')));
                     } else { // newest
-                        sampleDocuments.sort((a, b) => parseInt(b._id.replace('sample', '')) - parseInt(a._id.replace('sample', '')));
+                        filteredDocuments.sort((a, b) => parseInt(b._id.replace('sample', '')) - parseInt(a._id.replace('sample', '')));
                     }
+
+                    // [THÊM MỚI] Logic phân trang cho dữ liệu mẫu
+                    const docsPerPage = 10;
+                    const totalSampleDocs = filteredDocuments.length;
+                    const totalSamplePages = Math.ceil(totalSampleDocs / docsPerPage);
+                    const startIndex = (currentPage - 1) * docsPerPage;
+                    const paginatedDocs = filteredDocuments.slice(startIndex, startIndex + docsPerPage);
                 %>
                 
-                <% if (sampleDocuments.length > 0) { %>
+                <% if (paginatedDocs.length > 0) { %>
                     <div class="document-list-header">
-                        <p>Hiển thị <strong><%= sampleDocuments.length %></strong> tài liệu mẫu</p>
+                        <p>Hiển thị <strong><%= paginatedDocs.length %></strong> trên tổng số <strong><%= totalSampleDocs %></strong> tài liệu mẫu</p>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                        <% sampleDocuments.forEach(doc => { %>
+                        <% paginatedDocs.forEach(doc => { %>
                             <div class="col">
                                 <div class="card h-100 document-card">
                                     <a href="<%= doc.externalUrl %>" class="card-img-top-link" target="_blank">
@@ -200,6 +207,16 @@
                             </div>
                         <% }) %>
                     </div>
+                    
+                    <!-- [THÊM MỚI] Phân trang cho dữ liệu mẫu -->
+                    <% if (totalSamplePages > 1) { %>
+                        <%- include('../../partials/pagination', { 
+                            currentPage: currentPage, 
+                            totalPages: totalSamplePages, 
+                            baseUrl: `/learning-hub?sort=${(filters && filters.sort) || 'newest'}&category=${(filters && filters.category) || 'all'}&subject=${(filters && filters.subject) || 'all'}&q=${(filters && filters.q) || ''}` 
+                        }) %>
+                    <% } %>
+
                 <% } else { %>
                     <div class="alert alert-info text-center mt-4">
                         <i class="fas fa-box-open fa-3x mb-3"></i>
