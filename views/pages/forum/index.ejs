@@ -1,8 +1,32 @@
 <style>
     /* Các style tùy chỉnh cho diễn đàn */
-    .info-card {
+    .forum-section-card {
+        border: 1px solid #e0e0e0;
         border-radius: .75rem;
+        overflow: hidden;
     }
+    .forum-section-card .card-header {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .category-tabs {
+        background-color: #fff;
+        border-radius: .75rem;
+        padding: .5rem;
+    }
+    .category-tabs .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        border-radius: .5rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .category-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: #fff;
+    }
+    
     .filter-nav .nav-link { 
         color: #6c757d; 
         border-bottom: 3px solid transparent; 
@@ -17,6 +41,7 @@
     }
     .post-card {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border-radius: .75rem !important;
     }
     .post-card:hover {
         transform: translateY(-5px);
@@ -40,139 +65,144 @@
 <div class="row">
     <!-- Cột Nội Dung Chính -->
     <div class="col-lg-9">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-            <div>
-                <h1><i class="fas fa-comments text-success"></i> Diễn đàn cộng đồng</h1>
-                <p class="lead text-muted mb-0">Nơi sinh viên cùng nhau thảo luận và chia sẻ kinh nghiệm.</p>
-            </div>
+        <div class="mb-4">
+            <h1><i class="fas fa-comments text-success"></i> Diễn đàn cộng đồng</h1>
+            <p class="lead text-muted mb-0">Nơi sinh viên cùng nhau thảo luận và chia sẻ kinh nghiệm.</p>
         </div>
 
-        <!-- Nội quy và Danh mục -->
-        <div class="row mb-4">
-            <div class="col-md-6 mb-3 mb-md-0">
-                <div class="card h-100 info-card">
+        <!-- [SỬA 1] Tách Nội quy và Danh mục thành 2 cột riêng biệt -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 forum-section-card">
+                    <div class="card-header"><i class="fas fa-exclamation-triangle me-2"></i>Nội quy diễn đàn</div>
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Nội quy diễn đàn</h5>
-                        <p class="card-text">Tôn trọng lẫn nhau, thảo luận văn minh và không chia sẻ thông tin nhạy cảm. <a href="#">Xem chi tiết</a>.</p>
+                        <p class="card-text">Tôn trọng lẫn nhau, không chia sẻ thông tin nhạy cảm và giữ môi trường thảo luận văn minh, tích cực.</p>
+                        <a href="#" class="btn btn-sm btn-outline-secondary">Xem chi tiết <i class="fas fa-arrow-right ms-1"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card h-100 info-card">
+            <div class="col-md-6 mb-4">
+                 <div class="card h-100 forum-section-card">
+                    <div class="card-header"><i class="fas fa-book me-2"></i>Danh mục bài đăng</div>
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-book-open me-2"></i>Khám phá chủ đề</h5>
-                        <!-- [THAY ĐỔI] Chuyển thành form với dropdown -->
-                        <form action="/forum" method="GET" class="mt-3">
-                            <div class="input-group">
-                                <select name="category" class="form-select" onchange="this.form.submit()">
-                                    <option value="all" <%= (!filters || !filters.category || filters.category === 'all') ? 'selected' : '' %>>
-                                        Tất cả bài đăng (<%= totalPosts ?? 10 %>)
-                                    </option>
-                                    <% if (categories && categories.length > 0) { %>
-                                        <% categories.forEach(cat => { if (cat && cat._id) { %>
-                                            <option value="<%= cat._id %>" <%= (filters && filters.category === cat._id) ? 'selected' : '' %>>
-                                                <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %> (<%= cat.count %>)
-                                            </option>
-                                        <% }}) %>
-                                    <% } else { %>
-                                        <option value="hoc-tap" <%= (filters && filters.category === 'hoc-tap') ? 'selected' : '' %>>Học tập (3)</option>
-                                        <option value="ngoai-khoa" <%= (filters && filters.category === 'ngoai-khoa') ? 'selected' : '' %>>Ngoại khóa (3)</option>
-                                        <option value="doi-song" <%= (filters && filters.category === 'doi-song') ? 'selected' : '' %>>Đời sống (4)</option>
-                                    <% } %>
-                                </select>
-                                <input type="hidden" name="sort" value="<%= (filters && filters.sort) || '' %>">
-                            </div>
-                        </form>
+                        <p class="card-text">Khám phá các chủ đề thảo luận theo từng danh mục cụ thể được quan tâm nhất.</p>
+                         <a href="#category-section" class="btn btn-sm btn-outline-secondary">Xem danh mục <i class="fas fa-arrow-right ms-1"></i></a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bộ lọc và danh sách bài đăng -->
-        <div>
-            <div class="d-flex justify-content-between align-items-center border-bottom mb-3 pb-2">
-                <ul class="nav nav-pills filter-nav">
-                    <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= (filters && filters.category) || 'all' %>">Mới nhất</a></li>
-                    <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'popular') ? 'active' : '' %>" href="?sort=popular&category=<%= (filters && filters.category) || 'all' %>">Nổi bật</a></li>
-                    <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'discussed') ? 'active' : '' %>" href="?sort=discussed&category=<%= (filters && filters.category) || 'all' %>">Thảo luận nhiều</a></li>
+        <!-- [SỬA 2] Bố cục lọc theo tab và căn giữa -->
+        <div id="category-section" class="card shadow-sm mb-4">
+            <div class="card-body d-flex justify-content-center">
+                <ul class="nav nav-pills category-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link <%= (!filters || !filters.category || filters.category === 'all') ? 'active' : '' %>" href="?category=all">
+                            Tất cả bài đăng 
+                            <span class="badge bg-light text-dark ms-1"><%= totalPosts ?? 10 %></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (filters && filters.category === 'hoc-tap') ? 'active' : '' %>" href="?category=hoc-tap">
+                            Học tập 
+                            <span class="badge bg-light text-dark ms-1">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (filters && filters.category === 'ngoai-khoa') ? 'active' : '' %>" href="?category=ngoai-khoa">
+                            Ngoại khóa 
+                            <span class="badge bg-light text-dark ms-1">3</span>
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link <%= (filters && filters.category === 'doi-song') ? 'active' : '' %>" href="?category=doi-song">
+                            Đời sống 
+                            <span class="badge bg-light text-dark ms-1">4</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
+        </div>
+        
+        <!-- Bộ lọc con -->
+        <div class="d-flex justify-content-between align-items-center border-bottom mb-3 pb-2">
+            <ul class="nav nav-pills filter-nav">
+                <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= (filters && filters.category) || 'all' %>">Mới nhất</a></li>
+                <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'popular') ? 'active' : '' %>" href="?sort=popular&category=<%= (filters && filters.category) || 'all' %>">Nổi bật</a></li>
+                <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'discussed') ? 'active' : '' %>" href="?sort=discussed&category=<%= (filters && filters.category) || 'all' %>">Thảo luận nhiều</a></li>
+            </ul>
+        </div>
 
-            <div class="row row-cols-1 row-cols-lg-2 g-4">
-                <% if (posts && posts.length > 0) { %>
-                    <%# --- PHẦN DỮ LIỆU THẬT --- %>
-                <% } else { %>
-                    <%# --- PHẦN BÀI ĐĂNG MẪU VỚI LOGIC MỚI --- %>
-                    <%
-                        const allSamplePosts = [
-                            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet', author: { username: 'maianh' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, createdAt: '2025-10-19T14:00:00Z', externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
-                            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm', author: { username: 'hoang_k69' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, createdAt: '2025-10-19T11:30:00Z', externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
-                            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ Triết học', author: { username: 'baongan_log' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, createdAt: '2025-10-19T15:00:00Z', externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
-                            { _id: 'sample4', title: 'Tìm nhà trọ gần trường', author: { username: 'minhduc' }, category: 'doi-song', likesCount: 30, commentsCount: 18, views: 950, createdAt: '2025-10-18T09:00:00Z', externalUrl: 'https://thanhnien.vn/bi-kip-tim-phong-tro-cho-tan-sinh-vien-post1492520.html' },
-                            { _id: 'sample5', title: 'Tổng hợp quán ăn vặt ngon-bổ-rẻ', author: { username: 'foodlover' }, category: 'doi-song', likesCount: 125, commentsCount: 58, views: 2100, createdAt: '2025-10-19T08:00:00Z', externalUrl: 'https://toplist.vn/top-list/quan-an-vat-ngon-gan-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-tp-hcm-41808.htm' },
-                            { _id: 'sample6', title: 'Cân bằng giữa việc học và làm thêm', author: { username: 'thanh_tam' }, category: 'hoc-tap', likesCount: 88, commentsCount: 35, views: 1500, createdAt: '2025-10-18T16:00:00Z', externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' },
-                            { _id: 'sample7', title: 'Hướng dẫn đăng ký thi VNU-EPT', author: { username: 'anhkhoa' }, category: 'hoc-tap', likesCount: 110, commentsCount: 25, views: 1800, createdAt: '2025-10-17T10:00:00Z', externalUrl: 'https://vnuhcm.edu.vn/sinh-vien_33346864/huong-dan-dang-ky-thi-danh-gia-nang-luc-tieng-anh-vnu-ept-tren-cong-thong-tin-thi-dgnl-cua-dhqg-hcm/313635356864.html' },
-                            { _id: 'sample8', title: 'Cẩm nang sinh tồn KTX khu B', author: { username: 'tramy' }, category: 'doi-song', likesCount: 250, commentsCount: 95, views: 4500, createdAt: '2025-10-16T20:00:00Z', externalUrl: 'https://www.facebook.com/sinhvien.dhqghcm/posts/1349581728419614/' },
-                            { _id: 'sample9', title: 'Các tuyến xe buýt chính đến trường', author: { username: 'bussg' }, category: 'doi-song', likesCount: 180, commentsCount: 30, views: 3200, createdAt: '2025-10-15T08:30:00Z', externalUrl: 'https://vexeexpress.com/xe-buyt-dai-hoc-quoc-gia/' },
-                            { _id: 'sample10', title: 'Tuyển thành viên CLB Guitar USSH', author: { username: 'guitarclub' }, category: 'ngoai-khoa', likesCount: 150, commentsCount: 60, views: 2800, createdAt: '2025-10-14T11:00:00Z', externalUrl: 'https://www.facebook.com/clbguitar.ussh/' },
-                        ];
-                        
-                        let filteredSamplePosts = allSamplePosts;
-                        const categoryFilter = (filters && filters.category) ? filters.category : 'all';
-                        if (categoryFilter !== 'all') {
-                            filteredSamplePosts = filteredSamplePosts.filter(p => p.category === categoryFilter);
-                        }
+        <!-- Danh sách bài đăng -->
+        <div class="row row-cols-1 g-4">
+             <% if (posts && posts.length > 0) { %>
+                <%# --- PHẦN DỮ LIỆU THẬT --- %>
+             <% } else { %>
+                <%# --- PHẦN BÀI ĐĂNG MẪU --- %>
+                <%
+                    const allSamplePosts = [
+                        { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet', author: { username: 'maianh' }, likesCount: 98, commentsCount: 22, views: 850, createdAt: '2025-10-19T14:00:00Z', category: 'hoc-tap', externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
+                        { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69' }, likesCount: 55, commentsCount: 42, views: 1200, createdAt: '2025-10-19T11:30:00Z', category: 'ngoai-khoa', externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
+                        { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log' }, likesCount: 72, commentsCount: 15, views: 600, createdAt: '2025-10-19T15:00:00Z', category: 'hoc-tap', externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
+                        { _id: 'sample4', title: 'Tìm nhà trọ gần trường: Những điều cần lưu ý!', author: { username: 'minhduc' }, likesCount: 30, commentsCount: 18, views: 950, createdAt: '2025-10-18T09:00:00Z', category: 'doi-song', externalUrl: 'https://thanhnien.vn/bi-kip-tim-phong-tro-cho-tan-sinh-vien-post1492520.html' },
+                        { _id: 'sample5', title: 'Tổng hợp các quán ăn vặt ngon-bổ-rẻ quanh khu vực trường', author: { username: 'foodlover' }, likesCount: 125, commentsCount: 58, views: 2100, createdAt: '2025-10-19T08:00:00Z', category: 'doi-song', externalUrl: 'https://toplist.vn/top-list/quan-an-vat-ngon-gan-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-tp-hcm-41808.htm' },
+                        { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam' }, likesCount: 88, commentsCount: 35, views: 1500, createdAt: '2025-10-18T16:00:00Z', category: 'doi-song', externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' },
+                        { _id: 'sample7', title: 'Hướng dẫn đăng ký thi VNU-EPT chi tiết', author: { username: 'anhkhoa' }, likesCount: 110, commentsCount: 25, views: 1800, createdAt: '2025-10-17T10:00:00Z', category: 'hoc-tap', externalUrl: 'https://vnuhcm.edu.vn/sinh-vien_33346864/huong-dan-dang-ky-thi-danh-gia-nang-luc-tieng-anh-vnu-ept-tren-cong-thong-tin-thi-dgnl-cua-dhqg-hcm/313635356864.html' },
+                        { _id: 'sample8', title: 'Cẩm nang sinh tồn KTX khu B ĐHQG', author: { username: 'tramy' }, likesCount: 250, commentsCount: 95, views: 4500, createdAt: '2025-10-16T20:00:00Z', category: 'doi-song', externalUrl: 'https://www.facebook.com/sinhvien.dhqghcm/posts/1349581728419614/' },
+                        { _id: 'sample9', title: 'Tham gia CLB Guitar USSH như thế nào?', author: { username: 'guitarist' }, likesCount: 180, commentsCount: 30, views: 3200, createdAt: '2025-10-15T08:30:00Z', category: 'ngoai-khoa', externalUrl: 'https://www.facebook.com/clbguitar.ussh/' },
+                        { _id: 'sample10', title: 'Đội Công tác xã hội USSH tuyển thành viên', author: { username: 'ctxh_ussh' }, likesCount: 60, commentsCount: 12, views: 700, createdAt: '2025-10-14T11:00:00Z', category: 'ngoai-khoa', externalUrl: 'https://www.facebook.com/CTXH.USSH/' },
+                    ];
 
-                        const sortType = (filters && filters.sort) ? filters.sort : '';
-                        if (sortType === 'popular') { filteredSamplePosts.sort((a, b) => b.views - a.views); } 
-                        else if (sortType === 'discussed') { filteredSamplePosts.sort((a, b) => b.commentsCount - a.commentsCount); } 
-                        else if (sortType === 'latest') { filteredSamplePosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); }
-                        
-                        const postsPerPage = 5;
-                        const totalSamplePages = Math.ceil(filteredSamplePosts.length / postsPerPage);
-                        const page = currentPage || 1;
-                        const paginatedSamplePosts = filteredSamplePosts.slice((page - 1) * postsPerPage, page * postsPerPage);
-                    %>
-                    <% if (paginatedSamplePosts.length > 0) { %>
-                        <% paginatedSamplePosts.forEach(post => { %>
-                            <div class="col">
-                                <div class="card h-100 post-card">
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title"><a href="<%= post.externalUrl %>" target="_blank" class="text-decoration-none stretched-link"><%= post.title %></a></h5>
-                                        <small class="text-muted">bởi <strong><%= post.author.username %></strong> &middot; <%= new Date(post.createdAt).toLocaleDateString('vi-VN') %></small>
-                                        <div class="mt-auto pt-3">
-                                             <a href="<%= post.externalUrl %>" target="_blank" class="btn btn-sm btn-outline-primary">Xem chi tiết <i class="fas fa-external-link-alt ms-1"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-around">
-                                        <span class="post-meta-item" title="Lượt thích"><i class="fas fa-thumbs-up"></i> <%= post.likesCount %></span>
-                                        <span class="post-meta-item" title="Bình luận"><i class="fas fa-comment-alt"></i> <%= post.commentsCount %></span>
-                                        <span class="post-meta-item" title="Lượt xem"><i class="fas fa-eye"></i> <%= post.views %></span>
-                                    </div>
+                    let filteredSamplePosts = allSamplePosts;
+                    // [SỬA 2] Lọc bài đăng mẫu theo danh mục
+                    if (filters && filters.category && filters.category !== 'all') {
+                        filteredSamplePosts = filteredSamplePosts.filter(post => post.category === filters.category);
+                    }
+
+                    const sortType = (filters && filters.sort);
+                    if (sortType === 'popular') { filteredSamplePosts.sort((a, b) => b.views - a.views); } 
+                    else if (sortType === 'discussed') { filteredSamplePosts.sort((a, b) => b.commentsCount - a.commentsCount); } 
+                    else if (sortType === 'latest') { filteredSamplePosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); }
+
+                    const postsPerPage = 5;
+                    const page = currentPage || 1;
+                    const paginatedSamplePosts = filteredSamplePosts.slice((page - 1) * postsPerPage, page * postsPerPage);
+                %>
+                <% paginatedSamplePosts.forEach(post => { %>
+                    <div class="col">
+                        <div class="card h-100 post-card">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><a href="<%= post.externalUrl %>" target="_blank" class="text-decoration-none stretched-link"><%= post.title %></a></h5>
+                                <small class="text-muted">bởi <strong><%= post.author.username %></strong> &middot; <%= new Date(post.createdAt).toLocaleDateString('vi-VN') %></small>
+                                <div class="mt-auto pt-3">
+                                     <a href="<%= post.externalUrl %>" target="_blank" class="btn btn-sm btn-outline-primary">Xem chi tiết <i class="fas fa-external-link-alt ms-1"></i></a>
                                 </div>
                             </div>
-                        <% }); %>
-                    <% } else { %>
-                        <div class="col-12"><p class="text-center text-muted mt-4">Không có bài đăng nào trong mục này.</p></div>
-                    <% } %>
-                <% } %>
-            </div>
+                            <div class="card-footer d-flex justify-content-around">
+                                <span class="post-meta-item" title="Lượt thích"><i class="fas fa-thumbs-up"></i> <%= post.likesCount %></span>
+                                <span class="post-meta-item" title="Bình luận"><i class="fas fa-comment-alt"></i> <%= post.commentsCount %></span>
+                                <span class="post-meta-item" title="Lượt xem"><i class="fas fa-eye"></i> <%= post.views %></span>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+             <% } %>
+        </div>
 
-            <!-- Phân trang -->
+        <!-- Phân trang -->
+        <% if ((!posts || posts.length === 0)) { %>
             <% const totalSamplePages = Math.ceil(10 / 5); %>
-            <% if (totalPages > 1 || totalSamplePages > 1) { %>
-                 <%- include('../../partials/pagination', {
-                    currentPage: currentPage, 
-                    totalPages: totalPages || totalSamplePages,
+             <% if (totalSamplePages > 1) { %>
+                <%- include('../../partials/pagination', {
+                    currentPage: currentPage, totalPages: totalSamplePages,
                     baseUrl: `/forum?sort=${(filters && filters.sort) || ''}&category=${(filters && filters.category) || 'all'}&q=${(filters && filters.q) || ''}`
                 }) %>
-            <% } %>
-        </div>
+             <% } %>
+        <% } %>
     </div>
-</div>
-
-<!-- Thanh Bên Phải -->
-<div class="col-lg-3">
-    <%- include('../../partials/_forumSidebar', { totalPosts: totalPosts, user: user || null }) %>
+    <!-- Thanh Bên Phải -->
+    <div class="col-lg-3">
+        <%- include('../../partials/_forumSidebar', { totalPosts: totalPosts, user: user || null }) %>
+    </div>
 </div>
 
