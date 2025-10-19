@@ -1,14 +1,17 @@
 <style>
-    .filter-nav .nav-link { color: #6c757d; border-bottom: 3px solid transparent; padding-bottom: 0.5rem; }
-    .filter-nav .nav-link.active { color: #0d6efd; border-bottom-color: #0d6efd; font-weight: 500; }
+    /* Các style tùy chỉnh cho diễn đàn */
+    .filter-nav .nav-link { color: #6c757d; border-bottom: 3px solid transparent; padding-bottom: 0.5rem; transition: all 0.2s ease-in-out; }
+    .filter-nav .nav-link.active, .filter-nav .nav-link:hover { color: #0d6efd; border-bottom-color: #0d6efd; font-weight: 500; }
+    .post-item { transition: background-color 0.2s ease-in-out; }
     .post-item:hover { background-color: #f8f9fa; }
     .sticky-post { background-color: #fffbe6; border-left: 4px solid #ffc107; }
-    .post-avatar { width: 50px; height: 50px; object-fit: cover; }
+    .topic-title { font-size: 1.1rem; font-weight: 500; }
+    .topic-details { font-size: 0.85rem; }
 </style>
 
 <div class="container-fluid px-lg-5 my-5">
     <div class="row">
-        <!-- Main Content -->
+        <!-- Cột Nội Dung Chính -->
         <div class="col-lg-9">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                 <div>
@@ -20,19 +23,13 @@
                 </a>
             </div>
 
-            <!-- Filters -->
+            <!-- Bộ lọc -->
             <div class="card mb-4">
                 <div class="card-body p-2">
                     <ul class="nav nav-pills filter-nav">
-                        <li class="nav-item">
-                            <a class="nav-link <%= (!filters.sort || filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Mới nhất</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= filters.sort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Nổi bật</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= filters.sort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Thảo luận nhiều</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link <%= (!filters.sort || filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Mới nhất</a></li>
+                        <li class="nav-item"><a class="nav-link <%= filters.sort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Nổi bật</a></li>
+                        <li class="nav-item"><a class="nav-link <%= filters.sort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= filters.category || 'all' %>&q=<%= filters.q || '' %>">Thảo luận nhiều</a></li>
                     </ul>
                 </div>
             </div>
@@ -41,7 +38,7 @@
                 <div class="alert alert-danger"><%= error %></div>
             <% } %>
 
-            <!-- Posts List -->
+            <!-- Danh sách bài đăng -->
             <div class="list-group">
                 <% if (posts && posts.length > 0) { %>
                     <%# --- PHẦN NÀY DÀNH CHO DỮ LIỆU THẬT TỪ DATABASE --- %>
@@ -54,23 +51,23 @@
                         <%- include('../../partials/_postListItem', { post: post, isSticky: false }) %>
                     <% }); %>
                 <% } else { %>
-                    <%# --- PHẦN NÀY DÀNH CHO BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
+                    <%# --- PHẦN BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
                     <%
-                        // Tạo danh sách bài đăng mẫu
+                        // Tạo danh sách bài đăng mẫu với link ngoài
                         const sampleStickyPosts = [{
                             _id: 'sticky1', title: 'Nội quy diễn đàn và hướng dẫn cho thành viên mới',
-                            author: { username: 'Admin', avatar: '/images/default-avatar.png' },
-                            category: 'thong-bao', likesCount: 150, commentsCount: 25, views: 2500,
-                            lastActivity: new Date('2025-10-18T10:00:00Z')
+                            author: { username: 'Admin' }, category: 'thong-bao', likesCount: 150, commentsCount: 25, views: 2500,
+                            lastActivity: new Date('2025-10-18T10:00:00Z'),
+                            externalUrl: 'https://kenh14.vn/netizen-la-gi-va-van-hoa-ung-xu-tren-mang-xa-hoi-20220908122435733.chn' // Ví dụ link
                         }];
 
                         let samplePosts = [
-                            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng cho sinh viên năm nhất?', author: { username: 'maianh', avatar: '/images/default-avatar.png' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, lastActivity: new Date('2025-10-19T14:00:00Z') },
-                            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69', avatar: '/images/default-avatar.png' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, lastActivity: new Date('2025-10-19T11:30:00Z') },
-                            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log', avatar: '/images/default-avatar.png' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, lastActivity: new Date('2025-10-19T15:00:00Z') },
-                            { _id: 'sample4', title: 'Tìm nhà trọ gần trường: Những điều cần lưu ý!', author: { username: 'minhduc. hust', avatar: '/images/default-avatar.png' }, category: 'doi-song', likesCount: 30, commentsCount: 18, views: 950, lastActivity: new Date('2025-10-18T09:00:00Z') },
-                            { _id: 'sample5', title: 'Tổng hợp các quán ăn vặt ngon-bổ-rẻ quanh khu vực trường', author: { username: 'foodlover_hanoi', avatar: '/images/default-avatar.png' }, category: 'giai-tri', likesCount: 125, commentsCount: 58, views: 2100, lastActivity: new Date('2025-10-19T08:00:00Z') },
-                            { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam', avatar: '/images/default-avatar.png' }, category: 'ky-nang', likesCount: 88, commentsCount: 35, views: 1500, lastActivity: new Date('2025-10-18T16:00:00Z') }
+                            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet cho sinh viên', author: { username: 'maianh' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, lastActivity: new Date('2025-10-19T14:00:00Z'), externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
+                            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, lastActivity: new Date('2025-10-19T11:30:00Z'), externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
+                            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, lastActivity: new Date('2025-10-19T15:00:00Z'), externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
+                            { _id: 'sample4', title: 'Tìm nhà trọ gần trường: Những điều cần lưu ý!', author: { username: 'minhduc' }, category: 'doi-song', likesCount: 30, commentsCount: 18, views: 950, lastActivity: new Date('2025-10-18T09:00:00Z'), externalUrl: 'https://thanhnien.vn/bi-kip-tim-phong-tro-cho-tan-sinh-vien-post1492520.html' },
+                            { _id: 'sample5', title: 'Tổng hợp các quán ăn vặt ngon-bổ-rẻ quanh khu vực trường', author: { username: 'foodlover' }, category: 'giai-tri', likesCount: 125, commentsCount: 58, views: 2100, lastActivity: new Date('2025-10-19T08:00:00Z'), externalUrl: 'https://toplist.vn/top-list/quan-an-vat-ngon-gan-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-tp-hcm-41808.htm' },
+                            { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam' }, category: 'ky-nang', likesCount: 88, commentsCount: 35, views: 1500, lastActivity: new Date('2025-10-18T16:00:00Z'), externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' }
                         ];
 
                         // Sắp xếp bài đăng mẫu dựa trên bộ lọc
@@ -96,17 +93,16 @@
                 <% } %>
             </div>
 
-            <!-- Pagination (hiển thị khi có dữ liệu thật) -->
+            <!-- Phân trang (chỉ hiển thị khi có dữ liệu thật) -->
             <% if (posts && posts.length > 0) { %>
                 <%- include('../../partials/pagination', {
-                    currentPage: currentPage,
-                    totalPages: totalPages,
-                    baseUrl: `/forum?sort=${filters.sort}&category=${filters.category}&q=${filters.q || ''}`
+                    currentPage: currentPage, totalPages: totalPages,
+                    baseUrl: `/forum?sort=${filters.sort || 'latest'}&category=${filters.category || 'all'}&q=${filters.q || ''}`
                 }) %>
             <% } %>
         </div>
 
-        <!-- Sidebar -->
+        <!-- Thanh Bên Phải -->
         <div class="col-lg-3">
             <%- include('../../partials/_forumSidebar', { categories: categories || [], filters: filters || {}, totalPosts: totalPosts || 0, user: user || null }) %>
         </div>
