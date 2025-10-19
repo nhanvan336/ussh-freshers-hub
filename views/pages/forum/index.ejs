@@ -15,6 +15,21 @@
         padding: 0.5rem 0.75rem;
         background-color: #fff;
     }
+    .sticky-post {
+      background-color: #fffbe6;
+      border-left: 4px solid #ffc107;
+      padding-left: 20px;
+    }
+    .post-meta-item {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 1rem;
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+    .post-meta-item .fas {
+        margin-right: 0.35rem;
+    }
 </style>
 
 <div class="container-fluid px-lg-5 my-5">
@@ -28,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Bố cục bộ lọc và tìm kiếm MỚI -->
+            <!-- Bố cục bộ lọc và tìm kiếm -->
             <div class="card mb-4">
                 <div class="card-body">
                     <!-- Hàng 1: Danh mục -->
@@ -36,13 +51,13 @@
                         <strong class="me-3">Danh mục:</strong>
                         <ul class="nav nav-pills">
                             <li class="nav-item">
-                                <a class="nav-link <%= (!filters.category || filters.category === 'all') ? 'active' : '' %>" href="?sort=<%= filters.sort || 'latest' %>&category=all">Tất cả bài đăng</a>
+                                <a class="nav-link <%= (!filters || !filters.category || filters.category === 'all') ? 'active' : '' %>" href="?sort=<%= (filters && filters.sort) ? filters.sort : 'latest' %>&category=all">Tất cả bài đăng</a>
                             </li>
                             <% if (locals.categories && categories.length > 0) { %>
                                 <% categories.forEach(cat => { %>
                                     <% if (cat && cat._id) { %>
                                         <li class="nav-item">
-                                            <a class="nav-link <%= filters.category === cat._id ? 'active' : '' %>" href="?sort=<%= filters.sort || 'latest' %>&category=<%= cat._id %>">
+                                            <a class="nav-link <%= (filters && filters.category === cat._id) ? 'active' : '' %>" href="?sort=<%= (filters && filters.sort) ? filters.sort : 'latest' %>&category=<%= cat._id %>">
                                                 <%= cat._id.charAt(0).toUpperCase() + cat._id.slice(1) %>
                                             </a>
                                         </li>
@@ -54,14 +69,14 @@
                     <!-- Hàng 2: Bộ lọc con và Tìm kiếm -->
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                         <ul class="nav nav-pills filter-nav mb-3 mb-md-0">
-                            <li class="nav-item"><a class="nav-link <%= (!filters.sort || filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= filters.category || 'all' %>">Mới nhất</a></li>
-                            <li class="nav-item"><a class="nav-link <%= filters.sort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= filters.category || 'all' %>">Nổi bật</a></li>
-                            <li class="nav-item"><a class="nav-link <%= filters.sort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= filters.category || 'all' %>">Thảo luận nhiều</a></li>
+                            <li class="nav-item"><a class="nav-link <%= (!filters || !filters.sort || filters.sort === 'latest') ? 'active' : '' %>" href="?sort=latest&category=<%= (filters && filters.category) ? filters.category : 'all' %>">Mới nhất</a></li>
+                            <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'popular') ? 'active' : '' %>" href="?sort=popular&category=<%= (filters && filters.category) ? filters.category : 'all' %>">Nổi bật</a></li>
+                            <li class="nav-item"><a class="nav-link <%= (filters && filters.sort === 'discussed') ? 'active' : '' %>" href="?sort=discussed&category=<%= (filters && filters.category) ? filters.category : 'all' %>">Thảo luận nhiều</a></li>
                         </ul>
                         <form action="/forum" method="GET" class="d-flex search-form-custom">
-                            <input type="hidden" name="sort" value="<%= filters.sort || 'latest' %>">
-                            <input type="hidden" name="category" value="<%= filters.category || 'all' %>">
-                            <input type="text" name="q" class="form-control border-0" placeholder="Tìm kiếm chủ đề..." value="<%= filters.q || '' %>">
+                            <input type="hidden" name="sort" value="<%= (filters && filters.sort) ? filters.sort : 'latest' %>">
+                            <input type="hidden" name="category" value="<%= (filters && filters.category) ? filters.category : 'all' %>">
+                            <input type="text" name="q" class="form-control border-0" placeholder="Tìm kiếm chủ đề..." value="<%= (filters && filters.q) ? filters.q : '' %>">
                             <button type="submit" class="btn btn-link text-secondary p-0 ps-2"><i class="fas fa-search"></i></button>
                         </form>
                     </div>
@@ -72,17 +87,127 @@
                 <div class="alert alert-danger"><%= error %></div>
             <% } %>
 
-            <!-- Danh sách bài đăng -->
+            <!-- Bắt đầu Danh sách bài đăng -->
             <div class="list-group">
-                <%# Logic hiển thị bài đăng (dữ liệu thật hoặc mẫu) %>
-                <%- include('../../partials/_forumPostList', { posts, stickyPosts, currentPage, filters }) %>
+                <% if (posts && posts.length > 0) { %>
+                    <%# --- PHẦN NÀY DÀNH CHO DỮ LIỆU THẬT TỪ DATABASE --- %>
+                    <% if (stickyPosts && stickyPosts.length > 0 && currentPage === 1 && (!filters || !filters.q)) { %>
+                        <% stickyPosts.forEach(post => { %>
+                            <div class="list-group-item list-group-item-action post-item sticky-post">
+                                <!-- HTML của một bài đăng được ghim -->
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">
+                                        <i class="fas fa-thumbtack text-warning me-2"></i>
+                                        <a href="/forum/post/<%= post._id %>" class="text-decoration-none text-dark fw-bold"><%= post.title %></a>
+                                    </h5>
+                                </div>
+                                <div class="post-meta">
+                                    <span>Ghim bởi <strong><%= post.author ? post.author.username : 'N/A' %></strong></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span class="text-capitalize"><%= post.category %></span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                    <% posts.forEach(post => { %>
+                        <div class="list-group-item list-group-item-action post-item">
+                            <!-- HTML của một bài đăng thường -->
+                             <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"><a href="/forum/post/<%= post._id %>" class="text-decoration-none text-dark"><%= post.title %></a></h5>
+                                <small class="text-muted"><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></small>
+                            </div>
+                            <div class="mb-2">
+                                <span class="post-meta-item"><i class="fas fa-user"></i> <%= post.author ? post.author.username : 'N/A' %></span>
+                                <span class="post-meta-item"><i class="fas fa-thumbs-up"></i> <%= post.likesCount || 0 %></span>
+                                <span class="post-meta-item"><i class="fas fa-comment-alt"></i> <%= post.commentsCount || 0 %></span>
+                                <span class="post-meta-item"><i class="fas fa-eye"></i> <%= post.views || 0 %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <%# --- PHẦN BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
+                    <%
+                        const sampleStickyPosts = [{
+                            _id: 'sticky1', title: 'Nội quy diễn đàn và hướng dẫn cho thành viên mới',
+                            author: { username: 'Admin' }, category: 'thong-bao', likesCount: 150, commentsCount: 25, views: 2500,
+                            lastActivity: new Date('2025-10-18T10:00:00Z'),
+                            externalUrl: 'https://kenh14.vn/netizen-la-gi-va-van-hoa-ung-xu-tren-mang-xa-hoi-20220908122435733.chn'
+                        }];
+
+                        let samplePosts = [
+                            { _id: 'sample1', title: 'Kinh nghiệm "săn" học bổng Vallet cho sinh viên', author: { username: 'maianh' }, category: 'hoc-tap', likesCount: 98, commentsCount: 22, views: 850, lastActivity: new Date('2025-10-19T14:00:00Z'), externalUrl: 'https://svvn.tienphong.vn/bi-quyet-san-hoc-bong-vallet-danh-cho-tan-sinh-vien-post1473216.tpo' },
+                            { _id: 'sample2', title: 'Review các CLB/Đội/Nhóm: Đâu là nơi dành cho bạn?', author: { username: 'hoang_k69' }, category: 'ngoai-khoa', likesCount: 55, commentsCount: 42, views: 1200, lastActivity: new Date('2025-10-19T11:30:00Z'), externalUrl: 'https://vnu.edu.vn/tin-tuc-su-kien/-/tin-tuc/cau-lac-bo-doi-nhom-sinh-vien-vnu-noi-ket-noi-dam-me-va-toa-sang-tai-nang.vnu' },
+                            { _id: 'sample3', title: 'Tips ôn thi cuối kỳ hiệu quả môn Triết học?', author: { username: 'baongan_log' }, category: 'hoc-tap', likesCount: 72, commentsCount: 15, views: 600, lastActivity: new Date('2025-10-19T15:00:00Z'), externalUrl: 'https://www.studocu.com/vn/document/truong-dai-hoc-su-pham-ky-thuat-thanh-pho-ho-chi-minh/triet-hoc-mac-lenin/de-cuong-on-tap-cuoi-ki-triet-hoc-mac-lenin/24581452' },
+                            { _id: 'sample4', title: 'Tìm nhà trọ gần trường: Những điều cần lưu ý!', author: { username: 'minhduc' }, category: 'doi-song', likesCount: 30, commentsCount: 18, views: 950, lastActivity: new Date('2025-10-18T09:00:00Z'), externalUrl: 'https://thanhnien.vn/bi-kip-tim-phong-tro-cho-tan-sinh-vien-post1492520.html' },
+                            { _id: 'sample5', title: 'Tổng hợp các quán ăn vặt ngon-bổ-rẻ quanh khu vực trường', author: { username: 'foodlover' }, category: 'giai-tri', likesCount: 125, commentsCount: 58, views: 2100, lastActivity: new Date('2025-10-19T08:00:00Z'), externalUrl: 'https://toplist.vn/top-list/quan-an-vat-ngon-gan-dai-hoc-khoa-hoc-xa-hoi-va-nhan-van-tp-hcm-41808.htm' },
+                            { _id: 'sample6', title: 'Làm thế nào để cân bằng giữa việc học và đi làm thêm?', author: { username: 'thanh_tam' }, category: 'ky-nang', likesCount: 88, commentsCount: 35, views: 1500, lastActivity: new Date('2025-10-18T16:00:00Z'), externalUrl: 'https://glints.com/vn/blog/cach-can-bang-giua-viec-hoc-va-lam/' }
+                        ];
+
+                        const sortType = (locals.filters && filters.sort) ? filters.sort : 'latest';
+                        if (sortType === 'popular') {
+                            samplePosts.sort((a, b) => b.likesCount - a.likesCount);
+                        } else if (sortType === 'discussed') {
+                            samplePosts.sort((a, b) => b.commentsCount - a.commentsCount);
+                        } else { // latest
+                            samplePosts.sort((a, b) => new Date(b.lastActivity) - new Date(a.lastActivity));
+                        }
+                    %>
+
+                    <% if (sampleStickyPosts.length > 0) { %>
+                        <% sampleStickyPosts.forEach(post => { %>
+                            <div class="list-group-item list-group-item-action post-item sticky-post">
+                                <!-- HTML của một bài đăng ghim mẫu -->
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">
+                                        <i class="fas fa-thumbtack text-warning me-2"></i>
+                                        <a href="<%= post.externalUrl %>" target="_blank" class="text-decoration-none text-dark fw-bold"><%= post.title %></a>
+                                    </h5>
+                                </div>
+                                <div class="mb-2">
+                                    <span>Ghim bởi <strong><%= post.author.username %></strong></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span class="text-capitalize"><%= post.category %></span>
+                                </div>
+                                <div>
+                                    <a href="<%= post.externalUrl %>" target="_blank" class="btn btn-sm btn-outline-success">Xem bài gốc <i class="fas fa-external-link-alt ms-1"></i></a>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+
+                    <% if (samplePosts.length > 0) { %>
+                        <% samplePosts.forEach(post => { %>
+                            <div class="list-group-item list-group-item-action post-item">
+                                <!-- HTML của một bài đăng thường mẫu -->
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1"><a href="<%= post.externalUrl %>" target="_blank" class="text-decoration-none text-dark"><%= post.title %></a></h5>
+                                    <small class="text-muted"><%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></small>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="post-meta-item"><i class="fas fa-user"></i> <%= post.author.username %></span>
+                                    <span class="post-meta-item"><i class="fas fa-thumbs-up"></i> <%= post.likesCount %></span>
+                                    <span class="post-meta-item"><i class="fas fa-comment-alt"></i> <%= post.commentsCount %></span>
+                                    <span class="post-meta-item"><i class="fas fa-eye"></i> <%= post.views %></span>
+                                </div>
+                                <div>
+                                    <a href="<%= post.externalUrl %>" target="_blank" class="btn btn-sm btn-outline-success">Xem bài gốc <i class="fas fa-external-link-alt ms-1"></i></a>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                <% } %>
             </div>
+            <!-- Kết thúc Danh sách bài đăng -->
 
             <!-- Phân trang -->
-            <% if (posts && posts.length > 0) { %>
+            <% if (posts && posts.length > 0 && totalPages > 1) { %>
                 <%- include('../../partials/pagination', {
                     currentPage: currentPage, totalPages: totalPages,
-                    baseUrl: `/forum?sort=${filters.sort || 'latest'}&category=${filters.category || 'all'}&q=${filters.q || ''}`
+                    baseUrl: `/forum?sort=${(filters && filters.sort) ? filters.sort : 'latest'}&category=${(filters && filters.category) ? filters.category : 'all'}&q=${(filters && filters.q) ? filters.q : ''}`
                 }) %>
             <% } %>
         </div>
