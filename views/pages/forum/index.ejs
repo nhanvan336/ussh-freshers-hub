@@ -1,111 +1,106 @@
-<%# File: views/pages/forum/index.ejs %>
+<%- include('../../partials/header') %>
+<%- include('../../partials/navbar', { user: user }) %>
 
-<div class="page-header">
-    <div class="container">
-        <h1>Diễn đàn Cộng đồng</h1>
-        <p class="subtitle">Nơi kết nối, chia sẻ kinh nghiệm và thảo luận về mọi chủ đề.</p>
-        <% if (isAuthenticated) { %>
-            <a href="/forum/create" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tạo bài viết mới
-            </a>
-        <% } else { %>
-            <a href="/auth/login" class="btn btn-primary">
-                <i class="fas fa-sign-in-alt"></i> Đăng nhập để tham gia
-            </a>
-        <% } %>
-    </div>
-</div>
+<style>
+    /* Custom styles for the forum */
+    .filter-nav .nav-link {
+        color: #6c757d;
+        border-bottom: 3px solid transparent;
+        padding-bottom: 0.5rem;
+    }
+    .filter-nav .nav-link.active {
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        font-weight: 500;
+    }
+    .post-item {
+        transition: background-color 0.2s ease-in-out;
+    }
+    .post-item:hover {
+        background-color: #f8f9fa;
+    }
+    .sticky-post {
+        background-color: #fffbe6;
+        border-left: 4px solid #ffc107;
+    }
+    .post-avatar {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+</style>
 
-<div class="container page-content">
+<div class="container-fluid px-lg-5 my-5">
     <div class="row">
-        <!-- Cột Trái: Bộ lọc & Danh mục -->
-        <div class="col-lg-3">
-            <aside class="sidebar">
-                <!-- Form Tìm kiếm & Lọc -->
-                <div class="sidebar-widget">
-                    <h4><i class="fas fa-filter"></i> Lọc bài viết</h4>
-                    <form action="/forum" method="GET" class="filter-form">
-                        <div class="form-group">
-                            <label for="q">Tìm kiếm</label>
-                            <input type="search" id="q" name="q" class="form-control" placeholder="Nhập từ khóa..." value="<%= locals.filters && filters.q ? filters.q : '' %>">
-                        </div>
-                        <div class="form-group">
-                            <label for="sort">Sắp xếp theo</label>
-                            <select name="sort" id="sort" class="form-control">
-                                <option value="latest" <%= locals.filters && filters.sort === 'latest' ? 'selected' : '' %>>Mới nhất</option>
-                                <option value="popular" <%= locals.filters && filters.sort === 'popular' ? 'selected' : '' %>>Nhiều lượt thích</option>
-                                <option value="discussed" <%= locals.filters && filters.sort === 'discussed' ? 'selected' : '' %>>Nhiều bình luận</option>
-                                <option value="oldest" <%= locals.filters && filters.sort === 'oldest' ? 'selected' : '' %>>Cũ nhất</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-secondary w-100">Áp dụng</button>
-                    </form>
-                </div>
-                <!-- Danh sách danh mục -->
-                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                    <div class="sidebar-widget">
-                        <h4><i class="fas fa-tags"></i> Danh mục</h4>
-                        <ul class="list-group list-group-flush category-list">
-                            <a href="/forum" class="list-group-item d-flex justify-content-between align-items-center <%= locals.filters && (filters.category === 'all' || !filters.category) ? 'active' : '' %>">
-                                Tất cả chuyên mục
-                                <span class="badge bg-primary rounded-pill"><%= totalPosts %></span>
-                            </a>
-                            <% categories.forEach(cat => { %>
-                                <a href="/forum?category=<%= cat._id %>" class="list-group-item d-flex justify-content-between align-items-center <%= locals.filters && filters.category === cat._id ? 'active' : '' %>">
-                                    <%= cat._id %>
-                                    <span class="badge bg-secondary rounded-pill"><%= cat.count %></span>
-                                </a>
-                            <% }) %>
-                        </ul>
-                    </div>
-                <% } %>
-            </aside>
-        </div>
-
-        <!-- Cột Phải: Danh sách bài đăng -->
+        <!-- Main Content Column -->
         <div class="col-lg-9">
-            <% if (locals.error) { %>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <h1><i class="fas fa-comments text-success"></i> Diễn đàn cộng đồng</h1>
+                    <p class="lead text-muted mb-0">Nơi sinh viên cùng nhau thảo luận và chia sẻ kinh nghiệm.</p>
+                </div>
+                <a href="/forum/create" class="btn btn-primary btn-lg mt-3 mt-md-0 d-none d-lg-block">
+                    <i class="fas fa-plus-circle"></i> Tạo bài đăng
+                </a>
+            </div>
+
+            <!-- Filter and Sort Navigation -->
+            <div class="card mb-4">
+                <div class="card-body p-2">
+                    <ul class="nav nav-pills filter-nav">
+                        <li class="nav-item">
+                            <a class="nav-link <%= filters.sort === 'latest' ? 'active' : '' %>" href="?sort=latest&category=<%= filters.category %>&q=<%= filters.q || '' %>">Mới nhất</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= filters.sort === 'popular' ? 'active' : '' %>" href="?sort=popular&category=<%= filters.category %>&q=<%= filters.q || '' %>">Nổi bật</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= filters.sort === 'discussed' ? 'active' : '' %>" href="?sort=discussed&category=<%= filters.category %>&q=<%= filters.q || '' %>">Thảo luận nhiều</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <% if (error) { %>
                 <div class="alert alert-danger"><%= error %></div>
             <% } %>
 
-            <!-- Bài đăng đã ghim -->
-            <% if (typeof stickyPosts !== 'undefined' && stickyPosts.length > 0) { %>
-                <div class="post-list-section">
-                    <h4 class="section-title"><i class="fas fa-thumbtack"></i> Bài đăng đã ghim</h4>
+            <!-- Posts List -->
+            <div class="list-group">
+                <!-- Sticky Posts -->
+                <% if (stickyPosts && stickyPosts.length > 0 && currentPage === 1 && !filters.q) { %>
                     <% stickyPosts.forEach(post => { %>
-                        <%- include('../partials/forum-post-item', { post: post }) %>
-                    <% }) %>
-                </div>
-            <% } %>
-
-            <!-- Bài đăng thường -->
-            <div class="post-list-section">
-                 <h4 class="section-title"><i class="far fa-comments"></i> Thảo luận mới nhất</h4>
-                <% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+                        <%- include('../../partials/_postListItem', { post: post, isSticky: true }) %>
+                    <% }); %>
+                <% } %>
+                
+                <!-- Regular Posts -->
+                <% if (posts && posts.length > 0) { %>
                     <% posts.forEach(post => { %>
-                        <%- include('../partials/forum-post-item', { post: post }) %>
-                    <% }) %>
-                <% } else if (!locals.error) { %>
-                     <div class="alert alert-info text-center">
-                        <i class="fas fa-box-open fa-3x mb-3"></i>
-                        <h4>Chưa có bài viết nào.</h4>
-                        <p>Hãy là người đầu tiên bắt đầu một cuộc thảo luận nhé!</p>
+                        <%- include('../../partials/_postListItem', { post: post, isSticky: false }) %>
+                    <% }); %>
+                <% } else if (stickyPosts.length === 0) { %>
+                    <div class="text-center p-5 border rounded bg-light">
+                        <h4><i class="fas fa-search"></i> Không tìm thấy bài đăng nào</h4>
+                        <p class="text-muted">Chưa có bài đăng nào phù hợp với bộ lọc của bạn. Hãy thử lại hoặc tạo một bài đăng mới!</p>
                     </div>
                 <% } %>
             </div>
 
-            <!-- Phân trang -->
-            <% if (totalPages > 1) { %>
-                <nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center">
-                    <ul class="pagination">
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                <a class="page-link" href="/forum?page=<%= i %>&sort=<%= locals.filters && filters.sort ? filters.sort : 'latest' %>&q=<%= locals.filters && filters.q ? filters.q : '' %>&category=<%= locals.filters && filters.category ? filters.category : 'all' %>"><%= i %></a>
-                            </li>
-                        <% } %>
-                    </ul>
-                </nav>
-            <% } %>
+            <!-- Pagination -->
+            <%- include('../../partials/pagination', {
+                currentPage: currentPage,
+                totalPages: totalPages,
+                baseUrl: `/forum?sort=${filters.sort}&category=${filters.category}&q=${filters.q || ''}`
+            }) %>
+
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="col-lg-3">
+            <%- include('../../partials/_forumSidebar', { categories, filters, totalPosts, user }) %>
         </div>
     </div>
 </div>
+
+<%- include('../../partials/footer') %>
