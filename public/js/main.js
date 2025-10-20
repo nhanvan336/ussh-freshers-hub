@@ -3,50 +3,47 @@
 // ===================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- [BỔ SUNG] KẾT NỐI NÚT BẤM "BẮT ĐẦU TRÒ CHUYỆN" ---
+    // --- [BỔ SUNG] KẾT NỐI NÚT BẤM "BẮT ĐẦU TRÒ CHUYỆN" TRÊN TRANG CHỦ ---
     const startChatButton = document.getElementById('start-chat-btn');
     if (startChatButton) {
         startChatButton.addEventListener('click', () => {
-            // Kiểm tra xem chatbot UI (từ file chatbot-ui.js) đã được khởi tạo chưa
+            // Kiểm tra xem chatbot UI chuyên nghiệp (từ file chatbot-ui.js) đã sẵn sàng chưa
             if (window.chatbotUI && typeof window.chatbotUI.openChatbot === 'function') {
-                window.chatbotUI.openChatbot(); // Mở chatbot
+                window.chatbotUI.openChatbot(); // Gọi hàm để mở chatbot mới
             } else {
                 console.error('Chatbot UI is not available or not initialized yet.');
-                // Phương án dự phòng: thử gọi hàm global cũ hơn
-                if (typeof window.toggleChatbot === 'function') {
-                    window.toggleChatbot();
-                } else {
-                    alert('Chức năng chatbot đang được tải, vui lòng thử lại sau giây lát.');
-                }
+                alert('Chức năng chatbot đang được tải, vui lòng thử lại sau giây lát.');
             }
         });
     }
-    // --- KẾT THÚC PHẦN BỔ SUNG ---
 
-    // Initialize all modules (giữ nguyên code của bạn)
+    // Initialize các module khác (đã loại bỏ initializeChatbot() cũ)
     initializeNavigation();
-    initializeChatbot(); // Hàm này của bạn có thể vẫn hữu ích cho chatbot cũ
     initializeScrollEffects();
     initializeFormHandlers();
     initializeAnimations();
     initializeAccessibility();
+    
+    // Khởi tạo Socket.io
+    setTimeout(initializeSocket, 1000);
 });
 
 // ===================================
-// Navigation Module (Giữ nguyên)
+// Navigation Module
 // ===================================
 function initializeNavigation() {
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
     const navbarMenu = document.querySelector('.navbar-menu');
     const navLinks = document.querySelectorAll('.nav-link');
     
+    // Mobile menu toggle
     if (mobileToggle && navbarMenu) {
         mobileToggle.addEventListener('click', function() {
             const isOpen = navbarMenu.style.display === 'flex';
             navbarMenu.style.display = isOpen ? 'none' : 'flex';
             mobileToggle.setAttribute('aria-expanded', !isOpen);
             
+            // Animate hamburger lines
             const lines = mobileToggle.querySelectorAll('.hamburger-line');
             lines.forEach((line, index) => {
                 if (!isOpen) {
@@ -61,11 +58,13 @@ function initializeNavigation() {
         });
     }
     
+    // Close mobile menu when clicking outside
     document.addEventListener('click', function(e) {
         if (navbarMenu && !e.target.closest('.navbar') && window.innerWidth <= 768) {
             navbarMenu.style.display = 'none';
             mobileToggle.setAttribute('aria-expanded', 'false');
             
+            // Reset hamburger animation
             const lines = mobileToggle.querySelectorAll('.hamburger-line');
             lines.forEach(line => {
                 line.style.transform = 'none';
@@ -74,6 +73,7 @@ function initializeNavigation() {
         }
     });
     
+    // Smooth scroll for anchor links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -90,6 +90,7 @@ function initializeNavigation() {
         });
     });
     
+    // Active nav highlight based on scroll position
     window.addEventListener('scroll', throttle(updateActiveNavigation, 100));
 }
 
@@ -114,164 +115,448 @@ function updateActiveNavigation() {
 }
 
 // ===================================
-// Chatbot Module (Giữ nguyên)
+// Chatbot Module (ĐÃ ĐƯỢC GỠ BỎ)
+// Toàn bộ hàm initializeChatbot() và các hàm con của nó đã được xóa
+// để tránh xung đột với file chatbot-ui.js
 // ===================================
-function initializeChatbot() {
-    const chatbotToggle = document.querySelector('.chatbot-toggle');
-    const chatbotContainer = document.querySelector('.chatbot-container');
-    const chatbotClose = document.querySelector('.chatbot-close');
-    const chatbotInput = document.querySelector('.chatbot-input input');
-    const chatbotSendBtn = document.querySelector('.chatbot-input button');
-    const chatbotMessages = document.querySelector('.chatbot-messages');
+
+// Global function for external calls from old HTML structure (like home.ejs)
+// This is now handled by the new event listener at the top of the file.
+// The `window.toggleChatbot` can be safely removed if no other part of the site uses it.
+window.toggleChatbot = function() {
+    console.warn('toggleChatbot() is deprecated. Use window.chatbotUI.openChatbot() instead.');
+    if (window.chatbotUI && typeof window.chatbotUI.openChatbot === 'function') {
+        window.chatbotUI.openChatbot();
+    }
+};
+
+
+// ===================================
+// Scroll Effects Module
+// ===================================
+function initializeScrollEffects() {
+    const backToTopBtn = document.querySelector('.back-to-top');
+    const header = document.querySelector('.header');
     
-    let isOpen = false;
-    let messageHistory = [];
-    
-    if (chatbotToggle && chatbotContainer) {
-        chatbotToggle.addEventListener('click', toggleChatbot);
-        chatbotClose?.addEventListener('click', closeChatbot);
+    // Back to top button
+    if (backToTopBtn) {
+        window.addEventListener('scroll', throttle(() => {
+            if (window.scrollY > 300) {
+                backToTopBtn.style.display = 'block';
+                backToTopBtn.style.opacity = '1';
+            } else {
+                backToTopBtn.style.opacity = '0';
+                setTimeout(() => {
+                    if (window.scrollY <= 300) {
+                        backToTopBtn.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }, 100));
         
-        chatbotSendBtn?.addEventListener('click', sendMessage);
-        chatbotInput?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Header scroll effect
+    if (header) {
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', throttle(() => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 100) {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.backgroundColor = 'var(--white)';
+                header.style.backdropFilter = 'none';
+            }
+            
+            lastScrollY = currentScrollY;
+        }, 50));
+    }
+    
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
             }
         });
-        
-        addWelcomeMessage();
+    }, observerOptions);
+    
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.feature-card, .activity-column, .floating-card');
+    animateElements.forEach(el => observer.observe(el));
+}
+
+// ===================================
+// Form Handlers Module
+// ===================================
+function initializeFormHandlers() {
+    // Newsletter form
+    const newsletterForm = document.querySelector('.newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', handleNewsletterSubmit);
     }
     
-    function toggleChatbot() {
-        isOpen = !isOpen;
-        chatbotContainer.style.display = isOpen ? 'flex' : 'none';
-        chatbotToggle.style.transform = isOpen ? 'scale(0.9)' : 'scale(1)';
-        
-        if (isOpen) {
-            chatbotInput?.focus();
-            chatbotContainer.style.animation = 'slideUpFadeIn 0.3s ease-out';
-        }
-    }
-    
-    function closeChatbot() {
-        isOpen = false;
-        chatbotContainer.style.display = 'none';
-        chatbotToggle.style.transform = 'scale(1)';
-    }
-    
-    function sendMessage() {
-        const message = chatbotInput?.value.trim();
-        if (!message) return;
-        
-        addMessage(message, 'user');
-        chatbotInput.value = '';
-        
-        showTypingIndicator();
-        
-        setTimeout(() => {
-            hideTypingIndicator();
-            const response = generateAIResponse(message);
-            addMessage(response, 'bot');
-        }, 1000 + Math.random() * 1000);
-    }
-    
-    function addMessage(content, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chat-message ${sender}-message`;
-        
-        const timestamp = new Date().toLocaleTimeString('vi-VN', {
-            hour: '2-digit',
-            minute: '2-digit'
+    // Generic form validation
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        const inputs = form.querySelectorAll('input[required], textarea[required]');
+        inputs.forEach(input => {
+            input.addEventListener('blur', validateField);
+            input.addEventListener('input', clearFieldError);
         });
-        
-        messageDiv.innerHTML = `
-            <div class="message-content">${content}</div>
-            <div class="message-time">${timestamp}</div>
-        `;
-        
-        chatbotMessages?.appendChild(messageDiv);
-        chatbotMessages?.scrollTo({
-            top: chatbotMessages.scrollHeight,
-            behavior: 'smooth'
-        });
-        
-        messageHistory.push({ content, sender, timestamp });
+    });
+}
+
+function handleNewsletterSubmit(e) {
+    e.preventDefault();
+    const email = e.target.querySelector('.newsletter-input').value;
+    
+    if (validateEmail(email)) {
+        showNotification('Cảm ơn bạn đã đăng ký nhận thông báo!', 'success');
+        e.target.reset();
+    } else {
+        showNotification('Vui lòng nhập email hợp lệ.', 'error');
+    }
+}
+
+function validateField(e) {
+    const field = e.target;
+    const value = field.value.trim();
+    
+    clearFieldError(field);
+    
+    if (field.hasAttribute('required') && !value) {
+        showFieldError(field, 'Trường này là bắt buộc');
+        return false;
     }
     
-    function addWelcomeMessage() {
-        setTimeout(() => {
-            addMessage('Xin chào! Tôi là trợ lý AI của USSH Freshers\' Hub. Tôi có thể giúp bạn tìm hiểu về đời sống sinh viên, học tập và các hoạt động của trường. Bạn cần hỗ trợ gì không?', 'bot');
-        }, 500);
+    if (field.type === 'email' && value && !validateEmail(value)) {
+        showFieldError(field, 'Email không hợp lệ');
+        return false;
     }
     
-    function showTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'typing-indicator';
-        typingDiv.innerHTML = `
-            <div class="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        `;
-        chatbotMessages?.appendChild(typingDiv);
-        chatbotMessages?.scrollTo({
-            top: chatbotMessages.scrollHeight,
-            behavior: 'smooth'
-        });
+    return true;
+}
+
+function clearFieldError(field) {
+    if (typeof field === 'object' && field.target) {
+        field = field.target;
     }
     
-    function hideTypingIndicator() {
-        const typingIndicator = document.querySelector('.typing-indicator');
-        typingIndicator?.remove();
+    const errorElement = field.parentNode.querySelector('.field-error');
+    if (errorElement) {
+        errorElement.remove();
     }
+    field.classList.remove('error');
+}
+
+function showFieldError(field, message) {
+    clearFieldError(field);
+    field.classList.add('error');
     
-    function generateAIResponse(message) {
-        const lowerMessage = message.toLowerCase();
-        
-        const responses = {
-            'xin chào': 'Xin chào! Rất vui được gặp bạn. Tôi có thể giúp gì cho bạn?',
-            'học tập': 'Bạn có thể truy cập Trung tâm học tập để tìm tài liệu theo từng môn học. Có gì cụ thể bạn muốn tìm hiểu không?',
-            'đăng ký': 'Để đăng ký tài khoản, bạn chỉ cần click vào nút "Đăng ký" ở góc trên bên phải và điền thông tin cần thiết.',
-            'diễn đàn': 'Diễn đàn cộng đồng là nơi bạn có thể thảo luận với các bạn sinh viên khác. Hãy tham gia để chia sẻ kinh nghiệm nhé!',
-            'sức khỏe': 'Góc sức khỏe tinh thần cung cấp hỗ trợ tâm lý và theo dõi tâm trạng. Bạn có thể hỏi đáp ẩn danh nếu cần.',
-            'cẩm nang': 'Cẩm nang sinh viên có đầy đủ thông tin về trường, bản đồ, lịch sự kiện và quy định. Rất hữu ích cho tân sinh viên!',
-            'thời gian': `Hiện tại là ${new Date().toLocaleTimeString('vi-VN')}. Bạn cần biết thời gian mở cửa của cơ sở nào không?`,
-            'liên hệ': 'Bạn có thể liên hệ qua email freshers@ussh.edu.vn hoặc số điện thoại (024) 3514 0000.',
-            'sự kiện': 'Có nhiều sự kiện thú vị sắp diễn ra! Hãy kiểm tra lịch sự kiện trong Cẩm nang sinh viên nhé.',
-            'tài liệu': 'Trung tâm học tập có đầy đủ tài liệu theo môn học, bài giảng video và đề thi. Bạn muốn tìm tài liệu môn nào?'
-        };
-        
-        for (const [keyword, response] of Object.entries(responses)) {
-            if (lowerMessage.includes(keyword)) {
-                return response;
+    const errorElement = document.createElement('div');
+    errorElement.className = 'field-error';
+    errorElement.textContent = message;
+    field.parentNode.appendChild(errorElement);
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// ===================================
+// Animations Module
+// ===================================
+function initializeAnimations() {
+    // Counter animation for stats
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    const countUpObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                countUpObserver.unobserve(entry.target);
             }
+        });
+    }, { threshold: 0.5 });
+    
+    statNumbers.forEach(stat => countUpObserver.observe(stat));
+    
+    // Floating cards animation timing
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 1.5}s`;
+    });
+}
+
+function animateCounter(element) {
+    const target = parseInt(element.textContent.replace(/[^\d]/g, ''));
+    const suffix = element.textContent.replace(/[\d]/g, '');
+    let current = 0;
+    const increment = target / 50;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
         }
+        element.textContent = Math.floor(current) + suffix;
+    }, 50);
+}
+
+// ===================================
+// Accessibility Module
+// ===================================
+function initializeAccessibility() {
+    // Keyboard navigation
+    document.addEventListener('keydown', handleKeyboardNavigation);
+    
+    // Focus management for dropdowns
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle.click();
+            }
+        });
+    });
+    
+    // Announce screen reader messages
+    createAriaLiveRegion();
+}
+
+function handleKeyboardNavigation(e) {
+    // Escape key closes modals and dropdowns
+    if (e.key === 'Escape') {
+        const openDropdowns = document.querySelectorAll('.dropdown-menu[style*="visible"]');
+        openDropdowns.forEach(dropdown => {
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.opacity = '0';
+        });
         
-        const defaultResponses = [
-            'Tôi hiểu bạn đang hỏi về vấn đề này. Bạn có thể tìm thêm thông tin trong các mục Học tập, Diễn đàn, hoặc Cẩm nang sinh viên.',
-            'Đây là một câu hỏi thú vị! Tôi khuyên bạn nên tham gia Diễn đàn cộng đồng để nhận được nhiều ý kiến từ các bạn sinh viên khác.',
-            'Cảm ơn bạn đã hỏi! Để có thông tin chính xác nhất, hãy kiểm tra Cẩm nang sinh viên hoặc liên hệ trực tiếp với nhà trường.',
-            'Tôi sẽ cố gắng hỗ trợ tốt nhất có thể. Bạn có thể nói rõ hơn về vấn đề bạn cần giúp đỡ không?'
-        ];
-        
-        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        // Close chatbot if open
+        if (window.chatbotUI && window.chatbotUI.isOpen) {
+            window.chatbotUI.closeChatbot();
+        }
+    }
+}
+
+function createAriaLiveRegion() {
+    const liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = 'sr-only';
+    liveRegion.id = 'aria-live-region';
+    document.body.appendChild(liveRegion);
+}
+
+function announceToScreenReader(message) {
+    const liveRegion = document.getElementById('aria-live-region');
+    if (liveRegion) {
+        liveRegion.textContent = message;
+        setTimeout(() => {
+            liveRegion.textContent = '';
+        }, 1000);
     }
 }
 
 // ===================================
-// Các module khác (Giữ nguyên)
+// Notification System
 // ===================================
-function initializeScrollEffects() { /* ... */ }
-function initializeFormHandlers() { /* ... */ }
-function initializeAnimations() { /* ... */ }
-function initializeAccessibility() { /* ... */ }
-function handleKeyboardNavigation(e) { /* ... */ }
-function createAriaLiveRegion() { /* ... */ }
-function announceToScreenReader(message) { /* ... */ }
-function showNotification(message, type = 'info') { /* ... */ }
-function removeNotification(notification) { /* ... */ }
-function getNotificationIcon(type) { /* ... */ }
-function throttle(func, limit) { /* ... */ }
-function debounce(func, delay) { /* ... */ }
-// (Tôi đã rút gọn các hàm này vì chúng không thay đổi)
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="notification-icon fas fa-${getNotificationIcon(type)}"></i>
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" aria-label="Đóng thông báo">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Show animation
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    // Auto remove
+    setTimeout(() => removeNotification(notification), 5000);
+    
+    // Manual close
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        removeNotification(notification);
+    });
+    
+    // Announce to screen readers
+    announceToScreenReader(message);
+}
+
+function removeNotification(notification) {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-triangle',
+        warning: 'exclamation-circle',
+        info: 'info-circle'
+    };
+    return icons[type] || icons.info;
+}
+
+// ===================================
+// Utility Functions
+// ===================================
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+function debounce(func, delay) {
+    let debounceTimer;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+// ===================================
+// API Helpers
+// ===================================
+const API = {
+    baseURL: '/api',
+    
+    async request(endpoint, options = {}) {
+        const url = `${this.baseURL}${endpoint}`;
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        };
+        
+        try {
+            const response = await fetch(url, config);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('API request failed:', error);
+            throw error;
+        }
+    },
+    
+    get(endpoint, options = {}) {
+        return this.request(endpoint, { method: 'GET', ...options });
+    },
+    
+    post(endpoint, data, options = {}) {
+        return this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            ...options
+        });
+    },
+    
+    put(endpoint, data, options = {}) {
+        return this.request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            ...options
+        });
+    },
+    
+    delete(endpoint, options = {}) {
+        return this.request(endpoint, { method: 'DELETE', ...options });
+    }
+};
+
+// ===================================
+// Socket.io Integration
+// ===================================
+function initializeSocket() {
+    if (typeof io !== 'undefined') {
+        const socket = io();
+        
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+        
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+        
+        // Listen for real-time notifications
+        socket.on('notification', (data) => {
+            showNotification(data.message, data.type);
+        });
+        
+        // Listen for new forum posts
+        socket.on('newForumPost', (post) => {
+            // updateForumFeed(post); // Implement this function if needed
+        });
+        
+        window.realtimeService = { socket, isConnected: true };
+    }
+}
+
+// ===================================
+// Error Handling
+// ===================================
+window.addEventListener('error', (e) => {
+    console.error('JavaScript error:', e.error);
+    if (window.location.hostname === 'localhost') {
+        showNotification('Đã xảy ra lỗi JavaScript. Vui lòng kiểm tra console.', 'error');
+    }
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('Unhandled promise rejection:', e.reason);
+    e.preventDefault();
+});
+
+// ===================================
+// Performance Monitoring
+// ===================================
+if ('performance' in window) {
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const timing = performance.timing;
+            const loadTime = timing.loadEventEnd - timing.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
+        }, 0);
+    });
+}
 
