@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="/css/components/navbar.css">
     <link rel="stylesheet" href="/css/pages.css">
 
-    <!-- [CẬP NHẬT] CSS Cho Chatbot Messenger và Sửa lỗi Căn Giữa -->
     <style>
         /* Sửa lỗi căn giữa biểu tượng trên toàn trang */
         .fas, .fab, .far, .ai-robot i, .floating-card i, .ai-feature i, #chatbot-bubble i {
@@ -30,17 +29,19 @@
         }
 
         /* ----- Bố cục Chatbot Messenger ----- */
+        /* [THAY ĐỔI] Đẩy chatbot lên trên */
         #chatbot-container {
             position: fixed;
-            bottom: 25px;
+            bottom: 100px; /* Đẩy lên để chừa chỗ cho nút back-to-top */
             right: 25px;
             z-index: 1000;
         }
 
+        /* [THAY ĐỔI] Chuyển màu sang màu nâu đồng bộ */
         #chatbot-bubble {
             width: 60px;
             height: 60px;
-            background-color: #0d6efd;
+            background-color: #A16207; /* Màu nâu từ theme */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -79,8 +80,9 @@
             visibility: visible;
         }
 
+        /* [THAY ĐỔI] Chuyển màu header sang màu nâu */
         .chatbot-header {
-            background-color: #0d6efd;
+            background-color: #A16207;
             color: white;
             padding: 1rem;
             display: flex;
@@ -95,13 +97,14 @@
             flex-grow: 1;
             padding: 1rem;
             overflow-y: auto;
-            background-color: #f4f7f9;
+            background-color: #f_f_f_bf_9f_a;
         }
         .message { margin-bottom: 1rem; display: flex; max-width: 85%; align-items: flex-end; }
         .message.user { margin-left: auto; flex-direction: row-reverse; }
         .message .text { padding: 0.75rem 1rem; border-radius: 1.25rem; word-wrap: break-word; }
         .message.bot .text { background-color: #e9ecef; color: #212529; border-bottom-left-radius: 0.25rem; }
-        .message.user .text { background-color: #0d6efd; color: white; border-bottom-right-radius: 0.25rem; }
+        /* [THAY ĐỔI] Chuyển màu tin nhắn người dùng sang màu nâu */
+        .message.user .text { background-color: #A16207; color: white; border-bottom-right-radius: 0.25rem; }
         .message.typing .text { padding: 0.75rem 1rem; }
         .typing-indicator span { height: 8px; width: 8px; background-color: #999; border-radius: 50%; display: inline-block; margin: 0 1px; animation: bounce 1.4s infinite ease-in-out both; }
         .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
@@ -110,16 +113,16 @@
 
         .chatbot-input { border-top: 1px solid #dee2e6; padding: 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
         .chatbot-input input { flex-grow: 1; border: 1px solid #ced4da; border-radius: 50rem; padding: 0.5rem 1rem; margin-right: 0.5rem; }
-        .chatbot-input input:focus { outline: none; border-color: #86b7fe; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-        .chatbot-input button { background: none; border: none; font-size: 1.5rem; color: #0d6efd; cursor: pointer; }
+        /* [THAY ĐỔI] Chuyển màu focus sang màu nâu */
+        .chatbot-input input:focus { outline: none; border-color: #c_e_b_5_a_d; box-shadow: 0 0 0 0.25rem rgba(161, 98, 7, 0.25); }
+        .chatbot-input button { background: none; border: none; font-size: 1.5rem; color: #A16207; cursor: pointer; }
 
-        /* --- [BỔ SUNG] SỬA LỖI CHỒNG CHÉO --- */
-        /* Tìm nút "back-to-top" và đẩy nó lên trên nút chatbot */
+        /* [THAY ĐỔI] Giữ nút back-to-top ở vị trí gốc của nó */
         .back-to-top {
-            /* Đẩy nút này lên một khoảng bằng chiều cao của nút chatbot (60px) + khoảng trống (15px) + vị trí bottom của chatbot (25px) */
-            bottom: 100px !important; 
-            right: 25px !important; /* Đảm bảo nó cùng hàng dọc với chatbot */
-            z-index: 999; /* Đặt nó dưới chatbot một chút để không bị che */
+            position: fixed;
+            bottom: 25px !important; 
+            right: 25px !important;
+            z-index: 999;
         }
     </style>
 </head>
