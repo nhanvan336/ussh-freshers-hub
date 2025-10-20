@@ -23,7 +23,6 @@
     <style>
         #chatbot-container {
             position: fixed;
-            /* [SỬA 1] Đẩy widget lên cao hơn */
             bottom: 90px; 
             right: 25px;
             z-index: 1000;
@@ -168,6 +167,13 @@
             color: #0d6efd;
             cursor: pointer;
         }
+        
+        /* [SỬA 2] Căn giữa các biểu tượng Font Awesome */
+        i.fas, i.far, i.fab {
+            display: inline-block;
+            width: 1.25em; /* Đảm bảo icon có không gian để căn giữa */
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -196,7 +202,6 @@
     <div id="chatbot-container">
         <!-- Bong bóng nổi -->
         <div id="chatbot-bubble">
-            <!-- [SỬA 3] Thay đổi biểu tượng -->
             <i class="fas fa-robot"></i>
         </div>
 
@@ -225,7 +230,7 @@
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- [SỬA 2] Cập nhật script để xử lý gửi tin nhắn -->
+    <!-- Script xử lý gửi tin nhắn -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const chatbotBubble = document.getElementById('chatbot-bubble');
@@ -234,8 +239,7 @@
             const sendButton = document.getElementById('chatbot-send-btn');
             const inputField = document.getElementById('chatbot-input-field');
             const messagesContainer = chatbotWindow.querySelector('.chatbot-messages');
-            let conversationHistory = []; // Lưu trữ lịch sử trò chuyện
-
+            
             // --- Logic đóng/mở ---
             if (chatbotBubble && chatbotWindow && closeButton) {
                 chatbotBubble.addEventListener('click', () => chatbotWindow.classList.toggle('open'));
@@ -248,11 +252,10 @@
                 if (messageText === '') return;
 
                 addMessageToUI(messageText, 'user');
-                conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
                 inputField.value = '';
                 
                 showTypingIndicator();
-                sendMessageToAI(conversationHistory);
+                sendMessageToBe(messageText); // [SỬA 1] Gọi hàm mới
             };
 
             sendButton.addEventListener('click', sendMessage);
@@ -271,7 +274,8 @@
                     messageDiv.id = 'typing-indicator';
                     messageDiv.innerHTML = `<div class="text"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
                 } else {
-                    messageDiv.innerHTML = `<div class="text">${text}</div>`;
+                    const cleanText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    messageDiv.innerHTML = `<div class="text">${cleanText}</div>`;
                 }
                 messagesContainer.appendChild(messageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -288,35 +292,28 @@
                 }
             }
             
-            async function sendMessageToAI(history) {
+            // [SỬA 1] Hàm mới để gọi backend API
+            async function sendMessageToBe(message) {
                 try {
-                    const apiKey = ""; // API key sẽ được cung cấp tự động bởi môi trường
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                    const systemPrompt = "Bạn là USSH Assistant, một trợ lý AI thân thiện và hữu ích dành cho sinh viên trường Đại học Khoa học Xã hội và Nhân văn, ĐHQG Hà Nội. Luôn trả lời bằng tiếng Việt một cách ngắn gọn, rõ ràng và lịch sự.";
-
-                    const payload = {
-                        contents: history,
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                    };
-
-                    const response = await fetch(apiUrl, {
+                    const response = await fetch('/api/chatbot/message', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Giả sử bạn có một cách để lấy token, nếu không có, backend cần điều chỉnh
+                            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}` 
+                        },
+                        body: JSON.stringify({ message: message })
                     });
 
                     if (!response.ok) {
-                        throw new Error("Lỗi kết nối tới AI.");
+                        throw new Error('Lỗi khi gửi tin nhắn đến server.');
                     }
 
                     const result = await response.json();
-                    const botResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
                     removeTypingIndicator();
 
-                    if (botResponse) {
-                        addMessageToUI(botResponse, 'bot');
-                        conversationHistory.push({ role: 'model', parts: [{ text: botResponse }] });
+                    if (result.success && result.data && result.data.message) {
+                        addMessageToUI(result.data.message, 'bot');
                     } else {
                         addMessageToUI("Rất tiếc, tôi chưa có câu trả lời cho vấn đề này.", 'bot');
                     }
@@ -328,7 +325,6 @@
                 }
             }
 
-            // (Phần logic kết nối socket.io vẫn giữ nguyên)
             if (typeof io !== 'undefined') {
                 window.realtimeService = {
                     socket: io(), isConnected: true,
