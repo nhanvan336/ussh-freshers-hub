@@ -17,18 +17,101 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/components/navbar.css">
-    <link rel="stylesheet" href="/css/chatbot-ui.css"> 
     <link rel="stylesheet" href="/css/pages.css">
 
-    <!-- [SỬA LỖI GIAO DIỆN] CSS để căn giữa các biểu tượng -->
+    <!-- [CẬP NHẬT] CSS Cho Chatbot Messenger và Sửa lỗi Căn Giữa -->
     <style>
-        .chatbot-button-icon, .chatbot-send-btn svg {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            height: 100%;
-            width: 100%;
+        /* Sửa lỗi căn giữa biểu tượng trên toàn trang */
+        i.fas, i.far, i.fab {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25em;
         }
+
+        /* ----- Bố cục Chatbot Messenger ----- */
+        #chatbot-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+        }
+
+        #chatbot-bubble {
+            width: 60px;
+            height: 60px;
+            background-color: #0d6efd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease-in-out;
+        }
+        #chatbot-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        #chatbot-window {
+            width: 370px;
+            max-height: 70vh;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.95) translateY(10px);
+            opacity: 0;
+            visibility: hidden;
+            transform-origin: bottom right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #chatbot-window.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chatbot-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chatbot-header h4 { margin: 0; font-size: 1.1rem; }
+        .chatbot-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #f4f7f9;
+        }
+        .message { margin-bottom: 1rem; display: flex; max-width: 85%; align-items: flex-end; }
+        .message.user { margin-left: auto; flex-direction: row-reverse; }
+        .message .text { padding: 0.75rem 1rem; border-radius: 1.25rem; word-wrap: break-word; }
+        .message.bot .text { background-color: #e9ecef; color: #212529; border-bottom-left-radius: 0.25rem; }
+        .message.user .text { background-color: #0d6efd; color: white; border-bottom-right-radius: 0.25rem; }
+        .message.typing .text { padding: 0.75rem 1rem; }
+        .typing-indicator span { height: 8px; width: 8px; background-color: #999; border-radius: 50%; display: inline-block; margin: 0 1px; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .chatbot-input { border-top: 1px solid #dee2e6; padding: 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
+        .chatbot-input input { flex-grow: 1; border: 1px solid #ced4da; border-radius: 50rem; padding: 0.5rem 1rem; margin-right: 0.5rem; }
+        .chatbot-input input:focus { outline: none; border-color: #86b7fe; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+        .chatbot-input button { background: none; border: none; font-size: 1.5rem; color: #0d6efd; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -54,25 +137,108 @@
     
     <%- include('../partials/footer') %>
     
-    <!-- [XÓA] Toàn bộ widget chatbot tĩnh đã được xóa khỏi đây -->
+    <!-- [CẬP NHẬT] Toàn bộ Chatbot Messenger mới -->
+    <div id="chatbot-container">
+        <div id="chatbot-bubble"><i class="fas fa-robot"></i></div>
+        <div id="chatbot-window">
+            <div class="chatbot-header">
+                <h4>Trợ lý AI - USSH</h4>
+                <button class="chatbot-close-btn" aria-label="Đóng">&times;</button>
+            </div>
+            <div class="chatbot-messages">
+                <div class="message bot"><div class="text">👋 Chào bạn! Tôi là Trợ lý AI của USSH. Tôi có thể giúp gì cho bạn hôm nay?</div></div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input-field" placeholder="Nhập câu hỏi của bạn...">
+                <button id="chatbot-send-btn" aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
     
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- [QUAN TRỌNG] File chatbot-ui.js không còn được gọi nữa -->
 
-    <!-- [THAY ĐỔI] Gọi đúng file chatbot-ui.js của bạn -->
-    <script src="/js/chatbot-ui.js"></script>
-
+    <!-- Script điều khiển Chatbot Messenger -->
     <script>
-        // Khởi tạo các service cần thiết khác
         document.addEventListener('DOMContentLoaded', () => {
+            const chatbotBubble = document.getElementById('chatbot-bubble');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const closeButton = chatbotWindow.querySelector('.chatbot-close-btn');
+            const sendButton = document.getElementById('chatbot-send-btn');
+            const inputField = document.getElementById('chatbot-input-field');
+            const messagesContainer = chatbotWindow.querySelector('.chatbot-messages');
+            
+            if (chatbotBubble && chatbotWindow && closeButton) {
+                chatbotBubble.addEventListener('click', () => chatbotWindow.classList.toggle('open'));
+                closeButton.addEventListener('click', () => chatbotWindow.classList.remove('open'));
+            }
+
+            const sendMessage = () => {
+                const messageText = inputField.value.trim();
+                if (messageText === '') return;
+                addMessageToUI(messageText, 'user');
+                inputField.value = '';
+                showTypingIndicator();
+                sendMessageToBackend(messageText);
+            };
+
+            sendButton.addEventListener('click', sendMessage);
+            inputField.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+            });
+
+            function addMessageToUI(text, sender, isTyping = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                if (isTyping) {
+                    messageDiv.id = 'typing-indicator';
+                    messageDiv.innerHTML = `<div class="text"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+                } else {
+                    const cleanText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    messageDiv.innerHTML = `<div class="text">${cleanText}</div>`;
+                }
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            function showTypingIndicator() { addMessageToUI('', 'bot', true); }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+            }
+            
+            async function sendMessageToBackend(message) {
+                try {
+                    const response = await fetch('/api/chatbot/message', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: message })
+                    });
+
+                    if (!response.ok) { throw new Error('Lỗi mạng hoặc server'); }
+
+                    const result = await response.json();
+                    removeTypingIndicator();
+
+                    if (result.success && result.data && result.data.message) {
+                        addMessageToUI(result.data.message, 'bot');
+                    } else {
+                        addMessageToUI("Rất tiếc, tôi chưa có câu trả lời cho vấn đề này.", 'bot');
+                    }
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessageToUI("Đã có lỗi xảy ra. Vui lòng thử lại sau.", 'bot');
+                    console.error("Chatbot Error:", error);
+                }
+            }
+
             if (typeof io !== 'undefined') {
-                window.realtimeService = {
-                    socket: io(),
-                    isConnected: true,
-                    on: function(event, callback) { this.socket.on(event, callback); }
-                };
+                window.realtimeService = { socket: io(), isConnected: true, on: (e, cb) => window.realtimeService.socket.on(e, cb) };
             } else {
                  window.realtimeService = { isConnected: false };
             }
