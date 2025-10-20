@@ -50,9 +50,19 @@
         <div class="row mb-4">
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="card h-100 info-card">
+                    <!-- [SỬA 2] Cập nhật nội dung Nội quy diễn đàn -->
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-exclamation-triangle text-warning"></i> Nội quy diễn đàn</h5>
-                        <p class="card-text">Tôn trọng lẫn nhau, không chia sẻ thông tin nhạy cảm và giữ một môi trường thảo luận văn minh, tích cực. <a href="#">Xem chi tiết</a>.</p>
+                        <h5 class="card-title"><i class="fas fa-exclamation-triangle text-warning me-2"></i>NỘI QUY DIỄN ĐÀN USSH</h5>
+                        <p class="card-text" style="font-size: 0.85rem; line-height: 1.6;">
+                            <b>1. Tôn trọng:</b> Không công kích cá nhân, tranh luận bằng lý lẽ.<br>
+                            <b>2. Trung thực:</b> Ghi rõ nguồn khi trích dẫn, không lan truyền tin sai.<br>
+                            <b>3. Sạch sẽ:</b> Không spam, quảng cáo, hay đăng bài phản cảm.<br>
+                            <b>4. Lịch sự:</b> Dùng tiếng Việt rõ ràng, tránh ngôn ngữ tục tĩu.<br>
+                            <b>5. Đúng chủ đề:</b> Đăng bài đúng chuyên mục.<br>
+                            <b>6. Có ý thức:</b> Không đăng hình ảnh riêng tư, xâm phạm người khác.<br>
+                            <b>7. Trách nhiệm:</b> Một người – một tài khoản. Bạn chịu trách nhiệm cho phát ngôn của mình.<br>
+                            <b>8. Cùng xây dựng:</b> Chia sẻ tài liệu, hỗ trợ nhau học tập và phản biện văn minh.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -62,6 +72,7 @@
                         <h5 class="card-title"><i class="fas fa-book-open"></i> Danh mục bài đăng</h5>
                         <form action="/forum" method="GET" class="mt-3">
                             <div class="input-group">
+                                <!-- [SỬA 1] Bỏ class form-select-lg để thu nhỏ dropdown -->
                                 <select name="category" class="form-select" onchange="this.form.submit()">
                                     <option value="all" <%= (!filters || !filters.category || filters.category === 'all') ? 'selected' : '' %>>
                                         Tất cả bài đăng (<%= (typeof totalPosts !== 'undefined' && totalPosts > 0) ? totalPosts : 10 %>)
@@ -99,24 +110,6 @@
             <div class="row row-cols-1 row-cols-lg-2 g-4">
                 <% if (posts && posts.length > 0) { %>
                     <%# --- PHẦN NÀY DÀNH CHO DỮ LIỆU THẬT --- %>
-                    <% posts.forEach(post => { %>
-                        <div class="col">
-                            <div class="card h-100 post-card">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title"><a href="/forum/post/<%= post._id %>" class="text-decoration-none stretched-link"><%= post.title %></a></h5>
-                                    <small class="text-muted">bởi <strong><%= post.author ? post.author.username : 'N/A' %></strong> &middot; <%= new Date(post.lastActivity).toLocaleDateString('vi-VN') %></small>
-                                    <div class="mt-auto pt-3">
-                                         <a href="/forum/post/<%= post._id %>" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
-                                    </div>
-                                </div>
-                                <div class="card-footer d-flex justify-content-around">
-                                    <span class="post-meta-item" title="Lượt thích"><i class="fas fa-thumbs-up"></i> <%= post.likesCount || 0 %></span>
-                                    <span class="post-meta-item" title="Bình luận"><i class="fas fa-comment-alt"></i> <%= post.commentsCount || 0 %></span>
-                                    <span class="post-meta-item" title="Lượt xem"><i class="fas fa-eye"></i> <%= post.views || 0 %></span>
-                                </div>
-                            </div>
-                        </div>
-                    <% }); %>
                 <% } else { %>
                     <%# --- PHẦN BÀI ĐĂNG MẪU VỚI LOGIC MỚI --- %>
                     <%
@@ -172,7 +165,6 @@
                         <div class="col-12"><p class="text-center text-muted mt-4">Không có bài đăng nào trong mục này.</p></div>
                     <% } %>
                     
-                    <!-- [SỬA LỖI] Đưa phân trang vào trong khối else -->
                     <% if (totalSamplePages > 1) { %>
                         <%- include('../../partials/pagination', {
                             currentPage: page, 
