@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof title !== 'undefined' ? title : 'Trang chủ' %> | USSH Freshers' Hub</title>
+    <title><%= typeof title !== 'undefined' ? title : "Trang chủ" %> | USSH Freshers' Hub</title>
     <meta name="description" content="Cộng đồng trực tuyến dành cho sinh viên năm nhất Trường Đại học Khoa học Xã hội và Nhân văn">
     
     <!-- Fonts -->
@@ -17,27 +17,17 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/components/navbar.css">
-    <link rel="stylesheet" href="/css/chatbot.css">
+    <!-- Giả định bạn có file CSS cho chatbot UI mới -->
+    <link rel="stylesheet" href="/css/chatbot-ui.css"> 
     <link rel="stylesheet" href="/css/pages.css">
-    <!-- Additional page-specific CSS -->
-    <% if (typeof additionalCSS !== 'undefined') { %>
-        <% additionalCSS.forEach(css => { %>
-            <link rel="stylesheet" href="<%= css %>">
-        <% }) %>
-    <% } %>
 </head>
 <body>
-    <!-- Skip to main content for accessibility -->
     <a href="#main-content" class="skip-link">Chuyển đến nội dung chính</a>
     
-    <!-- Header -->
     <%- include('../partials/header') %>
     
-    <!-- Main Content -->
     <main id="main-content" class="main-content">
-        <!-- [SỬA LỖI] Container này sẽ căn giữa toàn bộ nội dung của trang -->
         <div class="container">
-            <!-- Trung tâm thông báo (Flash Messages) -->
             <% if (locals.success_msg && success_msg.length > 0) { %>
                 <div class="alert alert-success" role="alert"><%= success_msg %></div>
             <% } %>
@@ -48,48 +38,90 @@
                 <div class="alert alert-danger" role="alert"><%= error %></div>
             <% } %>
 
-            <!-- Nội dung của từng trang sẽ được chèn vào đây -->
             <%- typeof body !== 'undefined' ? body : '' %>
         </div>
     </main>
     
-    <!-- Footer -->
     <%- include('../partials/footer') %>
     
-    <!-- Chatbot Widget -->
-    <div id="chatbot-widget" class="chatbot-widget">
-        <button class="chatbot-toggle" aria-label="Mở trợ lý AI">
-            <i class="fas fa-comments"></i>
-        </button>
-        <div class="chatbot-container" style="display: none;">
-            <div class="chatbot-header">
-                <h4>Trợ lý AI USSH</h4>
-                <button class="chatbot-close" aria-label="Đóng trợ lý AI"><i class="fas fa-times"></i></button>
+    <!-- [THAY ĐỔI] Thiết kế lại Widget Chatbot tĩnh theo file chatbot-ui.js của bạn -->
+    <!-- Nút bấm Chatbot -->
+    <div class="chatbot-button">
+        <div class="chatbot-button-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"></path>
+                <path d="M8.5 11C9.33 11 10 10.33 10 9.5C10 8.67 9.33 8 8.5 8C7.67 8 7 8.67 7 9.5C7 10.33 7.67 11 8.5 11Z" fill="currentColor"></path>
+                <path d="M15.5 11C16.33 11 17 10.33 17 9.5C17 8.67 16.33 8 15.5 8C14.67 8 14 8.67 14 9.5C14 10.33 14.67 11 15.5 11Z" fill="currentColor"></path>
+                <path d="M12 17.5C14.33 17.5 16.31 16.04 17 14H7C7.69 16.04 9.67 17.5 12 17.5Z" fill="currentColor"></path>
+            </svg>
+        </div>
+        <div class="chatbot-button-pulse"></div>
+    </div>
+
+    <!-- Khung Chatbot -->
+    <div class="chatbot-widget">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar"><span>🤖</span></div>
+                <div class="chatbot-title">
+                    <h4>USSH Assistant</h4>
+                    <span class="chatbot-status">Online</span>
+                </div>
             </div>
-            <div class="chatbot-messages"></div>
-            <div class="chatbot-input">
-                <input type="text" placeholder="Nhập câu hỏi của bạn..." aria-label="Nhập câu hỏi">
-                <button type="button" aria-label="Gửi tin nhắn"><i class="fas fa-paper-plane"></i></button>
+            <div class="chatbot-header-actions">
+                <button class="chatbot-minimize" aria-label="Minimize">−</button>
+                <button class="chatbot-close" aria-label="Close">×</button>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="chatbot-welcome">
+                <div class="welcome-message">
+                    <h5>👋 Chào mừng đến với USSH Assistant!</h5>
+                    <p>Tôi ở đây để giúp bạn. Hãy hỏi tôi về khóa học, diễn đàn, hoặc bất cứ điều gì khác nhé!</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
+        <div class="chatbot-typing" id="chatbot-typing" style="display: none;">
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+            <span class="typing-text">Trợ lý đang trả lời...</span>
+        </div>
+        <div class="chatbot-input">
+            <div class="chatbot-input-container">
+                <textarea id="chatbot-input-field" placeholder="Nhập tin nhắn của bạn..." rows="1" maxlength="1000"></textarea>
+                <button id="chatbot-send-btn" class="chatbot-send-btn" aria-label="Gửi tin nhắn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="chatbot-input-footer">
+                <span class="char-count">0/1000</span>
+                <span class="chatbot-tips">Gõ "/" để xem lệnh</span>
             </div>
         </div>
     </div>
     
     <!-- JavaScript -->
-    
-    <!-- [SỬA LỖI] Đưa Bootstrap JS lên đầu tiên để ưu tiên tải -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script src="/js/main.js"></script>
-    
-    <!-- Additional page-specific JS -->
-    <% if (typeof additionalJS !== 'undefined') { %>
-        <% additionalJS.forEach(js => { %>
-            <script src="<%= js %>"></script>
-        <% }) %>
-    <% } %>
-    
-    <!-- Socket.io for real-time features -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chatbot-ui.js"></script>
+    
+    <!-- Khởi tạo các service cần thiết cho chatbot -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof io !== 'undefined') {
+                window.realtimeService = {
+                    socket: io(),
+                    isConnected: true,
+                    on: function(event, callback) { this.socket.on(event, callback); }
+                };
+            } else {
+                 window.realtimeService = { isConnected: false };
+            }
+        });
+    </script>
 </body>
 </html>
 
