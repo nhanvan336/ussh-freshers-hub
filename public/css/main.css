@@ -1824,3 +1824,16 @@ h1, h2, h3, h4, h5, h6 {
 .document-card .card-body {
   padding: 1.25rem; /* rem là đơn vị co giãn theo kích thước font gốc */
 }
+/* =================================
+FORM LABEL FIX
+================================= /
+/ Quy tắc này buộc tất cả các nhãn của form (<label>)
+phải hiển thị dưới dạng khối (block), đảm bảo chúng
+luôn nằm trên một dòng riêng biệt phía trên ô nhập liệu.
+
+Từ khóa !important được sử dụng để đảm bảo quy tắc này
+sẽ ghi đè lên bất kỳ style nào đang gây lỗi từ các file CSS khác.
+*/
+.form-label {
+display: block !important;
+}
