@@ -22,17 +22,17 @@
     <!-- [CẬP NHẬT] CSS Cho Chatbot Messenger và Sửa lỗi Căn Giữa -->
     <style>
         /* Sửa lỗi căn giữa biểu tượng trên toàn trang */
-        i.fas, i.far, i.fab {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .ai-robot i, .floating-card i, .ai-feature i, .chatbot-button-icon i, .activity-avatar i {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             width: 1.25em;
         }
 
         /* ----- Bố cục Chatbot Messenger ----- */
         #chatbot-container {
             position: fixed;
-            bottom: 25px;
+            bottom: 90px; /* Nâng lên để không che nút "Back to Top" */
             right: 25px;
             z-index: 1000;
         }
@@ -160,9 +160,8 @@
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
-    <!-- [QUAN TRỌNG] File chatbot-ui.js không còn được gọi nữa -->
+    <!-- [QUAN TRỌNG] File chatbot-ui.js không còn được gọi nữa, logic đã được tích hợp -->
 
-    <!-- Script điều khiển Chatbot Messenger -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const chatbotBubble = document.getElementById('chatbot-bubble');
@@ -206,7 +205,6 @@
             }
 
             function showTypingIndicator() { addMessageToUI('', 'bot', true); }
-
             function removeTypingIndicator() {
                 const indicator = document.getElementById('typing-indicator');
                 if (indicator) indicator.remove();
@@ -237,6 +235,7 @@
                 }
             }
 
+            // Khởi tạo các service khác của bạn
             if (typeof io !== 'undefined') {
                 window.realtimeService = { socket: io(), isConnected: true, on: (e, cb) => window.realtimeService.socket.on(e, cb) };
             } else {
