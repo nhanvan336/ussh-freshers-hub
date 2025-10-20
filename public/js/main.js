@@ -36,44 +36,22 @@ function initializeNavigation() {
     const navbarMenu = document.querySelector('.navbar-menu');
     const navLinks = document.querySelectorAll('.nav-link');
     
-    // Mobile menu toggle
     if (mobileToggle && navbarMenu) {
         mobileToggle.addEventListener('click', function() {
-            const isOpen = navbarMenu.style.display === 'flex';
-            navbarMenu.style.display = isOpen ? 'none' : 'flex';
-            mobileToggle.setAttribute('aria-expanded', !isOpen);
-            
-            // Animate hamburger lines
-            const lines = mobileToggle.querySelectorAll('.hamburger-line');
-            lines.forEach((line, index) => {
-                if (!isOpen) {
-                    if (index === 0) line.style.transform = 'rotate(45deg) translate(5px, 5px)';
-                    if (index === 1) line.style.opacity = '0';
-                    if (index === 2) line.style.transform = 'rotate(-45deg) translate(7px, -6px)';
-                } else {
-                    line.style.transform = 'none';
-                    line.style.opacity = '1';
-                }
-            });
+            const isOpen = navbarMenu.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', isOpen);
+            mobileToggle.classList.toggle('active', isOpen);
         });
     }
     
-    // Close mobile menu when clicking outside
     document.addEventListener('click', function(e) {
         if (navbarMenu && !e.target.closest('.navbar') && window.innerWidth <= 768) {
-            navbarMenu.style.display = 'none';
+            navbarMenu.classList.remove('active');
             mobileToggle.setAttribute('aria-expanded', 'false');
-            
-            // Reset hamburger animation
-            const lines = mobileToggle.querySelectorAll('.hamburger-line');
-            lines.forEach(line => {
-                line.style.transform = 'none';
-                line.style.opacity = '1';
-            });
+            mobileToggle.classList.remove('active');
         }
     });
     
-    // Smooth scroll for anchor links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
@@ -90,7 +68,6 @@ function initializeNavigation() {
         });
     });
     
-    // Active nav highlight based on scroll position
     window.addEventListener('scroll', throttle(updateActiveNavigation, 100));
 }
 
@@ -115,30 +92,12 @@ function updateActiveNavigation() {
 }
 
 // ===================================
-// Chatbot Module (ĐÃ ĐƯỢC GỠ BỎ)
-// Toàn bộ hàm initializeChatbot() và các hàm con của nó đã được xóa
-// để tránh xung đột với file chatbot-ui.js
-// ===================================
-
-// Global function for external calls from old HTML structure (like home.ejs)
-// This is now handled by the new event listener at the top of the file.
-// The `window.toggleChatbot` can be safely removed if no other part of the site uses it.
-window.toggleChatbot = function() {
-    console.warn('toggleChatbot() is deprecated. Use window.chatbotUI.openChatbot() instead.');
-    if (window.chatbotUI && typeof window.chatbotUI.openChatbot === 'function') {
-        window.chatbotUI.openChatbot();
-    }
-};
-
-
-// ===================================
 // Scroll Effects Module
 // ===================================
 function initializeScrollEffects() {
     const backToTopBtn = document.querySelector('.back-to-top');
     const header = document.querySelector('.header');
     
-    // Back to top button
     if (backToTopBtn) {
         window.addEventListener('scroll', throttle(() => {
             if (window.scrollY > 300) {
@@ -155,37 +114,21 @@ function initializeScrollEffects() {
         }, 100));
         
         backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
     
-    // Header scroll effect
     if (header) {
-        let lastScrollY = window.scrollY;
-        
         window.addEventListener('scroll', throttle(() => {
-            const currentScrollY = window.scrollY;
-            
-            if (currentScrollY > 100) {
+            if (window.scrollY > 100) {
                 header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                 header.style.backdropFilter = 'blur(10px)';
             } else {
                 header.style.backgroundColor = 'var(--white)';
                 header.style.backdropFilter = 'none';
             }
-            
-            lastScrollY = currentScrollY;
         }, 50));
     }
-    
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -193,9 +136,8 @@ function initializeScrollEffects() {
                 entry.target.classList.add('animate-in');
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     
-    // Observe elements for animation
     const animateElements = document.querySelectorAll('.feature-card, .activity-column, .floating-card');
     animateElements.forEach(el => observer.observe(el));
 }
@@ -204,13 +146,11 @@ function initializeScrollEffects() {
 // Form Handlers Module
 // ===================================
 function initializeFormHandlers() {
-    // Newsletter form
     const newsletterForm = document.querySelector('.newsletter-form');
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', handleNewsletterSubmit);
     }
     
-    // Generic form validation
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         const inputs = form.querySelectorAll('input[required], textarea[required]');
@@ -224,7 +164,6 @@ function initializeFormHandlers() {
 function handleNewsletterSubmit(e) {
     e.preventDefault();
     const email = e.target.querySelector('.newsletter-input').value;
-    
     if (validateEmail(email)) {
         showNotification('Cảm ơn bạn đã đăng ký nhận thông báo!', 'success');
         e.target.reset();
@@ -236,38 +175,28 @@ function handleNewsletterSubmit(e) {
 function validateField(e) {
     const field = e.target;
     const value = field.value.trim();
-    
     clearFieldError(field);
-    
     if (field.hasAttribute('required') && !value) {
         showFieldError(field, 'Trường này là bắt buộc');
         return false;
     }
-    
     if (field.type === 'email' && value && !validateEmail(value)) {
         showFieldError(field, 'Email không hợp lệ');
         return false;
     }
-    
     return true;
 }
 
 function clearFieldError(field) {
-    if (typeof field === 'object' && field.target) {
-        field = field.target;
-    }
-    
+    if (typeof field === 'object' && field.target) { field = field.target; }
     const errorElement = field.parentNode.querySelector('.field-error');
-    if (errorElement) {
-        errorElement.remove();
-    }
+    if (errorElement) { errorElement.remove(); }
     field.classList.remove('error');
 }
 
 function showFieldError(field, message) {
     clearFieldError(field);
     field.classList.add('error');
-    
     const errorElement = document.createElement('div');
     errorElement.className = 'field-error';
     errorElement.textContent = message;
@@ -283,9 +212,7 @@ function validateEmail(email) {
 // Animations Module
 // ===================================
 function initializeAnimations() {
-    // Counter animation for stats
     const statNumbers = document.querySelectorAll('.stat-number');
-    
     const countUpObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -294,10 +221,8 @@ function initializeAnimations() {
             }
         });
     }, { threshold: 0.5 });
-    
     statNumbers.forEach(stat => countUpObserver.observe(stat));
     
-    // Floating cards animation timing
     const floatingCards = document.querySelectorAll('.floating-card');
     floatingCards.forEach((card, index) => {
         card.style.animationDelay = `${index * 1.5}s`;
@@ -323,10 +248,7 @@ function animateCounter(element) {
 // Accessibility Module
 // ===================================
 function initializeAccessibility() {
-    // Keyboard navigation
     document.addEventListener('keydown', handleKeyboardNavigation);
-    
-    // Focus management for dropdowns
     const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('keydown', (e) => {
@@ -336,21 +258,16 @@ function initializeAccessibility() {
             }
         });
     });
-    
-    // Announce screen reader messages
     createAriaLiveRegion();
 }
 
 function handleKeyboardNavigation(e) {
-    // Escape key closes modals and dropdowns
     if (e.key === 'Escape') {
         const openDropdowns = document.querySelectorAll('.dropdown-menu[style*="visible"]');
         openDropdowns.forEach(dropdown => {
             dropdown.style.visibility = 'hidden';
             dropdown.style.opacity = '0';
         });
-        
-        // Close chatbot if open
         if (window.chatbotUI && window.chatbotUI.isOpen) {
             window.chatbotUI.closeChatbot();
         }
@@ -370,9 +287,7 @@ function announceToScreenReader(message) {
     const liveRegion = document.getElementById('aria-live-region');
     if (liveRegion) {
         liveRegion.textContent = message;
-        setTimeout(() => {
-            liveRegion.textContent = '';
-        }, 1000);
+        setTimeout(() => { liveRegion.textContent = ''; }, 1000);
     }
 }
 
@@ -386,26 +301,13 @@ function showNotification(message, type = 'info') {
         <div class="notification-content">
             <i class="notification-icon fas fa-${getNotificationIcon(type)}"></i>
             <span class="notification-message">${message}</span>
-            <button class="notification-close" aria-label="Đóng thông báo">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="notification-close" aria-label="Đóng thông báo"><i class="fas fa-times"></i></button>
         </div>
     `;
-    
     document.body.appendChild(notification);
-    
-    // Show animation
     setTimeout(() => notification.classList.add('show'), 100);
-    
-    // Auto remove
     setTimeout(() => removeNotification(notification), 5000);
-    
-    // Manual close
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        removeNotification(notification);
-    });
-    
-    // Announce to screen readers
+    notification.querySelector('.notification-close').addEventListener('click', () => removeNotification(notification));
     announceToScreenReader(message);
 }
 
@@ -415,12 +317,7 @@ function removeNotification(notification) {
 }
 
 function getNotificationIcon(type) {
-    const icons = {
-        success: 'check-circle',
-        error: 'exclamation-triangle',
-        warning: 'exclamation-circle',
-        info: 'info-circle'
-    };
+    const icons = { success: 'check-circle', error: 'exclamation-triangle', warning: 'exclamation-circle', info: 'info-circle' };
     return icons[type] || icons.info;
 }
 
@@ -455,52 +352,22 @@ function debounce(func, delay) {
 // ===================================
 const API = {
     baseURL: '/api',
-    
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            },
-            ...options
-        };
-        
+        const config = { headers: { 'Content-Type': 'application/json', ...options.headers }, ...options };
         try {
             const response = await fetch(url, config);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
             return await response.json();
         } catch (error) {
             console.error('API request failed:', error);
             throw error;
         }
     },
-    
-    get(endpoint, options = {}) {
-        return this.request(endpoint, { method: 'GET', ...options });
-    },
-    
-    post(endpoint, data, options = {}) {
-        return this.request(endpoint, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            ...options
-        });
-    },
-    
-    put(endpoint, data, options = {}) {
-        return this.request(endpoint, {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            ...options
-        });
-    },
-    
-    delete(endpoint, options = {}) {
-        return this.request(endpoint, { method: 'DELETE', ...options });
-    }
+    get(endpoint, options = {}) { return this.request(endpoint, { method: 'GET', ...options }); },
+    post(endpoint, data, options = {}) { return this.request(endpoint, { method: 'POST', body: JSON.stringify(data), ...options }); },
+    put(endpoint, data, options = {}) { return this.request(endpoint, { method: 'PUT', body: JSON.stringify(data), ...options }); },
+    delete(endpoint, options = {}) { return this.request(endpoint, { method: 'DELETE', ...options }); }
 };
 
 // ===================================
@@ -509,25 +376,10 @@ const API = {
 function initializeSocket() {
     if (typeof io !== 'undefined') {
         const socket = io();
-        
-        socket.on('connect', () => {
-            console.log('Connected to server');
-        });
-        
-        socket.on('disconnect', () => {
-            console.log('Disconnected from server');
-        });
-        
-        // Listen for real-time notifications
-        socket.on('notification', (data) => {
-            showNotification(data.message, data.type);
-        });
-        
-        // Listen for new forum posts
-        socket.on('newForumPost', (post) => {
-            // updateForumFeed(post); // Implement this function if needed
-        });
-        
+        socket.on('connect', () => console.log('Connected to server'));
+        socket.on('disconnect', () => console.log('Disconnected from server'));
+        socket.on('notification', (data) => showNotification(data.message, data.type));
+        socket.on('newForumPost', (post) => { /* updateForumFeed(post); */ });
         window.realtimeService = { socket, isConnected: true };
     }
 }
@@ -541,7 +393,6 @@ window.addEventListener('error', (e) => {
         showNotification('Đã xảy ra lỗi JavaScript. Vui lòng kiểm tra console.', 'error');
     }
 });
-
 window.addEventListener('unhandledrejection', (e) => {
     console.error('Unhandled promise rejection:', e.reason);
     e.preventDefault();
