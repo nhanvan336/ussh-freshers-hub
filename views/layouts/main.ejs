@@ -19,11 +19,12 @@
     <link rel="stylesheet" href="/css/components/navbar.css">
     <link rel="stylesheet" href="/css/pages.css">
 
-    <!-- [THÊM MỚI] CSS cho thiết kế Chatbot kiểu Messenger -->
+    <!-- CSS cho thiết kế Chatbot -->
     <style>
         #chatbot-container {
             position: fixed;
-            bottom: 25px;
+            /* [SỬA 1] Đẩy widget lên cao hơn */
+            bottom: 90px; 
             right: 25px;
             z-index: 1000;
         }
@@ -53,13 +54,12 @@
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             position: absolute;
-            bottom: 80px; /* Khoảng cách với bong bóng */
+            bottom: 80px;
             right: 0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             
-            /* Hiệu ứng đóng/mở */
             transform: scale(0.95) translateY(10px);
             opacity: 0;
             visibility: hidden;
@@ -103,6 +103,7 @@
             margin-bottom: 1rem;
             display: flex;
             max-width: 85%;
+            align-items: flex-end;
         }
         .message.user {
             margin-left: auto;
@@ -111,6 +112,7 @@
         .message .text {
             padding: 0.75rem 1rem;
             border-radius: 1.25rem;
+            word-wrap: break-word;
         }
         .message.bot .text {
             background-color: #e9ecef;
@@ -121,6 +123,24 @@
             background-color: #0d6efd;
             color: white;
             border-bottom-right-radius: 0.25rem;
+        }
+        .message.typing .text {
+            padding: 0.75rem 1rem;
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #999;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 1px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
         }
 
         .chatbot-input {
@@ -173,11 +193,11 @@
     
     <%- include('../partials/footer') %>
     
-    <!-- [THAY ĐỔI] Toàn bộ Chatbot được gộp vào đây -->
     <div id="chatbot-container">
         <!-- Bong bóng nổi -->
         <div id="chatbot-bubble">
-            <i class="fas fa-comments"></i>
+            <!-- [SỬA 3] Thay đổi biểu tượng -->
+            <i class="fas fa-robot"></i>
         </div>
 
         <!-- Khung trò chuyện (ẩn mặc định) -->
@@ -187,7 +207,6 @@
                 <button class="chatbot-close-btn" aria-label="Đóng">&times;</button>
             </div>
             <div class="chatbot-messages">
-                <!-- Lời chào -->
                 <div class="message bot">
                     <div class="text">
                         👋 Chào bạn! Tôi là Trợ lý AI của USSH. Tôi có thể giúp gì cho bạn hôm nay?
@@ -195,8 +214,8 @@
                 </div>
             </div>
             <div class="chatbot-input">
-                <input type="text" placeholder="Nhập câu hỏi của bạn...">
-                <button aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
+                <input type="text" id="chatbot-input-field" placeholder="Nhập câu hỏi của bạn...">
+                <button id="chatbot-send-btn" aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -206,23 +225,107 @@
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- [THAY ĐỔI] Dùng script này để điều khiển chatbot, thay vì chatbot-ui.js -->
+    <!-- [SỬA 2] Cập nhật script để xử lý gửi tin nhắn -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const chatbotBubble = document.getElementById('chatbot-bubble');
             const chatbotWindow = document.getElementById('chatbot-window');
             const closeButton = chatbotWindow.querySelector('.chatbot-close-btn');
+            const sendButton = document.getElementById('chatbot-send-btn');
+            const inputField = document.getElementById('chatbot-input-field');
+            const messagesContainer = chatbotWindow.querySelector('.chatbot-messages');
+            let conversationHistory = []; // Lưu trữ lịch sử trò chuyện
 
+            // --- Logic đóng/mở ---
             if (chatbotBubble && chatbotWindow && closeButton) {
-                // Mở/Đóng chatbot khi nhấn vào bong bóng
-                chatbotBubble.addEventListener('click', () => {
-                    chatbotWindow.classList.toggle('open');
-                });
+                chatbotBubble.addEventListener('click', () => chatbotWindow.classList.toggle('open'));
+                closeButton.addEventListener('click', () => chatbotWindow.classList.remove('open'));
+            }
 
-                // Đóng chatbot khi nhấn vào nút X
-                closeButton.addEventListener('click', () => {
-                    chatbotWindow.classList.remove('open');
-                });
+            // --- Logic gửi tin nhắn ---
+            const sendMessage = () => {
+                const messageText = inputField.value.trim();
+                if (messageText === '') return;
+
+                addMessageToUI(messageText, 'user');
+                conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
+                inputField.value = '';
+                
+                showTypingIndicator();
+                sendMessageToAI(conversationHistory);
+            };
+
+            sendButton.addEventListener('click', sendMessage);
+            inputField.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // --- Các hàm hỗ trợ ---
+            function addMessageToUI(text, sender, isTyping = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                if (isTyping) {
+                    messageDiv.id = 'typing-indicator';
+                    messageDiv.innerHTML = `<div class="text"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+                } else {
+                    messageDiv.innerHTML = `<div class="text">${text}</div>`;
+                }
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                addMessageToUI('', 'bot', true);
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+            
+            async function sendMessageToAI(history) {
+                try {
+                    const apiKey = ""; // API key sẽ được cung cấp tự động bởi môi trường
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                    const systemPrompt = "Bạn là USSH Assistant, một trợ lý AI thân thiện và hữu ích dành cho sinh viên trường Đại học Khoa học Xã hội và Nhân văn, ĐHQG Hà Nội. Luôn trả lời bằng tiếng Việt một cách ngắn gọn, rõ ràng và lịch sự.";
+
+                    const payload = {
+                        contents: history,
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                    };
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Lỗi kết nối tới AI.");
+                    }
+
+                    const result = await response.json();
+                    const botResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    removeTypingIndicator();
+
+                    if (botResponse) {
+                        addMessageToUI(botResponse, 'bot');
+                        conversationHistory.push({ role: 'model', parts: [{ text: botResponse }] });
+                    } else {
+                        addMessageToUI("Rất tiếc, tôi chưa có câu trả lời cho vấn đề này.", 'bot');
+                    }
+
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessageToUI("Đã có lỗi xảy ra. Vui lòng thử lại sau.", 'bot');
+                    console.error("Chatbot Error:", error);
+                }
             }
 
             // (Phần logic kết nối socket.io vẫn giữ nguyên)
