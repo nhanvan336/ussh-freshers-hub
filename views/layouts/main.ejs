@@ -22,7 +22,7 @@
     <!-- [CẬP NHẬT] CSS Cho Chatbot Messenger và Sửa lỗi Căn Giữa -->
     <style>
         /* Sửa lỗi căn giữa biểu tượng trên toàn trang */
-        .ai-robot i, .floating-card i, .ai-feature i, .chatbot-button-icon i, .activity-avatar i {
+        .ai-robot i, .floating-card i, .ai-feature i, #chatbot-bubble i, .activity-avatar i {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -235,7 +235,6 @@
                 }
             }
 
-            // Khởi tạo các service khác của bạn
             if (typeof io !== 'undefined') {
                 window.realtimeService = { socket: io(), isConnected: true, on: (e, cb) => window.realtimeService.socket.on(e, cb) };
             } else {
