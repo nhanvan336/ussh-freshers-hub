@@ -17,9 +17,24 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/components/navbar.css">
-    <!-- Giả định bạn có file CSS cho chatbot UI mới -->
     <link rel="stylesheet" href="/css/chatbot-ui.css"> 
     <link rel="stylesheet" href="/css/pages.css">
+
+    <!-- [THÊM MỚI] CSS cho thiết kế và chức năng đóng/mở Chatbot -->
+    <style>
+        .chatbot-widget {
+            border-radius: 0; /* Bỏ bo góc để thành hình chữ nhật */
+            transform: translateY(100%) translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .chatbot-widget.chatbot-open {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Chuyển đến nội dung chính</a>
@@ -44,8 +59,7 @@
     
     <%- include('../partials/footer') %>
     
-    <!-- [THAY ĐỔI] Thiết kế lại Widget Chatbot tĩnh theo file chatbot-ui.js của bạn -->
-    <!-- Nút bấm Chatbot -->
+    <!-- Widget Chatbot tĩnh -->
     <div class="chatbot-button">
         <div class="chatbot-button-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +72,6 @@
         <div class="chatbot-button-pulse"></div>
     </div>
 
-    <!-- Khung Chatbot -->
     <div class="chatbot-widget">
         <div class="chatbot-header">
             <div class="chatbot-header-info">
@@ -108,9 +121,26 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chatbot-ui.js"></script>
     
-    <!-- Khởi tạo các service cần thiết cho chatbot -->
+    <!-- [THÊM MỚI] Script đơn giản để điều khiển việc đóng/mở chatbot -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const chatbotButton = document.querySelector('.chatbot-button');
+            const chatbotWidget = document.querySelector('.chatbot-widget');
+            const closeButton = chatbotWidget.querySelector('.chatbot-close');
+
+            if (chatbotButton && chatbotWidget && closeButton) {
+                // Mở chatbot khi nhấn vào nút chính
+                chatbotButton.addEventListener('click', () => {
+                    chatbotWidget.classList.toggle('chatbot-open');
+                });
+
+                // Đóng chatbot khi nhấn vào nút X
+                closeButton.addEventListener('click', () => {
+                    chatbotWidget.classList.remove('chatbot-open');
+                });
+            }
+
+            // Khởi tạo các service cần thiết khác
             if (typeof io !== 'undefined') {
                 window.realtimeService = {
                     socket: io(),
