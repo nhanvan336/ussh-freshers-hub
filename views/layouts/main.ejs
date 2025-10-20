@@ -17,22 +17,136 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/components/navbar.css">
-    <link rel="stylesheet" href="/css/chatbot-ui.css"> 
     <link rel="stylesheet" href="/css/pages.css">
 
-    <!-- [THÊM MỚI] CSS cho thiết kế và chức năng đóng/mở Chatbot -->
+    <!-- [THÊM MỚI] CSS cho thiết kế Chatbot kiểu Messenger -->
     <style>
-        .chatbot-widget {
-            border-radius: 0; /* Bỏ bo góc để thành hình chữ nhật */
-            transform: translateY(100%) translateY(20px);
+        #chatbot-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+        }
+
+        #chatbot-bubble {
+            width: 60px;
+            height: 60px;
+            background-color: #0d6efd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease-in-out;
+        }
+        #chatbot-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        #chatbot-window {
+            width: 370px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: absolute;
+            bottom: 80px; /* Khoảng cách với bong bóng */
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            
+            /* Hiệu ứng đóng/mở */
+            transform: scale(0.95) translateY(10px);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease-in-out;
+            transform-origin: bottom right;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .chatbot-widget.chatbot-open {
-            transform: translateY(0);
+
+        #chatbot-window.open {
+            transform: scale(1) translateY(0);
             opacity: 1;
             visibility: visible;
+        }
+
+        .chatbot-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chatbot-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .chatbot-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #f4f7f9;
+        }
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            max-width: 85%;
+        }
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        .message .text {
+            padding: 0.75rem 1rem;
+            border-radius: 1.25rem;
+        }
+        .message.bot .text {
+            background-color: #e9ecef;
+            color: #212529;
+            border-bottom-left-radius: 0.25rem;
+        }
+        .message.user .text {
+            background-color: #0d6efd;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .chatbot-input {
+            border-top: 1px solid #dee2e6;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .chatbot-input input {
+            flex-grow: 1;
+            border: 1px solid #ced4da;
+            border-radius: 50rem;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+        }
+        .chatbot-input input:focus {
+            outline: none;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .chatbot-input button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #0d6efd;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -59,58 +173,30 @@
     
     <%- include('../partials/footer') %>
     
-    <!-- Widget Chatbot tĩnh -->
-    <div class="chatbot-button">
-        <div class="chatbot-button-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"></path>
-                <path d="M8.5 11C9.33 11 10 10.33 10 9.5C10 8.67 9.33 8 8.5 8C7.67 8 7 8.67 7 9.5C7 10.33 7.67 11 8.5 11Z" fill="currentColor"></path>
-                <path d="M15.5 11C16.33 11 17 10.33 17 9.5C17 8.67 16.33 8 15.5 8C14.67 8 14 8.67 14 9.5C14 10.33 14.67 11 15.5 11Z" fill="currentColor"></path>
-                <path d="M12 17.5C14.33 17.5 16.31 16.04 17 14H7C7.69 16.04 9.67 17.5 12 17.5Z" fill="currentColor"></path>
-            </svg>
+    <!-- [THAY ĐỔI] Toàn bộ Chatbot được gộp vào đây -->
+    <div id="chatbot-container">
+        <!-- Bong bóng nổi -->
+        <div id="chatbot-bubble">
+            <i class="fas fa-comments"></i>
         </div>
-        <div class="chatbot-button-pulse"></div>
-    </div>
 
-    <div class="chatbot-widget">
-        <div class="chatbot-header">
-            <div class="chatbot-header-info">
-                <div class="chatbot-avatar"><span>🤖</span></div>
-                <div class="chatbot-title">
-                    <h4>USSH Assistant</h4>
-                    <span class="chatbot-status">Online</span>
+        <!-- Khung trò chuyện (ẩn mặc định) -->
+        <div id="chatbot-window">
+            <div class="chatbot-header">
+                <h4>Trợ lý AI - USSH</h4>
+                <button class="chatbot-close-btn" aria-label="Đóng">&times;</button>
+            </div>
+            <div class="chatbot-messages">
+                <!-- Lời chào -->
+                <div class="message bot">
+                    <div class="text">
+                        👋 Chào bạn! Tôi là Trợ lý AI của USSH. Tôi có thể giúp gì cho bạn hôm nay?
+                    </div>
                 </div>
             </div>
-            <div class="chatbot-header-actions">
-                <button class="chatbot-minimize" aria-label="Minimize">−</button>
-                <button class="chatbot-close" aria-label="Close">×</button>
-            </div>
-        </div>
-        <div class="chatbot-messages" id="chatbot-messages">
-            <div class="chatbot-welcome">
-                <div class="welcome-message">
-                    <h5>👋 Chào mừng đến với USSH Assistant!</h5>
-                    <p>Tôi ở đây để giúp bạn. Hãy hỏi tôi về khóa học, diễn đàn, hoặc bất cứ điều gì khác nhé!</p>
-                </div>
-            </div>
-        </div>
-        <div class="chatbot-suggestions" id="chatbot-suggestions"></div>
-        <div class="chatbot-typing" id="chatbot-typing" style="display: none;">
-            <div class="typing-indicator"><span></span><span></span><span></span></div>
-            <span class="typing-text">Trợ lý đang trả lời...</span>
-        </div>
-        <div class="chatbot-input">
-            <div class="chatbot-input-container">
-                <textarea id="chatbot-input-field" placeholder="Nhập tin nhắn của bạn..." rows="1" maxlength="1000"></textarea>
-                <button id="chatbot-send-btn" class="chatbot-send-btn" aria-label="Gửi tin nhắn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="chatbot-input-footer">
-                <span class="char-count">0/1000</span>
-                <span class="chatbot-tips">Gõ "/" để xem lệnh</span>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Nhập câu hỏi của bạn...">
+                <button aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -119,32 +205,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/chatbot-ui.js"></script>
-    
-    <!-- [THÊM MỚI] Script đơn giản để điều khiển việc đóng/mở chatbot -->
+
+    <!-- [THAY ĐỔI] Dùng script này để điều khiển chatbot, thay vì chatbot-ui.js -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const chatbotButton = document.querySelector('.chatbot-button');
-            const chatbotWidget = document.querySelector('.chatbot-widget');
-            const closeButton = chatbotWidget.querySelector('.chatbot-close');
+            const chatbotBubble = document.getElementById('chatbot-bubble');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const closeButton = chatbotWindow.querySelector('.chatbot-close-btn');
 
-            if (chatbotButton && chatbotWidget && closeButton) {
-                // Mở chatbot khi nhấn vào nút chính
-                chatbotButton.addEventListener('click', () => {
-                    chatbotWidget.classList.toggle('chatbot-open');
+            if (chatbotBubble && chatbotWindow && closeButton) {
+                // Mở/Đóng chatbot khi nhấn vào bong bóng
+                chatbotBubble.addEventListener('click', () => {
+                    chatbotWindow.classList.toggle('open');
                 });
 
                 // Đóng chatbot khi nhấn vào nút X
                 closeButton.addEventListener('click', () => {
-                    chatbotWidget.classList.remove('chatbot-open');
+                    chatbotWindow.classList.remove('open');
                 });
             }
 
-            // Khởi tạo các service cần thiết khác
+            // (Phần logic kết nối socket.io vẫn giữ nguyên)
             if (typeof io !== 'undefined') {
                 window.realtimeService = {
-                    socket: io(),
-                    isConnected: true,
+                    socket: io(), isConnected: true,
                     on: function(event, callback) { this.socket.on(event, callback); }
                 };
             } else {
