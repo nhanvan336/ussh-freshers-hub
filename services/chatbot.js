@@ -123,6 +123,7 @@ class ChatbotService {
     }
     
     // --- Các hàm còn lại trong file 800 dòng của bạn được giữ nguyên ở đây ---
+    // ... (ví dụ: handleCommand, detectQuickAction, v.v...)
     handleCommand(message, userId, user) {
         const parts = message.substring(1).split(' ');
         const command = parts[0].toLowerCase();
