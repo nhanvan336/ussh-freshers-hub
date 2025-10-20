@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof title !== 'undefined' ? title : "Trang chủ" %> | USSH Freshers' Hub</title>
+    <title><%= typeof title !== 'undefined' ? title : 'Trang chủ' %> | USSH Freshers' Hub</title>
     <meta name="description" content="Cộng đồng trực tuyến dành cho sinh viên năm nhất Trường Đại học Khoa học Xã hội và Nhân văn">
     
     <!-- Fonts -->
@@ -35,6 +35,7 @@
     
     <!-- Main Content -->
     <main id="main-content" class="main-content">
+        <!-- [SỬA LỖI] Container này sẽ căn giữa toàn bộ nội dung của trang -->
         <div class="container">
             <!-- Trung tâm thông báo (Flash Messages) -->
             <% if (locals.success_msg && success_msg.length > 0) { %>
@@ -74,9 +75,10 @@
     </div>
     
     <!-- JavaScript -->
-    <!-- [THÊM MỚI] Bootstrap JS Bundle (bao gồm Popper) - Cần cho Dropdown và các tương tác khác -->
+    
+    <!-- [SỬA LỖI] Đưa Bootstrap JS lên đầu tiên để ưu tiên tải -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    
     <script src="/js/main.js"></script>
     
     <!-- Additional page-specific JS -->
