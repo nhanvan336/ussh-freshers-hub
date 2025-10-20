@@ -168,11 +168,11 @@
             cursor: pointer;
         }
         
-        /* [SỬA 2] Căn giữa các biểu tượng Font Awesome */
+        /* [SỬA LỖI] Căn giữa các biểu tượng Font Awesome bằng !important */
         i.fas, i.far, i.fab {
             display: inline-block;
-            width: 1.25em; /* Đảm bảo icon có không gian để căn giữa */
-            text-align: center;
+            width: 1.25em; 
+            text-align: center !important; /* Thêm !important để ghi đè lên các style khác */
         }
     </style>
 </head>
@@ -220,121 +220,5 @@
             </div>
             <div class="chatbot-input">
                 <input type="text" id="chatbot-input-field" placeholder="Nhập câu hỏi của bạn...">
-                <button id="chatbot-send-btn" aria-label="Gửi"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-
-    <!-- Script xử lý gửi tin nhắn -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatbotBubble = document.getElementById('chatbot-bubble');
-            const chatbotWindow = document.getElementById('chatbot-window');
-            const closeButton = chatbotWindow.querySelector('.chatbot-close-btn');
-            const sendButton = document.getElementById('chatbot-send-btn');
-            const inputField = document.getElementById('chatbot-input-field');
-            const messagesContainer = chatbotWindow.querySelector('.chatbot-messages');
-            
-            // --- Logic đóng/mở ---
-            if (chatbotBubble && chatbotWindow && closeButton) {
-                chatbotBubble.addEventListener('click', () => chatbotWindow.classList.toggle('open'));
-                closeButton.addEventListener('click', () => chatbotWindow.classList.remove('open'));
-            }
-
-            // --- Logic gửi tin nhắn ---
-            const sendMessage = () => {
-                const messageText = inputField.value.trim();
-                if (messageText === '') return;
-
-                addMessageToUI(messageText, 'user');
-                inputField.value = '';
-                
-                showTypingIndicator();
-                sendMessageToBe(messageText); // [SỬA 1] Gọi hàm mới
-            };
-
-            sendButton.addEventListener('click', sendMessage);
-            inputField.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            // --- Các hàm hỗ trợ ---
-            function addMessageToUI(text, sender, isTyping = false) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                if (isTyping) {
-                    messageDiv.id = 'typing-indicator';
-                    messageDiv.innerHTML = `<div class="text"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-                } else {
-                    const cleanText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    messageDiv.innerHTML = `<div class="text">${cleanText}</div>`;
-                }
-                messagesContainer.appendChild(messageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-            function showTypingIndicator() {
-                addMessageToUI('', 'bot', true);
-            }
-
-            function removeTypingIndicator() {
-                const indicator = document.getElementById('typing-indicator');
-                if (indicator) {
-                    indicator.remove();
-                }
-            }
-            
-            // [SỬA 1] Hàm mới để gọi backend API
-            async function sendMessageToBe(message) {
-                try {
-                    const response = await fetch('/api/chatbot/message', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            // Giả sử bạn có một cách để lấy token, nếu không có, backend cần điều chỉnh
-                            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}` 
-                        },
-                        body: JSON.stringify({ message: message })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Lỗi khi gửi tin nhắn đến server.');
-                    }
-
-                    const result = await response.json();
-                    removeTypingIndicator();
-
-                    if (result.success && result.data && result.data.message) {
-                        addMessageToUI(result.data.message, 'bot');
-                    } else {
-                        addMessageToUI("Rất tiếc, tôi chưa có câu trả lời cho vấn đề này.", 'bot');
-                    }
-
-                } catch (error) {
-                    removeTypingIndicator();
-                    addMessageToUI("Đã có lỗi xảy ra. Vui lòng thử lại sau.", 'bot');
-                    console.error("Chatbot Error:", error);
-                }
-            }
-
-            if (typeof io !== 'undefined') {
-                window.realtimeService = {
-                    socket: io(), isConnected: true,
-                    on: function(event, callback) { this.socket.on(event, callback); }
-                };
-            } else {
-                 window.realtimeService = { isConnected: false };
-            }
-        });
-    </script>
-</body>
-</html>
+                <button id="chatbot-send
 
