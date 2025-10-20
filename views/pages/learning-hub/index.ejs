@@ -9,7 +9,8 @@
                 <i class="fas fa-upload"></i> Tải lên tài liệu
             </a>
         <% } else { %>
-            <a href="/login" class="btn btn-primary">
+            <!-- [SỬA LỖI] Đường dẫn đã được sửa thành /auth/login -->
+            <a href="/auth/login" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập để tải lên
             </a>
         <% } %>
@@ -142,39 +143,26 @@
                     ];
 
                     let filteredDocuments = allSampleDocuments;
+                    
+                    const currentPage = (typeof page !== 'undefined') ? parseInt(page) : 1;
 
-                    // Lọc theo Category
-                    if (filters && filters.category && filters.category !== 'all') {
-                        filteredDocuments = filteredDocuments.filter(doc => doc.category === filters.category);
-                    }
-                    // Lọc theo Subject
-                    if (filters && filters.subject && filters.subject !== 'all') {
-                        filteredDocuments = filteredDocuments.filter(doc => doc.subject === filters.subject.replace(/\s/g, '-'));
-                    }
-                    // Lọc theo từ khóa tìm kiếm
+                    // Lọc và Sắp xếp
+                    if (filters && filters.category && filters.category !== 'all') { filteredDocuments = filteredDocuments.filter(doc => doc.category === filters.category); }
+                    if (filters && filters.subject && filters.subject !== 'all') { filteredDocuments = filteredDocuments.filter(doc => doc.subject === filters.subject); }
                     if (filters && filters.q) {
                         const query = filters.q.toLowerCase();
-                        filteredDocuments = filteredDocuments.filter(doc =>
-                            doc.title.toLowerCase().includes(query) ||
-                            doc.description.toLowerCase().includes(query)
-                        );
+                        filteredDocuments = filteredDocuments.filter(doc => doc.title.toLowerCase().includes(query) || doc.description.toLowerCase().includes(query));
                     }
-                    
-                    // Sắp xếp kết quả
                     const sortType = (filters && filters.sort) ? filters.sort : 'newest';
-                    if (sortType === 'popular' || sortType === 'rated') {
-                        filteredDocuments.sort((a, b) => b.views - a.views);
-                    } else if (sortType === 'oldest') {
-                        filteredDocuments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                    } else { // newest
-                        filteredDocuments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    }
+                    if (sortType === 'popular' || sortType === 'rated') { filteredDocuments.sort((a, b) => b.views - a.views); } 
+                    else if (sortType === 'oldest') { filteredDocuments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); } 
+                    else { filteredDocuments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); }
 
+                    // Phân trang
                     const docsPerPage = 10;
                     const totalSampleDocs = filteredDocuments.length;
                     const totalSamplePages = Math.ceil(totalSampleDocs / docsPerPage);
-                    const startIndex = (currentPage - 1) * docsPerPage;
-                    const paginatedDocs = filteredDocuments.slice(startIndex, startIndex + docsPerPage);
+                    const paginatedDocs = filteredDocuments.slice((currentPage - 1) * docsPerPage, currentPage * docsPerPage);
                 %>
                 
                 <% if (paginatedDocs.length > 0) { %>
