@@ -1,31 +1,52 @@
-<div class="container my-5">
+<style>
+    .contact-form-card {
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0, .1);
+        border-radius: 1rem;
+    }
+    .contact-form-card .form-label {
+        font-weight: 500;
+    }
+
+    /* [THÊM MỚI] CSS để làm các ô nhập liệu to hơn */
+    .contact-form-card .form-control-lg {
+        padding: 1rem 1.25rem; /* Tăng khoảng đệm bên trong */
+        font-size: 1.1rem;      /* Tăng nhẹ cỡ chữ */
+    }
+    .contact-form-card .btn-lg {
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container my-5 py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="text-center mb-5">
                 <h1><i class="fas fa-envelope-open-text text-success"></i> Liên hệ với chúng tôi</h1>
                 <p class="lead text-muted">Nếu bạn có bất kỳ câu hỏi, góp ý hoặc cần hỗ trợ, đừng ngần ngại liên hệ với ban quản trị.</p>
             </div>
 
-            <div class="card">
-                <div class="card-body p-4">
+            <div class="card contact-form-card">
+                <div class="card-body p-4 p-md-5">
                     <form action="/contact" method="POST">
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="name" class="form-label">Họ và tên</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" required placeholder="Nhập họ và tên của bạn">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" required placeholder="Nhập địa chỉ email">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="subject" class="form-label">Chủ đề</label>
-                            <input type="text" class="form-control" id="subject" name="subject" required>
+                            <input type="text" class="form-control form-control-lg" id="subject" name="subject" required placeholder="Nhập chủ đề bạn muốn trao đổi">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="message" class="form-label">Nội dung</label>
-                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            <textarea class="form-control form-control-lg" id="message" name="message" rows="5" required placeholder="Nhập nội dung tin nhắn của bạn..."></textarea>
                         </div>
-                        <div class="d-grid">
+                        <div class="d-grid mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">Gửi tin nhắn</button>
                         </div>
                     </form>
@@ -33,8 +54,9 @@
             </div>
 
             <div class="text-center mt-4">
-                <p class="text-muted">Hoặc liên hệ trực tiếp qua email: <a href="mailto:support@ussh-hub.com">support@ussh-hub.com</a></p>
+                <p class="text-muted">Hoặc liên hệ trực tiếp qua email: <a href="mailto:dongocluu.sjc.ussh@gmail.com">dongocluu.sjc.ussh@gmail.com</a></p>
             </div>
         </div>
     </div>
 </div>
+
