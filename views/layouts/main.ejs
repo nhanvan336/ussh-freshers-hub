@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/css/pages.css">
 
     <style>
-        /* Sửa lỗi căn giữa biểu tượng trên toàn trang */
+        /* Sửa lỗi căn giữa biểu tượng trên toàn trang (của bạn) */
         .fas, .fab, .far, .ai-robot i, .floating-card i, .ai-feature i, #chatbot-bubble i {
             display: inline-flex !important;
             align-items: center !important;
@@ -28,20 +28,32 @@
             width: 1.25em;
         }
 
+        /* --- [BỔ SUNG] SỬA LỖI CĂN GIỮA CHO CÁC WIDGET --- */
+        /* Buộc các thẻ chứa icon phải căn giữa nội dung của chúng */
+        .feature-icon, .floating-card, .ai-robot, .ai-feature, .activity-icon, .activity-avatar, .activity-date {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        /* Đảm bảo các icon lớn có đủ không gian */
+        .feature-icon i, .floating-card i, .ai-robot i {
+            line-height: 1;
+        }
+        /* --- KẾT THÚC PHẦN BỔ SUNG --- */
+
         /* ----- Bố cục Chatbot Messenger ----- */
-        /* [THAY ĐỔI] Đẩy chatbot lên trên */
         #chatbot-container {
             position: fixed;
-            bottom: 100px; /* Đẩy lên để chừa chỗ cho nút back-to-top */
+            bottom: 100px;
             right: 25px;
             z-index: 1000;
         }
 
-        /* [THAY ĐỔI] Chuyển màu sang màu nâu đồng bộ */
         #chatbot-bubble {
             width: 60px;
             height: 60px;
-            background-color: #A16207; /* Màu nâu từ theme */
+            background-color: #A16207;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -80,7 +92,6 @@
             visibility: visible;
         }
 
-        /* [THAY ĐỔI] Chuyển màu header sang màu nâu */
         .chatbot-header {
             background-color: #A16207;
             color: white;
@@ -97,13 +108,12 @@
             flex-grow: 1;
             padding: 1rem;
             overflow-y: auto;
-            background-color: #f_f_f_bf_9f_a;
+            background-color: #f4f7f9;
         }
         .message { margin-bottom: 1rem; display: flex; max-width: 85%; align-items: flex-end; }
         .message.user { margin-left: auto; flex-direction: row-reverse; }
         .message .text { padding: 0.75rem 1rem; border-radius: 1.25rem; word-wrap: break-word; }
         .message.bot .text { background-color: #e9ecef; color: #212529; border-bottom-left-radius: 0.25rem; }
-        /* [THAY ĐỔI] Chuyển màu tin nhắn người dùng sang màu nâu */
         .message.user .text { background-color: #A16207; color: white; border-bottom-right-radius: 0.25rem; }
         .message.typing .text { padding: 0.75rem 1rem; }
         .typing-indicator span { height: 8px; width: 8px; background-color: #999; border-radius: 50%; display: inline-block; margin: 0 1px; animation: bounce 1.4s infinite ease-in-out both; }
@@ -113,11 +123,9 @@
 
         .chatbot-input { border-top: 1px solid #dee2e6; padding: 0.75rem; display: flex; align-items: center; flex-shrink: 0; }
         .chatbot-input input { flex-grow: 1; border: 1px solid #ced4da; border-radius: 50rem; padding: 0.5rem 1rem; margin-right: 0.5rem; }
-        /* [THAY ĐỔI] Chuyển màu focus sang màu nâu */
-        .chatbot-input input:focus { outline: none; border-color: #c_e_b_5_a_d; box-shadow: 0 0 0 0.25rem rgba(161, 98, 7, 0.25); }
+        .chatbot-input input:focus { outline: none; border-color: #A16207; box-shadow: 0 0 0 0.25rem rgba(161, 98, 7, 0.25); }
         .chatbot-input button { background: none; border: none; font-size: 1.5rem; color: #A16207; cursor: pointer; }
 
-        /* [THAY ĐỔI] Giữ nút back-to-top ở vị trí gốc của nó */
         .back-to-top {
             position: fixed;
             bottom: 25px !important; 
@@ -149,7 +157,6 @@
     
     <%- include('../partials/footer') %>
     
-    <!-- [CẬP NHẬT] Toàn bộ Chatbot Messenger mới -->
     <div id="chatbot-container">
         <div id="chatbot-bubble"><i class="fas fa-robot"></i></div>
         <div id="chatbot-window">
@@ -172,8 +179,6 @@
     <script src="/js/main.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
-    <!-- [QUAN TRỌNG] File chatbot-ui.js không còn được gọi nữa, logic đã được tích hợp -->
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const chatbotBubble = document.getElementById('chatbot-bubble');
