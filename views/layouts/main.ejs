@@ -112,6 +112,15 @@
         .chatbot-input input { flex-grow: 1; border: 1px solid #ced4da; border-radius: 50rem; padding: 0.5rem 1rem; margin-right: 0.5rem; }
         .chatbot-input input:focus { outline: none; border-color: #86b7fe; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
         .chatbot-input button { background: none; border: none; font-size: 1.5rem; color: #0d6efd; cursor: pointer; }
+
+        /* --- [BỔ SUNG] SỬA LỖI CHỒNG CHÉO --- */
+        /* Tìm nút "back-to-top" và đẩy nó lên trên nút chatbot */
+        .back-to-top {
+            /* Đẩy nút này lên một khoảng bằng chiều cao của nút chatbot (60px) + khoảng trống (15px) + vị trí bottom của chatbot (25px) */
+            bottom: 100px !important; 
+            right: 25px !important; /* Đảm bảo nó cùng hàng dọc với chatbot */
+            z-index: 999; /* Đặt nó dưới chatbot một chút để không bị che */
+        }
     </style>
 </head>
 <body>
@@ -238,7 +247,7 @@
             if (typeof io !== 'undefined') {
                 window.realtimeService = { socket: io(), isConnected: true, on: (e, cb) => window.realtimeService.socket.on(e, cb) };
             } else {
-                 window.realtimeService = { isConnected: false };
+                window.realtimeService = { isConnected: false };
             }
         });
     </script>
