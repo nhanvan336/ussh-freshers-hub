@@ -1,5 +1,25 @@
+<!-- [CẬP NHẬT] Gộp cả hai đoạn mã CSS sửa lỗi căn lề -->
 <style>
-    /* Biến khối thông tin AI thành flex container để dễ căn chỉnh */
+    /* Căn giữa các biểu tượng trong widget trên toàn trang */
+    .floating-card i, 
+    .feature-icon i, 
+    .ai-robot i, 
+    .ai-feature i,
+    .hero-cta .btn i,
+    .feature-link i,
+    .ai-info .btn i,
+    .activity-title i,
+    .activity-avatar i,
+    .activity-icon i,
+    .view-all-link i,
+    .cta-buttons .btn i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25em; /* Đảm bảo icon có không gian để căn giữa */
+    }
+
+    /* Căn chỉnh cho khu vực Trợ lý AI */
     .ai-info {
         display: flex;
         flex-direction: column;
@@ -8,12 +28,13 @@
     .ai-features {
         justify-content: center;
     }
-    /* Căn giữa chính cụm tính năng và nút bấm so với cột cha */
+    /* Căn giữa chính cụm tính năng và nút bấm so với cột cha của chúng */
     .ai-info > .ai-features,
-    .ai-info > .btn {
+    .ai-info > button {
         align-self: center;
     }
 </style>
+
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="hero-background">
