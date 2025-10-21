@@ -1841,7 +1841,7 @@ display: block !important;
 /* [FIX] Global Icon Alignment        */
 /* =================================== */
 
-/* * Buộc các thẻ chứa icon (widget) phải sử dụng Flexbox 
+/* Buộc các thẻ chứa icon (widget) phải sử dụng Flexbox 
  * để căn giữa nội dung bên trong nó theo cả chiều ngang và chiều dọc.
 */
 .feature-icon, 
@@ -1857,11 +1857,19 @@ display: block !important;
     text-align: center;
 }
 
-/* * Đảm bảo các icon lớn (thường là font-size kế thừa) 
+/* Đảm bảo các icon lớn (thường là font-size kế thừa) 
  * được hiển thị đúng và không bị cắt xén.
 */
 .feature-icon i, 
 .floating-card i, 
 .ai-robot i {
     line-height: 1;
+}
+
+/* Luật cũ của bạn để đảm bảo các icon FontAwesome hiển thị đúng */
+.fas, .fab, .far {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 1.25em;
 }
