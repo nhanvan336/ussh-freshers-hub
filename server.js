@@ -75,13 +75,11 @@ const learningHubRouter = require('./routes/learning-hub');
 const forumRouter = require('./routes/forum');
 const wellnessRouter = require('./routes/wellness');
 const handbookRouter = require('./routes/handbook');
-const eventsRouter = require('./routes/events');
 
 app.use('/learning-hub', learningHubRouter);
 app.use('/forum', forumRouter);
 app.use('/wellness', wellnessRouter);
 app.use('/handbook', handbookRouter);
-app.use('/events', eventsRouter);
 
 // *** [BỔ SUNG] ROUTER CHO CÁC TRANG TĨNH ***
 const staticRouter = require('./routes/static');
