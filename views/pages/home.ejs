@@ -1,3 +1,19 @@
+<style>
+    /* Biến khối thông tin AI thành flex container để dễ căn chỉnh */
+    .ai-info {
+        display: flex;
+        flex-direction: column;
+    }
+    /* Căn giữa cụm 3 mục tính năng */
+    .ai-features {
+        justify-content: center;
+    }
+    /* Căn giữa chính cụm tính năng và nút bấm so với cột cha */
+    .ai-info > .ai-features,
+    .ai-info > .btn {
+        align-self: center;
+    }
+</style>
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="hero-background">
