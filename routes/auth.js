@@ -54,7 +54,17 @@ router.post('/register', async (req, res) => {
         console.error('Registration error:', err);
         // Thêm log lỗi chi tiết
         if (err.code === 11000) {
-            req.flash('error_msg', 'Email, tên đăng nhập, hoặc MSSV đã tồn tại.');
+            // Lỗi duplicate key, kiểm tra xem trường nào bị trùng
+            let field = Object.keys(err.keyPattern)[0];
+            if (field === 'studentId') {
+                req.flash('error_msg', 'Mã số sinh viên đã tồn tại.');
+            } else if (field === 'email') {
+                req.flash('error_msg', 'Email đã được sử dụng.');
+            } else if (field === 'username') {
+                req.flash('error_msg', 'Tên đăng nhập đã tồn tại.');
+            } else {
+                req.flash('error_msg', 'Thông tin đăng ký đã tồn tại.');
+            }
         } else {
             req.flash('error_msg', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
         }
@@ -72,4 +82,3 @@ router.post('/logout', (req, res, next) => {
 });
 
 module.exports = router;
-
