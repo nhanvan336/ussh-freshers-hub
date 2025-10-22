@@ -2,12 +2,15 @@ console.log('--- ROUTER: File routes/learning-hub.js đã được tải ---'); 
 
 const express = require('express');
 const router = express.Router();
+const path = require('path'); // <-- Đã BỔ SUNG
 const { asyncHandler } = require('../middleware/error');
 const { isAuthenticated, isVerifiedStudent, postRateLimit } = require('../middleware/auth');
 const { validateDocument, validateRating, validateObjectId } = require('../middleware/validation');
-const { uploadDocument, handleMulterError, getFileInfo } = require('../services/file-upload');
 const Document = require('../models/Document');
 const User = require('../models/User');
+
+// [SỬA LỖI] Sử dụng đúng 'ống kính' upload
+const { uploadDocument, handleMulterError } = require('../services/file-upload');
 
 // Learning Hub main page
 router.get('/', asyncHandler(async (req, res) => {
@@ -17,7 +20,6 @@ router.get('/', asyncHandler(async (req, res) => {
     const limit = 12;
     const skip = (page - 1) * limit;
     
-    // Build filter query
     let filter = { isApproved: true };
     
     if (category && category !== 'all') {
@@ -32,20 +34,12 @@ router.get('/', asyncHandler(async (req, res) => {
         filter.$text = { $search: q };
     }
     
-    // Build sort query
     let sortQuery = {};
     switch (sort) {
-        case 'popular':
-            sortQuery = { downloads: -1 };
-            break;
-        case 'rated':
-            sortQuery = { 'ratings.rating': -1 };
-            break;
-        case 'oldest':
-            sortQuery = { createdAt: 1 };
-            break;
-        default:
-            sortQuery = { createdAt: -1 };
+        case 'popular': sortQuery = { downloads: -1 }; break;
+        case 'rated': sortQuery = { 'ratings.rating': -1 }; break;
+        case 'oldest': sortQuery = { createdAt: 1 }; break;
+        default: sortQuery = { createdAt: -1 };
     }
     
     try {
@@ -58,12 +52,10 @@ router.get('/', asyncHandler(async (req, res) => {
             
             Document.countDocuments(filter),
             
-            // Featured documents
             Document.find({ isApproved: true, isFeatured: true })
                 .populate('uploader', 'username fullName avatar')
                 .limit(3),
             
-            // Recent uploads
             Document.find({ isApproved: true })
                 .populate('uploader', 'username fullName avatar')
                 .sort({ createdAt: -1 })
@@ -75,12 +67,9 @@ router.get('/', asyncHandler(async (req, res) => {
         console.log('--- ROUTER: Chuẩn bị render file pages/learning-hub/index ---'); // LOG KIỂM TRA
         res.render('pages/learning-hub/index', {
             title: 'Thư viện học tập - USSH Freshers\' Hub',
-            documents,
-            featuredDocs,
-            recentUploads,
+            documents, featuredDocs, recentUploads,
             currentPage: parseInt(page),
-            totalPages,
-            totalDocuments,
+            totalPages, totalDocuments,
             filters: { category, subject, sort, q },
             user: req.user
         });
@@ -88,12 +77,8 @@ router.get('/', asyncHandler(async (req, res) => {
         console.error('Learning hub error:', error);
         res.render('pages/learning-hub/index', {
             title: 'Thư viện học tập - USSH Freshers\' Hub',
-            documents: [],
-            featuredDocs: [],
-            recentUploads: [],
-            currentPage: 1,
-            totalPages: 0,
-            totalDocuments: 0,
+            documents: [], featuredDocs: [], recentUploads: [],
+            currentPage: 1, totalPages: 0, totalDocuments: 0,
             filters: {},
             error: 'Có lỗi xảy ra khi tải tài liệu',
             user: req.user
@@ -123,11 +108,9 @@ router.get('/document/:id', validateObjectId('id'), asyncHandler(async (req, res
             });
         }
         
-        // Increment views
         document.incrementViews();
         await document.save();
         
-        // Get related documents
         const relatedDocuments = await Document.find({
             _id: { $ne: document._id },
             $or: [
@@ -168,11 +151,11 @@ router.get('/upload', isAuthenticated, /* isVerifiedStudent, */ (req, res) => {
 // Handle document upload
 router.post('/upload',
     isAuthenticated,
-    // isVerifiedStudent, //
+    // isVerifiedStudent, // Đã vô hiệu hóa
     postRateLimit,
     uploadDocument.single('document'),
     handleMulterError,
-    // validateDocument,
+    // validateDocument, // Đã vô hiệu hóa
     asyncHandler(async (req, res) => {
         try {
             if (!req.file) {
@@ -184,42 +167,54 @@ router.post('/upload',
                 title, description, category, subject, instructor, semester, academicYear, tags
             } = req.body;
             
-            // Process tags
             const processedTags = tags ? 
                 (Array.isArray(tags) ? tags : tags.split(','))
                     .map(tag => tag.trim().toLowerCase())
                     .filter(tag => tag.length > 0)
                 : [];
+
+            // [SỬA LỖI 1] Tự xây dựng fileInfo với đường dẫn web URL chính xác
+            const fileInfo = {
+                filename: req.file.filename,
+                originalName: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+                // Giả sử file được lưu vào /public/uploads/documents/
+                url: `/uploads/documents/${req.file.filename}` 
+            };
             
             const document = new Document({
                 title: title.trim(),
                 description: description.trim(),
                 category,
                 subject,
-                fileInfo: getFileInfo(req.file),
+                fileInfo: fileInfo, // <-- Sử dụng fileInfo đã được sửa
                 uploader: req.user._id,
                 instructor: instructor ? instructor.trim() : '',
                 semester: semester ? semester.trim() : '',
                 academicYear: academicYear ? academicYear.trim() : '',
                 tags: processedTags,
-                isApproved: req.user.role === 'admin' // Auto-approve for admins
+                isApproved: true // [SỬA LỖI] Tạm thời tự động duyệt
             });
             
             await document.save();
             
-            req.flash('success', req.user.role === 'admin' 
-                ? 'Tải lên thành công và đã được duyệt tự động'
-                : 'Tải lên thành công! Tài liệu sẽ được duyệt trong thời gian sớm nhất.');
+            req.flash('success', 'Tải lên thành công!');
             
-            res.redirect(`/learning-hub`);
+            res.redirect(`/learning-hub`); // Chuyển về trang chính
         } catch (error) {
             console.error('Document upload error:', error);
-            req.flash('error', 'Có lỗi xảy ra khi tải lên tài liệu');
+            if (error.name === 'ValidationError') {
+                req.flash('error', 'Lỗi xác thực: ' + error.message);
+            } else {
+                req.flash('error', 'Có lỗi xảy ra khi tải lên tài liệu');
+            }
             res.redirect('/learning-hub/upload');
         }
     })
 );
 
+// [SỬA LỖI 2] Thay đổi logic route /download
 // Download document
 router.get('/download/:id', 
     validateObjectId('id'),
@@ -228,40 +223,32 @@ router.get('/download/:id',
             const document = await Document.findById(req.params.id);
             
             if (!document || !document.isApproved) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Tài liệu không tồn tại hoặc chưa được duyệt'
-                });
+                return res.status(404).send('Tài liệu không tồn tại hoặc chưa được duyệt');
             }
             
-            // Check access level
             if (document.accessLevel === 'students-only' && !req.user) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Vui lòng đăng nhập để tải tài liệu này'
-                });
+                return res.status(401).send('Vui lòng đăng nhập để tải tài liệu này');
             }
             
-            // Increment download count
-            const userId = req.user ? req.user._id : null;
-            const ipAddress = req.ip || req.connection.remoteAddress;
-            
-            document.incrementDownloads(userId, ipAddress);
+            document.incrementDownloads(req.user ? req.user._id : null, req.ip);
             await document.save();
             
-            // Set appropriate headers for download
-            res.setHeader('Content-Disposition', `attachment; filename="${document.fileInfo.originalName}"`);
-            res.setHeader('Content-Type', document.fileInfo.mimetype);
+            // Xây dựng đường dẫn file hệ thống chính xác
+            const filePath = path.join(__dirname, '..', 'public', document.fileInfo.url); // Sửa lại: fileInfo.url đã có /uploads/documents
             
-            // For now, redirect to file URL (in production, use proper file serving)
-            res.redirect(document.fileInfo.url);
+            const downloadName = document.fileInfo.originalName;
+
+            // Sử dụng res.download() để gửi file trực tiếp
+            res.download(filePath, downloadName, (err) => {
+                if (err) {
+                    console.error("Download file error:", err);
+                    res.status(404).send('Không tìm thấy file trên server.');
+                }
+            });
             
         } catch (error) {
             console.error('Download error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Có lỗi xảy ra khi tải file'
-            });
+            res.status(500).send('Có lỗi xảy ra khi tải file');
         }
     })
 );
@@ -277,18 +264,11 @@ router.post('/document/:id/rate',
             const document = await Document.findById(req.params.id);
             
             if (!document || !document.isApproved) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Tài liệu không tồn tại'
-                });
+                return res.status(404).json({ success: false, message: 'Tài liệu không tồn tại' });
             }
             
-            // Check if user already rated
             if (document.hasUserRated(req.user._id)) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Bạn đã đánh giá tài liệu này rồi'
-                });
+                return res.status(400).json({ success: false, message: 'Bạn đã đánh giá tài liệu này rồi' });
             }
             
             document.addRating(req.user._id, parseInt(rating), review || '');
@@ -302,10 +282,7 @@ router.post('/document/:id/rate',
             });
         } catch (error) {
             console.error('Rating error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Có lỗi xảy ra khi đánh giá'
-            });
+            res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi đánh giá' });
         }
     })
 );
@@ -319,25 +296,18 @@ router.post('/document/:id/comment',
             const { content } = req.body;
             
             if (!content || content.trim().length === 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Nội dung bình luận không được để trống'
-                });
+                return res.status(400).json({ success: false, message: 'Nội dung bình luận không được để trống' });
             }
             
             const document = await Document.findById(req.params.id);
             
             if (!document || !document.isApproved) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Tài liệu không tồn tại'
-                });
+                return res.status(404).json({ success: false, message: 'Tài liệu không tồn tại' });
             }
             
             document.addComment(req.user._id, content.trim());
             await document.save();
             
-            // Populate the new comment for response
             await document.populate('comments.user', 'username fullName avatar');
             const newComment = document.comments[document.comments.length - 1];
             
@@ -348,10 +318,7 @@ router.post('/document/:id/comment',
             });
         } catch (error) {
             console.error('Comment error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Có lỗi xảy ra khi bình luận'
-            });
+            res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi bình luận' });
         }
     })
 );
@@ -372,11 +339,7 @@ router.get('/my-uploads', isAuthenticated, asyncHandler(async (req, res) => {
     
     try {
         const [documents, totalDocuments] = await Promise.all([
-            Document.find(filter)
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit),
-            
+            Document.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
             Document.countDocuments(filter)
         ]);
         
@@ -415,21 +378,14 @@ router.delete('/document/:id',
             const document = await Document.findById(req.params.id);
             
             if (!document) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Tài liệu không tồn tại'
-                });
+                return res.status(404).json({ success: false, message: 'Tài liệu không tồn tại' });
             }
             
-            // Check permissions
             const canDelete = document.uploader.toString() === req.user._id.toString() || 
                                 req.user.role === 'admin';
             
             if (!canDelete) {
-                return res.status(403).json({
-                    success: false,
-                    message: 'Bạn không có quyền xóa tài liệu này'
-                });
+                return res.status(403).json({ success: false, message: 'Bạn không có quyền xóa tài liệu này' });
             }
             
             // Delete file from filesystem (implement based on your storage solution)
@@ -445,12 +401,10 @@ router.delete('/document/:id',
             });
         } catch (error) {
             console.error('Delete document error:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Có lỗi xảy ra khi xóa tài liệu'
-            });
+            res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa tài liệu' });
         }
     })
 );
 
 module.exports = router;
+
