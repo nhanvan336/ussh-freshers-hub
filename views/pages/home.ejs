@@ -242,6 +242,41 @@
     </div>
 </section>
 
+<!-- [BỔ SUNG] Music Player Section -->
+<section class="music-player-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Giai điệu USSH</h2>
+            <p class="section-subtitle">Một chút âm nhạc thư giãn cho tâm hồn.</p>
+        </div>
+        
+        <div class="music-player-card">
+            <div class="album-art">
+                <!-- THAY THẾ: Bằng ảnh bìa album của bạn -->
+                <img src="/images/art-music.png" alt="Album Art">
+            </div>
+            <div class="track-info">
+                <h4 class="track-title">Nơi tri thức gặp đam mê</h4>
+                <p class="track-artist">5 nang linh ngu lam</p>
+                
+                <div class="controls">
+                    <button id="play-pause-btn" class="control-btn" aria-label="Play">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <input type="range" id="progress-bar" class="progress-bar" value="0" min="0" max="100">
+                    <span id="current-time" class="time-display">0:00</span>
+                    <span class="time-separator">/</span>
+                    <span id="duration" class="time-display">0:00</span>
+                </div>
+            </div>
+            
+            <!-- [QUAN TRỌNG] Đây là nơi chứa file nhạc của bạn -->
+            <!-- Bạn cần tải file .mp3 lên thư mục public/ và thay đường dẫn ở đây -->
+            <audio id="audio-player" src="/music/ussh-noi-tri-thuc-gap-dam-me.mp3"></audio>
+        </div>
+    </div>
+</section>
+
 <!-- Recent Activities Section -->
 <section class="recent-activities-section">
     <div class="container">
