@@ -5,8 +5,12 @@
         <h1>Cẩm nang sinh viên</h1>
         <p class="subtitle">Tất cả thông tin bạn cần biết cho một khởi đầu thuận lợi tại USSH.</p>
 
-        <!-- [ĐÂY LÀ PHIÊN BẢN ĐÚNG] -->
-        <a href="https://heyzine.com/flip-book/274df872ce.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <!-- [SỬA LỖI] 1. Thêm một ID duy nhất cho nút bấm -->
+        <a href="https://heyzine.com/flip-book/274df872ce.html" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn btn-primary"
+           id="handbook-pdf-link">
             <i class="fas fa-file-pdf"></i> Tải Cẩm nang Tân sinh viên (PDF)
         </a>
         
@@ -82,3 +86,11 @@
     </div>
 </div>
 
+<!-- [SỬA LỖI] 2. Thêm "luật" CSS đặc biệt để phá vỡ "bức tường vô hình" -->
+<style>
+  #handbook-pdf-link {
+    position: relative; /* Giúp z-index hoạt động */
+    z-index: 99; /* Đảm bảo nút này nằm trên các yếu tố khác */
+    pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
+  }
+</style>
