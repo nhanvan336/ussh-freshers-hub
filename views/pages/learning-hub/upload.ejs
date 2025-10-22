@@ -33,27 +33,35 @@
                                 <label for="category" class="form-label">Loại tài liệu</label>
                                 <select name="category" id="category" class="form-control" required>
                                     <option value="" disabled selected>-- Chọn loại --</option>
-                                    <option value="lecture">Bài giảng</option>
-                                    <option value="ebook">Giáo trình/Ebook</option>
-                                    <option value="exam">Đề thi</option> <!-- Giữ nguyên 'exam' (thường là đúng) -->
+                                    <option value="textbooks">Giáo trình</option>
+                                    <option value="lecture-notes">Bài giảng / Slide</option>
+                                    <option value="exam-materials">Đề thi / Ôn tập</option>
+                                    <option value="study-guides">Hướng dẫn học tập</option>
+                                    <option value="research-papers">Bài nghiên cứu</option>
+                                    <option value="thesis-samples">Luận văn mẫu</option>
+                                    <option value="multimedia">Tài liệu đa phương tiện</option>
+                                    <option value="reference-books">Sách tham khảo</option>
                                     <option value="other">Khác</option>
                                 </select>
                             </div>
-                            <!-- [SỬA LỖI] Cập nhật giá trị 'value' cho Subject (theo chuẩn của User.js) -->
+                            <!-- [SỬA LỖI] Cập nhật giá trị 'value' cho Subject -->
                             <div class="col-md-6 mb-3">
                                 <label for="subject" class="form-label">Môn học</label>
                                 <select name="subject" id="subject" class="form-control" required>
                                    <option value="" disabled selected>-- Chọn môn học --</option>
                                    <% const subjects = [
-                                        { value: "Journalism", name: "Báo chí" },
-                                        { value: "Oriental Studies", name: "Đông phương học" },
-                                        // { value: "Han-Quoc-hoc", name: "Hàn Quốc học"}, // Tạm thời bỏ qua nếu không chắc
-                                        { value: "International Studies", name: "Quốc tế học" },
-                                        { value: "Library Science", name: "Thông tin - Thư viện" },
+                                        { value: "Vietnamese Literature", name: "Văn học" },
+                                        { value: "History", name: "Lịch sử" },
                                         { value: "Philosophy", name: "Triết học" },
-                                        { value: "Sociology", name: "Xã hội học" },
                                         { value: "Psychology", name: "Tâm lý học" },
-                                        { value: "Other", name: "Ngành khác" }
+                                        { value: "Sociology", name: "Xã hội học" },
+                                        { value: "Journalism", name: "Báo chí & Truyền thông" },
+                                        { value: "International Studies", name: "Quốc tế học" },
+                                        { value: "Oriental Studies", name: "Đông phương học" },
+                                        { value: "Library Science", name: "Thông tin - Thư viện" },
+                                        { value: "General Studies", name: "Đại cương" },
+                                        { value: "Foreign Languages", name: "Ngoại ngữ" },
+                                        { value: "Research Methods", name: "Phương pháp nghiên cứu" }
                                    ]; %>
                                    <% subjects.forEach(subject => { %>
                                        <option value="<%= subject.value %>"><%= subject.name %></option>
@@ -63,31 +71,26 @@
                         </div>
 
                         <div class="row">
-                            <!-- Giảng viên -->
                             <div class="col-md-6 mb-3">
                                 <label for="instructor" class="form-label">Giảng viên (Nếu có)</label>
                                 <input type="text" class="form-control" id="instructor" name="instructor">
                             </div>
-                            <!-- Học kỳ -->
                             <div class="col-md-6 mb-3">
                                 <label for="semester" class="form-label">Học kỳ (VD: "Học kỳ 1")</label>
                                 <input type="text" class="form-control" id="semester" name="semester">
                             </div>
                         </div>
                         
-                        <!-- Năm học -->
                         <div class="mb-3">
                             <label for="academicYear" class="form-label">Năm học (VD: "2024-2025")</label>
                             <input type="text" class="form-control" id="academicYear" name="academicYear">
                         </div>
 
-                        <!-- Thẻ Tags -->
                         <div class="mb-3">
                             <label for="tags" class="form-label">Tags (Từ khóa, cách nhau bằng dấu phẩy)</label>
                             <input type="text" class="form-control" id="tags" name="tags" placeholder="ví dụ: đề cương, trắc nghiệm, cuối kỳ">
                         </div>
 
-                        <!-- Chọn file -->
                         <div class="mb-3">
                             <label for="document" class="form-label">Chọn file</label>
                             <input type="file" class="form-control" id="document" name="document" required>
