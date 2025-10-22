@@ -4,11 +4,12 @@
     <div class="container">
         <h1>Cẩm nang sinh viên</h1>
         <p class="subtitle">Tất cả thông tin bạn cần biết cho một khởi đầu thuận lợi tại USSH.</p>
-<!-- [BỔ SUNG] Nút bấm tải tài liệu chung -->
+
+        <!-- [ĐÂY LÀ PHIÊN BẢN ĐÚNG] -->
         <a href="https://heyzine.com/flip-book/274df872ce.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
             <i class="fas fa-file-pdf"></i> Tải Cẩm nang Tân sinh viên (PDF)
         </a>
-        <!-- Kết thúc phần bổ sung -->
+        
     </div>
 </div>
 
@@ -22,14 +23,12 @@
                     <% sections.forEach(section => { %>
                         <div class="col">
                             <a href="<%= section.url %>" class="card handbook-card h-100">
-                                <div class="card-body">
-                                    <div class="handbook-card-icon">
-                                        <i class="<%= section.icon %> fa-2x"></i>
+                                <div class="card-body text-center">
+                                    <div class="handbook-card-icon mb-3">
+                                        <i class="<%= section.icon %> fa-3x text-primary"></i>
                                     </div>
-                                    <div class="handbook-card-content">
-                                        <h5 class="card-title"><%= section.title %></h5>
-                                        <p class="card-text"><%= section.description %></p>
-                                    </div>
+                                    <h5 class="card-title"><%= section.title %></h5>
+                                    <p class="card-text small text-muted"><%= section.description %></p>
                                 </div>
                             </a>
                         </div>
@@ -82,7 +81,4 @@
         </div>
     </div>
 </div>
-
-
-
 
