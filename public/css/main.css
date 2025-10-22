@@ -1914,7 +1914,7 @@ display: block !important;
     align-items: center;
     flex-shrink: 0; /* Ngăn icon bị co lại */
 }
-Thêm "luật" CSS đặc biệt để phá vỡ "bức tường vô hình" -->
+
 <style>
   #learning-hub-upload-link {
     position: relative;
