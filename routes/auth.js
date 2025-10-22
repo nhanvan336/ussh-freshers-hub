@@ -4,8 +4,8 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// [SỬA LỖI] Sử dụng đúng tên middleware upload từ file service của bạn
-// (Giả sử bạn dùng chung `uploadAttachment` từ file `forum.js`)
+// [BỔ SUNG] Import middleware upload file của bạn
+// (Giả sử file service của bạn tên là 'file-upload' và có export 'uploadAttachment')
 const { uploadAttachment } = require('../services/file-upload'); 
 
 // --- TRANG ĐĂNG NHẬP ---
@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
             req.flash('error_msg', 'Email hoặc tên đăng nhập đã được sử dụng.');
             return res.redirect('/auth/register');
         }
-        
+
         const newUser = new User({ 
             fullName, 
             studentId, 
@@ -78,7 +78,7 @@ router.post('/logout', (req, res, next) => {
     });
 });
 
-// --- QUẢN LÝ HỒ SƠ CÁ NHÂN ---
+// --- [BỔ SUNG] QUẢN LÝ HỒ SƠ CÁ NHÂN ---
 
 // @route   GET /auth/profile
 // @desc    Hiển thị trang hồ sơ cá nhân
@@ -87,6 +87,7 @@ router.get('/profile', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/auth/login');
     }
+    // Route này sẽ render file 'profile.ejs' bạn đã có
     res.render('pages/auth/profile', { 
         title: 'Hồ sơ của tôi',
         user: req.user 
@@ -96,7 +97,6 @@ router.get('/profile', (req, res) => {
 // @route   POST /auth/profile/avatar
 // @desc    Cập nhật ảnh đại diện
 // @access  Private
-// [SỬA LỖI] Sử dụng đúng biến `uploadAttachment`
 router.post('/profile/avatar', uploadAttachment.single('avatar'), async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ success: false, message: 'Chưa xác thực' });
@@ -111,8 +111,8 @@ router.post('/profile/avatar', uploadAttachment.single('avatar'), async (req, re
             return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
         }
 
-        // (Giả sử file upload service trả về đường dẫn URL của file)
-        const avatarUrl = req.file.path; // Hoặc /uploads/avatars/ten-file.png
+        // Giả sử service trả về 'path' (URL) của file đã upload
+        const avatarUrl = req.file.path; 
 
         user.avatar = avatarUrl;
         await user.save();
