@@ -180,7 +180,7 @@ router.post('/upload',
                 mimetype: req.file.mimetype,
                 size: req.file.size,
                 // Giả sử file được lưu vào /public/uploads/documents/
-                url: `/uploads/documents/${req.file.filename}` 
+                url: `/uploads/attachments/${req.file.filename}` 
             };
             
             const document = new Document({
