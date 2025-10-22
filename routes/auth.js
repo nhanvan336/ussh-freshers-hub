@@ -32,17 +32,32 @@ router.post('/register', async (req, res) => {
             return res.redirect('/auth/register');
         }
 
-        const newUser = new User({ fullName, studentId, major, username, email, password });
+        // [SỬA LỖI] Chỉ cần truyền mật khẩu gốc. File User.js sẽ tự động mã hóa.
+        const newUser = new User({ 
+            fullName, 
+            studentId, 
+            major, 
+            username: username.toLowerCase(), // Đảm bảo username cũng được chuẩn hóa
+            email: email.toLowerCase(), 
+            password // Truyền mật khẩu gốc
+        });
 
-        const salt = await bcrypt.genSalt(10);
-        newUser.password = await bcrypt.hash(password, salt);
-        await newUser.save();
+        // [SỬA LỖI] Gỡ bỏ các dòng mã hóa thủ công
+        // const salt = await bcrypt.genSalt(10);
+        // newUser.password = await bcrypt.hash(password, salt);
+        
+        await newUser.save(); // File User.js sẽ tự động hash tại bước này
 
         req.flash('success_msg', 'Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
         res.redirect('/auth/login');
     } catch (err) {
         console.error('Registration error:', err);
-        req.flash('error_msg', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        // Thêm log lỗi chi tiết
+        if (err.code === 11000) {
+            req.flash('error_msg', 'Email, tên đăng nhập, hoặc MSSV đã tồn tại.');
+        } else {
+            req.flash('error_msg', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        }
         res.redirect('/auth/register');
     }
 });
@@ -57,3 +72,4 @@ router.post('/logout', (req, res, next) => {
 });
 
 module.exports = router;
+
