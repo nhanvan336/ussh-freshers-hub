@@ -211,7 +211,7 @@ router.post('/upload',
                 ? 'Tải lên thành công và đã được duyệt tự động'
                 : 'Tải lên thành công! Tài liệu sẽ được duyệt trong thời gian sớm nhất.');
             
-            res.redirect(`/learning-hub/document/${document._id}`);
+            res.redirect(`/learning-hub`);
         } catch (error) {
             console.error('Document upload error:', error);
             req.flash('error', 'Có lỗi xảy ra khi tải lên tài liệu');
