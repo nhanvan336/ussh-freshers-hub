@@ -1,21 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const { isAuthenticated, isAdmin } = require('../middleware/auth'); // Giả sử bạn có middleware isAdmin
+const { isAuthenticated } = require('../middleware/auth'); // Chỉ dùng 'isAuthenticated' mà chúng ta biết chắc là có
 const Document = require('../models/Document');
 const ForumPost = require('../models/ForumPost');
 
 // @route   GET /admin
 // @desc    Hiển thị trang chính của Admin Dashboard
 // @access  Private (Admin only)
-router.get('/', isAuthenticated, isAdmin, async (req, res) => {
+// [SỬA LỖI] Gỡ bỏ 'isAdmin' để tránh crash server
+router.get('/', isAuthenticated, async (req, res) => {
     try {
-        // Lấy 5 tài liệu và 5 bài post mới nhất đang chờ duyệt
+        // [THẬN TRỌNG] Thêm kiểm tra vai trò (role) ngay tại đây
+        if (req.user.role !== 'admin') {
+            req.flash('error_msg', 'Bạn không có quyền truy cập trang này.');
+            return res.redirect('/');
+        }
+
         const pendingDocuments = await Document.find({ isApproved: false })
             .populate('uploader', 'username fullName')
             .sort({ createdAt: -1 })
             .limit(5);
 
-        const pendingPosts = await ForumPost.find({ isApproved: false }) // Giả sử ForumPost cũng có isApproved
+        const pendingPosts = await ForumPost.find({ isApproved: false })
             .populate('author', 'username fullName')
             .sort({ createdAt: -1 })
             .limit(5);
@@ -35,8 +41,14 @@ router.get('/', isAuthenticated, isAdmin, async (req, res) => {
 // @route   POST /admin/document/:id/approve
 // @desc    Duyệt một tài liệu
 // @access  Private (Admin only)
-router.post('/document/:id/approve', isAuthenticated, isAdmin, async (req, res) => {
+// [SỬA LỖI] Gỡ bỏ 'isAdmin'
+router.post('/document/:id/approve', isAuthenticated, async (req, res) => {
     try {
+        if (req.user.role !== 'admin') {
+            req.flash('error_msg', 'Bạn không có quyền thực hiện hành động này.');
+            return res.redirect('/');
+        }
+
         await Document.findByIdAndUpdate(req.params.id, { isApproved: true });
         req.flash('success_msg', 'Đã duyệt tài liệu thành công.');
         res.redirect('/admin');
@@ -47,6 +59,5 @@ router.post('/document/:id/approve', isAuthenticated, isAdmin, async (req, res) 
     }
 });
 
-// (Bạn có thể thêm route để từ chối/xóa tài liệu ở đây)
-
 module.exports = router;
+
