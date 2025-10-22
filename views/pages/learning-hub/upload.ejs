@@ -11,22 +11,87 @@
 <div class="container page-content">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card">
-                <div class="card-body">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
                     <form action="/learning-hub/upload" method="POST" enctype="multipart/form-data">
+                        
+                        <!-- Tiêu đề -->
                         <div class="mb-3">
                             <label for="title" class="form-label">Tiêu đề tài liệu</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
+                        
+                        <!-- Mô tả -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Mô tả ngắn</label>
                             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
+
+                        <!-- [BỔ SUNG] Các trường thông tin chi tiết -->
+                        <div class="row">
+                            <!-- Loại tài liệu -->
+                            <div class="col-md-6 mb-3">
+                                <label for="category" class="form-label">Loại tài liệu</label>
+                                <select name="category" id="category" class="form-control" required>
+                                    <option value="" disabled selected>-- Chọn loại --</option>
+                                    <option value="lecture">Bài giảng</option>
+                                    <option value="ebook">Giáo trình/Ebook</option>
+                                    <option value="exam">Đề thi</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+                            <!-- Môn học -->
+                            <div class="col-md-6 mb-3">
+                                <label for="subject" class="form-label">Môn học</label>
+                                <select name="subject" id="subject" class="form-control" required>
+                                   <option value="" disabled selected>-- Chọn môn học --</option>
+                                   <% const subjects = [
+                                        { value: "Bao-chi", name: "Báo chí" }, { value: "Dong-phuong-hoc", name: "Đông phương học" }, 
+                                        { value: "Han-Quoc-hoc", name: "Hàn Quốc học"}, { value: "Quan-he-cong-chung", name: "Quan hệ công chúng" }, 
+                                        { value: "Thong-tin-Thu-vien", name: "Thông tin - Thư viện" }, { value: "Triet-hoc", name: "Triết học" },
+                                        { value: "Xa-hoi-hoc", name: "Xã hội học" }, { value: "Quoc-te-hoc", name: "Quốc tế học" }, 
+                                        { value: "Tam-ly-hoc", name: "Tâm lý học" }, { value: "Nganh-khac", name: "Ngành khác" }
+                                   ]; %>
+                                   <% subjects.forEach(subject => { %>
+                                       <option value="<%= subject.value %>"><%= subject.name %></option>
+                                   <% }); %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Giảng viên -->
+                            <div class="col-md-6 mb-3">
+                                <label for="instructor" class="form-label">Giảng viên (Nếu có)</label>
+                                <input type="text" class="form-control" id="instructor" name="instructor">
+                            </div>
+                            <!-- Học kỳ -->
+                            <div class="col-md-6 mb-3">
+                                <label for="semester" class="form-label">Học kỳ (VD: "Học kỳ 1")</label>
+                                <input type="text" class="form-control" id="semester" name="semester">
+                            </div>
+                        </div>
+                        
+                        <!-- Năm học -->
                         <div class="mb-3">
-                            <label for="document" class="form-label">Chọn file (PDF, DOCX, PPTX...)</label>
+                            <label for="academicYear" class="form-label">Năm học (VD: "2024-2025")</label>
+                            <input type="text" class="form-control" id="academicYear" name="academicYear">
+                        </div>
+
+                        <!-- Thẻ Tags -->
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags (Từ khóa, cách nhau bằng dấu phẩy)</label>
+                            <input type="text" class="form-control" id="tags" name="tags" placeholder="ví dụ: đề cương, trắc nghiệm, cuối kỳ">
+                        </div>
+                        <!-- [KẾT THÚC BỔ SUNG] -->
+
+                        <!-- Chọn file -->
+                        <div class="mb-3">
+                            <label for="document" class="form-label">Chọn file</label>
                             <input type="file" class="form-control" id="document" name="document" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Tải lên</button>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Tải lên tài liệu</button>
                     </form>
                 </div>
             </div>
