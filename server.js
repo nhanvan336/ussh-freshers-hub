@@ -75,7 +75,6 @@ const learningHubRouter = require('./routes/learning-hub');
 const forumRouter = require('./routes/forum');
 const wellnessRouter = require('./routes/wellness');
 const handbookRouter = require('./routes/handbook');
-const staticRouter = require('./routes/static');
 const adminRouter = require('./routes/admin'); // <-- BỔ SUNG DÒNG NÀY
 
 
@@ -83,10 +82,11 @@ app.use('/learning-hub', learningHubRouter);
 app.use('/forum', forumRouter);
 app.use('/wellness', wellnessRouter);
 app.use('/handbook', handbookRouter);
-app.use('/', staticRouter);
 app.use('/admin', adminRouter); // <-- BỔ SUNG DÒNG NÀY
 
 // *** [BỔ SUNG] ROUTER CHO CÁC TRANG TĨNH ***
+const staticRouter = require('./routes/static');
+app.use('/', staticRouter);
 
 console.log('--- SERVER: Các routes đã được định nghĩa xong ---');
 
