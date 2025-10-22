@@ -27,30 +27,33 @@
                             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
 
-                        <!-- [BỔ SUNG] Các trường thông tin chi tiết -->
                         <div class="row">
-                            <!-- Loại tài liệu -->
+                            <!-- [SỬA LỖI] Cập nhật giá trị 'value' cho Category -->
                             <div class="col-md-6 mb-3">
                                 <label for="category" class="form-label">Loại tài liệu</label>
                                 <select name="category" id="category" class="form-control" required>
                                     <option value="" disabled selected>-- Chọn loại --</option>
                                     <option value="lecture">Bài giảng</option>
                                     <option value="ebook">Giáo trình/Ebook</option>
-                                    <option value="exam">Đề thi</option>
+                                    <option value="exam">Đề thi</option> <!-- Giữ nguyên 'exam' (thường là đúng) -->
                                     <option value="other">Khác</option>
                                 </select>
                             </div>
-                            <!-- Môn học -->
+                            <!-- [SỬA LỖI] Cập nhật giá trị 'value' cho Subject (theo chuẩn của User.js) -->
                             <div class="col-md-6 mb-3">
                                 <label for="subject" class="form-label">Môn học</label>
                                 <select name="subject" id="subject" class="form-control" required>
                                    <option value="" disabled selected>-- Chọn môn học --</option>
                                    <% const subjects = [
-                                        { value: "Bao-chi", name: "Báo chí" }, { value: "Dong-phuong-hoc", name: "Đông phương học" }, 
-                                        { value: "Han-Quoc-hoc", name: "Hàn Quốc học"}, { value: "Quan-he-cong-chung", name: "Quan hệ công chúng" }, 
-                                        { value: "Thong-tin-Thu-vien", name: "Thông tin - Thư viện" }, { value: "Triet-hoc", name: "Triết học" },
-                                        { value: "Xa-hoi-hoc", name: "Xã hội học" }, { value: "Quoc-te-hoc", name: "Quốc tế học" }, 
-                                        { value: "Tam-ly-hoc", name: "Tâm lý học" }, { value: "Nganh-khac", name: "Ngành khác" }
+                                        { value: "Journalism", name: "Báo chí" },
+                                        { value: "Oriental Studies", name: "Đông phương học" },
+                                        // { value: "Han-Quoc-hoc", name: "Hàn Quốc học"}, // Tạm thời bỏ qua nếu không chắc
+                                        { value: "International Studies", name: "Quốc tế học" },
+                                        { value: "Library Science", name: "Thông tin - Thư viện" },
+                                        { value: "Philosophy", name: "Triết học" },
+                                        { value: "Sociology", name: "Xã hội học" },
+                                        { value: "Psychology", name: "Tâm lý học" },
+                                        { value: "Other", name: "Ngành khác" }
                                    ]; %>
                                    <% subjects.forEach(subject => { %>
                                        <option value="<%= subject.value %>"><%= subject.name %></option>
@@ -83,7 +86,6 @@
                             <label for="tags" class="form-label">Tags (Từ khóa, cách nhau bằng dấu phẩy)</label>
                             <input type="text" class="form-control" id="tags" name="tags" placeholder="ví dụ: đề cương, trắc nghiệm, cuối kỳ">
                         </div>
-                        <!-- [KẾT THÚC BỔ SUNG] -->
 
                         <!-- Chọn file -->
                         <div class="mb-3">
