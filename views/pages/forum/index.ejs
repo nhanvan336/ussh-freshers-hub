@@ -184,6 +184,30 @@
 <div class="col-lg-3">
     <%- include('../../partials/_forumSidebar', { totalPosts: totalPosts, user: user || null }) %>
 </div>
+<style>
+    .forum-controls .btn-group {
+        flex-grow: 1;
+    }
+    @media (max-width: 991.98px) {
+        .forum-controls {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        /* Đây là nút bấm bị dính vào phân trang */
+        .post-list + .pagination {
+            margin-top: 1.5rem !important;
+        }
+        /* Chúng ta sẽ tạo một nút bấm riêng ở trên cho mobile */
+        #create-post-header-btn {
+            display: none; /* Ẩn nút trên header */
+        }
+    }
+    @media (min-width: 992px) {
+        .forum-controls a.btn-primary {
+            display: none; /* Ẩn nút "Tạo bài viết" ở đây trên desktop */
+        }
+    }
+</style>
 
 
 
