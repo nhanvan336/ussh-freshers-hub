@@ -1,0 +1,80 @@
+<%# File: views/pages/forum/create.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <a href="/forum" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Diễn đàn</a>
+        <h1>Tạo bài viết mới</h1>
+        <p class="subtitle">Chia sẻ kiến thức, đặt câu hỏi hoặc bắt đầu một cuộc thảo luận mới.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <form action="/forum/create" method="POST" enctype="multipart/form-data">
+                        
+                        <!-- Tiêu đề -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề bài viết</label>
+                            <input type="text" class="form-control" id="title" name="title" required placeholder="Nhập tiêu đề rõ ràng, súc tích...">
+                        </div>
+
+                        <!-- Chuyên mục -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Chuyên mục</label>
+                            <select name="category" id="category" class="form-control" required>
+                                <option value="" disabled selected>-- Chọn chuyên mục --</option>
+                                <option value="Hoc Tap">Học tập</option>
+                                <option value="Hoat Dong">Hoạt động ngoại khóa</option>
+                                <option value="Doi Song">Đời sống & Nhà trọ</option>
+                                <option value="Hoi Dap">Hỏi đáp</option>
+                                <option value="Khac">Khác</option>
+                            </select>
+                        </div>
+
+                        <!-- Nội dung -->
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Nội dung</label>
+                            <textarea class="form-control" id="content" name="content" rows="10" required placeholder="Viết nội dung chi tiết của bạn ở đây..."></textarea>
+                        </div>
+
+                        <!-- Thẻ Tags -->
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags (Từ khóa)</label>
+                            <input type="text" class="form-control" id="tags" name="tags" placeholder="ví dụ: đề cương, câu lạc bộ, xe buýt (cách nhau bằng dấu phẩy)">
+                        </div>
+
+                        <!-- Đính kèm -->
+                        <div class="mb-3">
+                            <label for="attachments" class="form-label">Tệp đính kèm (Tối đa 3 file)</label>
+                            <input type="file" class="form-control" id="attachments" name="attachments" multiple>
+                        </div>
+
+                        <!-- (Nâng cao) Tạo Poll -->
+                        <div class="mb-3">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#poll-creator" aria-expanded="false">
+                                <i class="fas fa-poll"></i> Thêm cuộc thăm dò (Không bắt buộc)
+                            </button>
+                            <div class="collapse mt-3" id="poll-creator">
+                                <div class="card card-body">
+                                    <div class="mb-3">
+                                        <label for="pollQuestion" class="form-label">Câu hỏi thăm dò</label>
+                                        <input type="text" class="form-control" id="pollQuestion" name="pollQuestion" placeholder="Bạn nghĩ sao về...?">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pollOptions" class="form-label">Các lựa chọn (Mỗi lựa chọn một dòng)</label>
+                                        <textarea class="form-control" id="pollOptions" name="pollOptions" rows="3" placeholder="Lựa chọn 1&#10;Lựa chọn 2&#10;Lựa chọn 3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Đăng bài</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
