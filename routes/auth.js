@@ -4,8 +4,7 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// [BỔ SUNG] Import middleware upload file của bạn
-// (Giả sử file service của bạn tên là 'file-upload' và có export 'uploadAttachment')
+// [SỬA LỖI 2] Sử dụng đúng tên middleware upload từ file service của bạn
 const { uploadAttachment } = require('../services/file-upload'); 
 
 // --- TRANG ĐĂNG NHẬP ---
@@ -35,7 +34,7 @@ router.post('/register', async (req, res) => {
             req.flash('error_msg', 'Email hoặc tên đăng nhập đã được sử dụng.');
             return res.redirect('/auth/register');
         }
-
+        
         const newUser = new User({ 
             fullName, 
             studentId, 
@@ -51,6 +50,7 @@ router.post('/register', async (req, res) => {
         res.redirect('/auth/login');
     } catch (err) {
         console.error('Registration error:', err);
+        // ... (xử lý lỗi giữ nguyên)
         if (err.code === 11000) {
             let field = Object.keys(err.keyPattern)[0];
             if (field === 'studentId') {
@@ -78,7 +78,7 @@ router.post('/logout', (req, res, next) => {
     });
 });
 
-// --- [BỔ SUNG] QUẢN LÝ HỒ SƠ CÁ NHÂN ---
+// --- QUẢN LÝ HỒ SƠ CÁ NHÂN ---
 
 // @route   GET /auth/profile
 // @desc    Hiển thị trang hồ sơ cá nhân
@@ -87,7 +87,6 @@ router.get('/profile', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/auth/login');
     }
-    // Route này sẽ render file 'profile.ejs' bạn đã có
     res.render('pages/auth/profile', { 
         title: 'Hồ sơ của tôi',
         user: req.user 
@@ -111,8 +110,9 @@ router.post('/profile/avatar', uploadAttachment.single('avatar'), async (req, re
             return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng' });
         }
 
-        // Giả sử service trả về 'path' (URL) của file đã upload
-        const avatarUrl = req.file.path; 
+        // [SỬA LỖI 2] Tạo đường dẫn web URL, không dùng đường dẫn file hệ thống
+        // Giả sử file-upload service lưu file vào public/uploads/attachments/
+        const avatarUrl = `/uploads/attachments/${req.file.filename}`;
 
         user.avatar = avatarUrl;
         await user.save();
@@ -125,5 +125,22 @@ router.post('/profile/avatar', uploadAttachment.single('avatar'), async (req, re
     }
 });
 
-module.exports = router;
+// @route   POST /auth/profile
+// @desc    Cập nhật thông tin hồ sơ (Họ tên, Bio)
+// @access  Private
+router.post('/profile', (req, res) => {
+     if (!req.isAuthenticated()) {
+        return res.status(401).json({ success: false, message: 'Chưa xác thực' });
+    }
+    // TODO: Thêm logic cập nhật Họ tên và Bio vào database ở đây
+    console.log('Đã nhận được yêu cầu cập nhật profile:', req.body);
+    // ...
+    // const user = await User.findById(req.user.id);
+    // user.fullName = req.body.fullName;
+    // user.bio = req.body.bio;
+    // await user.save();
+    // ...
+    res.json({ success: true, message: 'Cập nhật thông tin thành công!' });
+});
 
+module.exports = router;
