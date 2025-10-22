@@ -1,0 +1,57 @@
+<%# File: views/pages/admin/index.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Bảng điều khiển Admin</h1>
+        <p class="subtitle">Chào mừng, <%= user.fullName %>. Đây là nơi bạn quản lý nội dung.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row">
+        <!-- Cột Tài liệu chờ duyệt -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-file-alt"></i> Tài liệu chờ duyệt</h4>
+                </div>
+                <div class="card-body">
+                    <% if (pendingDocuments && pendingDocuments.length > 0) { %>
+                        <ul class="list-group list-group-flush">
+                            <% pendingDocuments.forEach(doc => { %>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong><%= doc.title %></strong>
+                                        <small class="d-block text-muted">Bởi: <%= doc.uploader.username %></small>
+                                    </div>
+                                    <!-- Nút bấm "Duyệt" -->
+                                    <form action="/admin/document/<%= doc._id %>/approve" method="POST" style="margin: 0;">
+                                        <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
+                                    </form>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        <p class="text-center text-muted">Không có tài liệu nào chờ duyệt.</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột Bài đăng chờ duyệt (Tạm thời) -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-comments"></i> Bài đăng chờ duyệt</h4>
+                </div>
+                <div class="card-body">
+                    <% if (pendingPosts && pendingPosts.length > 0) { %>
+                        <!-- Hiển thị danh sách bài post chờ duyệt -->
+                    <% } else { %>
+                        <p class="text-center text-muted">Không có bài đăng nào chờ duyệt.</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
