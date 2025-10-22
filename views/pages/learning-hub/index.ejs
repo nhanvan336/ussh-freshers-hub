@@ -91,7 +91,9 @@
                                 <a href="/learning-hub/document/<%= doc._id %>" class="card-img-top-link">
                                     <div class="card-img-top-placeholder">
                                         <i class="fas fa-file-alt fa-3x"></i>
-                                        <span class="file-type-badge"><%= doc.fileInfo.fileType.toUpperCase() %></span>
+                                        <% if (doc.fileInfo && doc.fileInfo.originalName) { %>
+                                            <span class="file-type-badge"><%= doc.fileInfo.originalName.split('.').pop().toUpperCase() %></span>
+                                        <% } %>
                                     </div>
                                 </a>
                                 <div class="card-body d-flex flex-column">
@@ -227,6 +229,7 @@
     pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
   }
 </style>
+
 
 
 
