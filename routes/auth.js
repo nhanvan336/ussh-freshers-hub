@@ -4,54 +4,100 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// [BỔ SUNG] Import middleware upload file của bạn
-// (Giả sử file service của bạn tên là 'file-upload' và có export 'upload')
-const { upload } = require('../services/file-upload'); 
+// [SỬA LỖI] Sử dụng đúng tên middleware upload từ file service của bạn
+// (Giả sử bạn dùng chung `uploadAttachment` từ file `forum.js`)
+const { uploadAttachment } = require('../services/file-upload'); 
 
 // --- TRANG ĐĂNG NHẬP ---
 router.get('/login', (req, res) => {
-    // ... (code cũ giữ nguyên)
+    if (req.isAuthenticated()) return res.redirect('/');
+    res.render('pages/auth/login', { title: 'Đăng nhập', additionalCSS: ['/css/auth.css'] });
 });
 
 router.post('/login', passport.authenticate('local', {
-    // ... (code cũ giữ nguyên)
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+    failureFlash: true
 }));
 
 // --- TRANG ĐĂNG KÝ ---
 router.get('/register', (req, res) => {
-    // ... (code cũ giữ nguyên)
+    if (req.isAuthenticated()) return res.redirect('/');
+    res.render('pages/auth/register', { title: 'Đăng ký', additionalCSS: ['/css/auth.css'] });
 });
 
 router.post('/register', async (req, res) => {
-    // ... (code cũ giữ nguyên)
+    try {
+        const { fullName, studentId, major, username, email, password } = req.body;
+        
+        const existingUser = await User.findOne({ $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }] });
+        if (existingUser) {
+            req.flash('error_msg', 'Email hoặc tên đăng nhập đã được sử dụng.');
+            return res.redirect('/auth/register');
+        }
+        
+        const newUser = new User({ 
+            fullName, 
+            studentId, 
+            major, 
+            username: username.toLowerCase(),
+            email: email.toLowerCase(), 
+            password
+        });
+        
+        await newUser.save();
+        
+        req.flash('success_msg', 'Đăng ký thành công! Bây giờ bạn có thể đăng nhập.');
+        res.redirect('/auth/login');
+    } catch (err) {
+        console.error('Registration error:', err);
+        if (err.code === 11000) {
+            let field = Object.keys(err.keyPattern)[0];
+            if (field === 'studentId') {
+                req.flash('error_msg', 'Mã số sinh viên đã tồn tại.');
+            } else if (field === 'email') {
+                req.flash('error_msg', 'Email đã được sử dụng.');
+            } else if (field === 'username') {
+                req.flash('error_msg', 'Tên đăng nhập đã tồn tại.');
+            } else {
+                req.flash('error_msg', 'Thông tin đăng ký đã tồn tại.');
+            }
+        } else {
+            req.flash('error_msg', 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+        }
+        res.redirect('/auth/register');
+    }
 });
 
 // --- ĐĂNG XUẤT ---
 router.post('/logout', (req, res, next) => {
-    // ... (code cũ giữ nguyên)
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        req.flash('success_msg', 'Bạn đã đăng xuất thành công.');
+        res.redirect('/auth/login');
+    });
 });
 
-// --- [BỔ SUNG] QUẢN LÝ HỒ SƠ CÁ NHÂN ---
+// --- QUẢN LÝ HỒ SƠ CÁ NHÂN ---
 
 // @route   GET /auth/profile
 // @desc    Hiển thị trang hồ sơ cá nhân
 // @access  Private
 router.get('/profile', (req, res) => {
-    // (isAuthenticated đã được kiểm tra ở file header.ejs,
-    // nhưng chúng ta có thể thêm 1 middleware `isAuthenticated` ở đây cho chắc chắn)
     if (!req.isAuthenticated()) {
         return res.redirect('/auth/login');
     }
     res.render('pages/auth/profile', { 
         title: 'Hồ sơ của tôi',
-        user: req.user // Truyền thông tin user vào trang EJS
+        user: req.user 
     });
 });
 
 // @route   POST /auth/profile/avatar
 // @desc    Cập nhật ảnh đại diện
 // @access  Private
-router.post('/profile/avatar', upload.single('avatar'), async (req, res) => {
+// [SỬA LỖI] Sử dụng đúng biến `uploadAttachment`
+router.post('/profile/avatar', uploadAttachment.single('avatar'), async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ success: false, message: 'Chưa xác thực' });
     }
@@ -78,7 +124,6 @@ router.post('/profile/avatar', upload.single('avatar'), async (req, res) => {
         res.status(500).json({ success: false, message: 'Lỗi server khi tải ảnh lên.' });
     }
 });
-
 
 module.exports = router;
 
