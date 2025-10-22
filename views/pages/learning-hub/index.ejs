@@ -5,7 +5,7 @@
         <h1>Thư viện học tập</h1>
         <p class="subtitle">Khám phá, chia sẻ và tải về hàng ngàn tài liệu học thuật giá trị.</p>
         <% if (isAuthenticated) { %>
-            <a href="/learning-hub/upload" class="btn btn-primary" id="learning-hub-upload-link">
+            <a href="/learning-hub/upload" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="learning-hub-upload-link">
                 <i class="fas fa-upload"></i> Tải lên tài liệu
             </a>
         <% } else { %>
@@ -227,6 +227,7 @@
     pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
   }
 </style>
+
 
 
 
