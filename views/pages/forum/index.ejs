@@ -185,13 +185,8 @@
     <%- include('../../partials/_forumSidebar', { totalPosts: totalPosts, user: user || null }) %>
 </div>
 <style>
+    /* Thêm một khoảng đệm 2rem (khoảng 32px) bên dưới thanh phân trang */
     #forum-pagination {
-        /* Thêm khoảng cách 1.5rem (khoảng 24px) ở dưới thanh phân trang */
-        margin-bottom: 1.5rem; 
-    }
-    @media (max-width: 991.98px) {
-        #create-post-header-btn {
-            display: none; /* Ẩn nút trên header */
-        }
+        margin-bottom: 2rem; 
     }
 </style>
