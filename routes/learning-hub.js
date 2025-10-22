@@ -172,7 +172,7 @@ router.post('/upload',
     postRateLimit,
     uploadDocument.single('document'),
     handleMulterError,
-    validateDocument,
+    // validateDocument,
     asyncHandler(async (req, res) => {
         try {
             if (!req.file) {
