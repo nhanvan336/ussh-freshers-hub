@@ -157,7 +157,7 @@ router.get('/document/:id', validateObjectId('id'), asyncHandler(async (req, res
 }));
 
 // Upload document page
-router.get('/upload', isAuthenticated, isVerifiedStudent, (req, res) => {
+router.get('/upload', isAuthenticated, /* isVerifiedStudent, */ (req, res) => {
     res.render('pages/learning-hub/upload', {
         title: 'Tải lên tài liệu - USSH Freshers\' Hub',
         user: req.user,
@@ -168,7 +168,7 @@ router.get('/upload', isAuthenticated, isVerifiedStudent, (req, res) => {
 // Handle document upload
 router.post('/upload',
     isAuthenticated,
-    isVerifiedStudent,
+    // isVerifiedStudent, //
     postRateLimit,
     uploadDocument.single('document'),
     handleMulterError,
