@@ -1,0 +1,37 @@
+<%# File: views/pages/learning-hub/upload.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Tải lên tài liệu</h1>
+        <p class="subtitle">Chia sẻ kiến thức của bạn với cộng đồng.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/learning-hub/upload" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề tài liệu</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả ngắn</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="document" class="form-label">Chọn file (PDF, DOCX, PPTX...)</label>
+                            <input type="file" class="form-control" id="document" name="document" required>
+                        </div>
+                        
+                        <!-- Bạn có thể thêm các trường khác như category, subject ở đây -->
+                        
+                        <button type="submit" class="btn btn-primary">Tải lên</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
