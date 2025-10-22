@@ -1,0 +1,110 @@
+<%# File: views/pages/auth/profile.ejs %>
+
+<div class="page-header">
+    <div class="container">
+        <h1>Hồ sơ của tôi</h1>
+        <p class="subtitle">Quản lý thông tin cá nhân và theo dõi hoạt động của bạn.</p>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="row">
+        <!-- Cột Trái: Avatar và Thông tin cơ bản -->
+        <div class="col-lg-4">
+            <div class="card profile-card">
+                <div class="card-body text-center">
+                    
+                    <!-- [TRẢ LỜI CÂU 3] Đây là khu vực thay đổi avatar -->
+                    <div class="profile-avatar-wrapper">
+                        <img src="<%= user.avatar || '/images/avatars/default-avatar.png' %>" alt="Avatar" class="profile-avatar" id="avatar-preview">
+                        <form id="avatar-upload-form" enctype="multipart/form-data">
+                            <label for="avatar-upload-input" class="avatar-edit-button" title="Đổi ảnh đại diện">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" id="avatar-upload-input" name="avatar" accept="image/*" style="display: none;">
+                        </form>
+                    </div>
+                    <!-- Kết thúc khu vực thay đổi avatar -->
+
+                    <h4 class="mt-3"><%= user.fullName %></h4>
+                    <p class="text-muted">@<%= user.username %></p>
+                    <p class="text-muted"><%= user.major %></p>
+                    <p class="small text-muted">Tham gia từ: <%= new Date(user.joinedDate).toLocaleDateString('vi-VN') %></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột Phải: Thông tin chi tiết và Cài đặt -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Cập nhật thông tin</h5>
+                    <form id="profile-update-form">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Họ và Tên</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" value="<%= user.fullName %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Giới thiệu bản thân (Bio)</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3"><%= user.bio || '' %></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm CSS và JS cho chức năng upload ảnh -->
+<style>
+    .profile-avatar-wrapper { position: relative; width: 150px; height: 150px; margin: 0 auto; }
+    .profile-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .avatar-edit-button {
+        position: absolute; bottom: 5px; right: 5px;
+        width: 40px; height: 40px; background-color: #A16207; color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .avatar-edit-button:hover { background-color: #845005; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const avatarInput = document.getElementById('avatar-upload-input');
+    const avatarPreview = document.getElementById('avatar-preview');
+
+    avatarInput.addEventListener('change', async () => {
+        const file = avatarInput.files[0];
+        if (!file) return;
+
+        // 1. Hiển thị ảnh mới ngay lập tức (cho trải nghiệm người dùng tốt)
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            avatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // 2. Tải ảnh lên server
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        try {
+            const response = await fetch('/auth/profile/avatar', {
+                method: 'POST',
+                body: formData
+                // Headers sẽ được tự động set là 'multipart/form-data'
+            });
+            const result = await response.json();
+            if(result.success) {
+                console.log('Cập nhật avatar thành công!');
+                // Bạn có thể thêm thông báo thành công ở đây
+            } else {
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Lỗi tải lên avatar:', error);
+        }
+    });
+});
+</script>
