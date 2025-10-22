@@ -1,0 +1,77 @@
+<%# File: views/pages/learning-hub/document.ejs %>
+
+<div class="container page-content document-detail-page">
+    <div class="row">
+        <!-- Cột chính: Nội dung tài liệu -->
+        <div class="col-lg-8">
+            <div class="document-header">
+                <a href="/learning-hub" class="back-link"><i class="fas fa-arrow-left"></i> Quay lại Thư viện</a>
+                <span class="document-category"><%= document.category %></span>
+                <h1><%= document.title %></h1>
+
+                <div class="document-meta">
+                    <div class="uploader-info">
+                        <img src="<%= document.uploader.avatar || '/images/avatars/default-avatar.png' %>" alt="<%= document.uploader.username %>" class="avatar-small">
+                        <span>
+                            Đăng bởi <strong><%= document.uploader.username %></strong><br>
+                            <small class="text-muted"><%= new Date(document.createdAt).toLocaleDateString('vi-VN') %></small>
+                        </span>
+                    </div>
+                    <div class="document-stats">
+                        <span><i class="fas fa-eye"></i> <%= document.views %> lượt xem</span>
+                        <span><i class="fas fa-download"></i> <%= document.downloads %> lượt tải</span>
+                        <span><i class="fas fa-star text-warning"></i> <%= document.averageRating.toFixed(1) %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mô tả tài liệu</h5>
+                    <p><%= document.description %></p>
+                    <hr>
+                    <h5 class="card-title">Chi tiết</h5>
+                    <ul class="list-unstyled document-details-list">
+                        <li><strong>Môn học:</strong> <%= document.subject %></li>
+                        <% if (document.instructor) { %>
+                            <li><strong>Giảng viên:</strong> <%= document.instructor %></li>
+                        <% } %>
+                        <% if (document.semester) { %>
+                            <li><strong>Học kỳ:</strong> <%= document.semester %></li>
+                        <% } %>
+                        <% if (document.academicYear) { %>
+                            <li><strong>Năm học:</strong> <%= document.academicYear %></li>
+                        <% } %>
+                    </ul>
+                    <a href="/learning-hub/download/<%= document._id %>" class="btn btn-primary btn-lg w-100 mt-3" target="_blank">
+                        <i class="fas fa-download"></i> Tải về (.<%= document.fileInfo.fileType %> - <%= document.fileSizeFormatted %>)
+                    </a>
+                </div>
+            </div>
+
+            <!-- TODO: Khu vực bình luận và đánh giá sẽ được thêm ở đây -->
+
+        </div>
+
+        <!-- Cột Phải: Tài liệu liên quan -->
+        <div class="col-lg-4">
+            <aside class="sidebar">
+                <div class="sidebar-widget">
+                    <h4>Tài liệu liên quan</h4>
+                    <% if (relatedDocuments && relatedDocuments.length > 0) { %>
+                        <ul class="list-group list-group-flush">
+                            <% relatedDocuments.forEach(doc => { %>
+                                <li class="list-group-item">
+                                    <a href="/learning-hub/document/<%= doc._id %>" class="related-doc-title"><%= doc.title %></a>
+                                    <small class="text-muted d-block">bởi <%= doc.uploader.username %></small>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        <p class="text-muted">Không tìm thấy tài liệu liên quan.</p>
+                    <% } %>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
