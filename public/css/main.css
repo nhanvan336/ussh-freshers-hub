@@ -1824,21 +1824,3 @@ h1, h2, h3, h4, h5, h6 {
 .document-card .card-body {
   padding: 1.25rem; /* rem là đơn vị co giãn theo kích thước font gốc */
 }
-/* --- Căn giữa hoàn hảo cho icon footer --- */
-.social-link {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center;
-  line-height: 1; /* Ngăn icon bị đẩy lệch theo font */
-}
-
-.social-link i {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem; /* Tùy chỉnh theo kích thước mong muốn */
-  line-height: 1;
-  width: 1em;
-  height: 1em;
-}
