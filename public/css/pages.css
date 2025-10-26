@@ -2982,29 +2982,16 @@
 .notification-close:hover {
     background: var(--beige-100);
 }
-/* ==== Fix: Center all icons inside widgets ==== */
-.feature-icon,
-.floating-card,
-.ai-feature,
-.activity-icon,
-.activity-avatar,
-.ai-robot {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
-}
-
-/* Bảo đảm icon không bị lệch theo chiều cao */
+/* --- FINAL ALIGNMENT PATCH --- */
 .feature-icon i,
 .floating-card i,
 .ai-feature i,
 .activity-icon i,
 .activity-avatar i,
 .ai-robot i {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1;
-    vertical-align: middle;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: auto !important;
+    text-align: center !important;
 }
