@@ -31,4 +31,35 @@
 .footer-contact .contact-item span {
     line-height: 1.4;
 }
+/* --- SỬA LỖI CĂN GIỮA ICON MẠNG XÃ HỘI Ở FOOTER --- */
+.social-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start; /* hoặc center nếu bạn muốn canh giữa cả hàng */
+  align-items: center;
+}
 
+.social-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #5D5238; /* màu be đậm bạn đang dùng */
+  transition: all 0.2s ease-in-out;
+}
+
+.social-link i {
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5f0e8; /* hoặc var(--beige-200) nếu bạn muốn giữ màu theme */
+}
+
+.social-link:hover {
+  background: #A16207; /* Màu nâu nhấn */
+  transform: translateY(-2px);
+}
