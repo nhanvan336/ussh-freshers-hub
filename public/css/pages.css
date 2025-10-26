@@ -3008,11 +3008,3 @@
     line-height: 1;
     vertical-align: middle;
 }
-
-/* Nếu muốn nhích icon và chữ ra xa một chút cho đẹp */
-.feature-icon i + span,
-.floating-card i + span,
-.ai-feature i + span {
-    margin-top: 6px;
-    display: block;
-}
