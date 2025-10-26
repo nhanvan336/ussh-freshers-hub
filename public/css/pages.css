@@ -2982,36 +2982,37 @@
 .notification-close:hover {
     background: var(--beige-100);
 }
-/* ===== [FIX GLOBAL ICON ALIGNMENT] ===== */
-.container,
-.main-content,
-.features-grid,
-.activities-grid,
-.feature-card,
+/* ==== Fix: Center all icons inside widgets ==== */
+.feature-icon,
 .floating-card,
 .ai-feature,
 .activity-icon,
-.activity-avatar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.activity-avatar,
+.ai-robot {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
 }
 
-/* Giữ lại layout dọc cho các grid hoặc card */
-.features-grid,
-.activities-grid {
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-}
-
-/* Đảm bảo icon hiển thị giữa khung, không bị ảnh hưởng line-height */
-i, .fas, .fab, .far {
-    line-height: 1;
-    vertical-align: middle;
+/* Bảo đảm icon không bị lệch theo chiều cao */
+.feature-icon i,
+.floating-card i,
+.ai-feature i,
+.activity-icon i,
+.activity-avatar i,
+.ai-robot i {
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* Nếu muốn nhích icon và chữ ra xa một chút cho đẹp */
+.feature-icon i + span,
+.floating-card i + span,
+.ai-feature i + span {
+    margin-top: 6px;
+    display: block;
 }
