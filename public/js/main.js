@@ -4,8 +4,6 @@
 
 // ===================================
 
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize all modules
@@ -24,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-
-
 // ===================================
 
 // Navigation Module
@@ -40,8 +36,6 @@ function initializeNavigation() {
 
     const navLinks = document.querySelectorAll('.nav-link');
 
-    
-
     // Mobile menu toggle
 
     if (mobileToggle && navbarMenu) {
@@ -53,8 +47,6 @@ function initializeNavigation() {
             navbarMenu.style.display = isOpen ? 'none' : 'flex';
 
             mobileToggle.setAttribute('aria-expanded', !isOpen);
-
-            
 
             // Animate hamburger lines
 
@@ -84,8 +76,6 @@ function initializeNavigation() {
 
     }
 
-    
-
     // Close mobile menu when clicking outside
 
     document.addEventListener('click', function(e) {
@@ -95,9 +85,7 @@ function initializeNavigation() {
             navbarMenu.style.display = 'none';
 
             mobileToggle.setAttribute('aria-expanded', 'false');
-
-            
-
+ 
             // Reset hamburger animation
 
             const lines = mobileToggle.querySelectorAll('.hamburger-line');
@@ -113,8 +101,6 @@ function initializeNavigation() {
         }
 
     });
-
-    
 
     // Smooth scroll for anchor links
 
@@ -148,15 +134,11 @@ function initializeNavigation() {
 
     });
 
-    
-
     // Active nav highlight based on scroll position
 
     window.addEventListener('scroll', throttle(updateActiveNavigation, 100));
 
 }
-
-
 
 function updateActiveNavigation() {
 
@@ -164,7 +146,6 @@ function updateActiveNavigation() {
 
     const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
 
-    
 
     let currentSection = '';
 
@@ -180,8 +161,6 @@ function updateActiveNavigation() {
 
     });
 
-    
-
     navLinks.forEach(link => {
 
         link.classList.remove('active');
@@ -195,8 +174,6 @@ function updateActiveNavigation() {
     });
 
 }
-
-
 
 // ===================================
 
@@ -218,13 +195,11 @@ function initializeChatbot() {
 
     const chatbotMessages = document.querySelector('.chatbot-messages');
 
-    
 
     let isOpen = false;
 
     let messageHistory = [];
 
-    
 
     // Toggle chatbot
 
@@ -233,8 +208,6 @@ function initializeChatbot() {
         chatbotToggle.addEventListener('click', toggleChatbot);
 
         chatbotClose?.addEventListener('click', closeChatbot);
-
-        
 
         // Send message handlers
 
@@ -245,20 +218,16 @@ function initializeChatbot() {
             if (e.key === 'Enter') {
 
                 sendMessage();
-
             }
 
         });
 
-        
 
         // Initialize with welcome message
 
         addWelcomeMessage();
 
     }
-
-    
 
     function toggleChatbot() {
 
@@ -267,8 +236,6 @@ function initializeChatbot() {
         chatbotContainer.style.display = isOpen ? 'flex' : 'none';
 
         chatbotToggle.style.transform = isOpen ? 'scale(0.9)' : 'scale(1)';
-
-        
 
         if (isOpen) {
 
@@ -282,8 +249,6 @@ function initializeChatbot() {
 
     }
 
-    
-
     function closeChatbot() {
 
         isOpen = false;
@@ -294,29 +259,21 @@ function initializeChatbot() {
 
     }
 
-    
-
     function sendMessage() {
 
         const message = chatbotInput?.value.trim();
 
         if (!message) return;
 
-        
-
         // Add user message
 
         addMessage(message, 'user');
 
         chatbotInput.value = '';
-
-        
-
+  
         // Show typing indicator
 
         showTypingIndicator();
-
-        
 
         // Simulate AI response
 
@@ -331,16 +288,13 @@ function initializeChatbot() {
         }, 1000 + Math.random() * 1000);
 
     }
-
-    
-
+   
     function addMessage(content, sender) {
 
         const messageDiv = document.createElement('div');
 
         messageDiv.className = `chat-message ${sender}-message`;
 
-        
 
         const timestamp = new Date().toLocaleTimeString('vi-VN', {
 
@@ -349,9 +303,7 @@ function initializeChatbot() {
             minute: '2-digit'
 
         });
-
-        
-
+  
         messageDiv.innerHTML = `
 
             <div class="message-content">${content}</div>
@@ -359,8 +311,6 @@ function initializeChatbot() {
             <div class="message-time">${timestamp}</div>
 
         `;
-
-        
 
         chatbotMessages?.appendChild(messageDiv);
 
@@ -372,15 +322,11 @@ function initializeChatbot() {
 
         });
 
-        
-
         // Store in history
 
         messageHistory.push({ content, sender, timestamp });
 
     }
-
-    
 
     function addWelcomeMessage() {
 
@@ -391,8 +337,6 @@ function initializeChatbot() {
         }, 500);
 
     }
-
-    
 
     function showTypingIndicator() {
 
@@ -426,8 +370,6 @@ function initializeChatbot() {
 
     }
 
-    
-
     function hideTypingIndicator() {
 
         const typingIndicator = document.querySelector('.typing-indicator');
@@ -436,13 +378,10 @@ function initializeChatbot() {
 
     }
 
-    
-
     function generateAIResponse(message) {
 
         const lowerMessage = message.toLowerCase();
 
-        
 
         // Simple keyword-based responses
 
@@ -470,8 +409,6 @@ function initializeChatbot() {
 
         };
 
-        
-
         // Find matching response
 
         for (const [keyword, response] of Object.entries(responses)) {
@@ -483,8 +420,6 @@ function initializeChatbot() {
             }
 
         }
-
-        
 
         // Default responses
 
@@ -499,16 +434,12 @@ function initializeChatbot() {
             'Tôi sẽ cố gắng hỗ trợ tốt nhất có thể. Bạn có thể nói rõ hơn về vấn đề bạn cần giúp đỡ không?'
 
         ];
-
         
-
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 
     }
 
 }
-
-
 
 // Global function for external calls
 
@@ -524,8 +455,6 @@ window.toggleChatbot = function() {
 
 };
 
-
-
 // ===================================
 
 // Scroll Effects Module
@@ -537,8 +466,6 @@ function initializeScrollEffects() {
     const backToTopBtn = document.querySelector('.back-to-top');
 
     const header = document.querySelector('.header');
-
-    
 
     // Back to top button
 
@@ -570,8 +497,6 @@ function initializeScrollEffects() {
 
         }, 100));
 
-        
-
         backToTopBtn.addEventListener('click', () => {
 
             window.scrollTo({
@@ -586,21 +511,15 @@ function initializeScrollEffects() {
 
     }
 
-    
-
     // Header scroll effect
 
     if (header) {
 
         let lastScrollY = window.scrollY;
 
-        
-
         window.addEventListener('scroll', throttle(() => {
 
             const currentScrollY = window.scrollY;
-
-            
 
             if (currentScrollY > 100) {
 
@@ -616,15 +535,11 @@ function initializeScrollEffects() {
 
             }
 
-            
-
             lastScrollY = currentScrollY;
 
         }, 50));
 
     }
-
-    
 
     // Intersection Observer for animations
 
@@ -635,8 +550,6 @@ function initializeScrollEffects() {
         rootMargin: '0px 0px -50px 0px'
 
     };
-
-    
 
     const observer = new IntersectionObserver((entries) => {
 
@@ -652,8 +565,6 @@ function initializeScrollEffects() {
 
     }, observerOptions);
 
-    
-
     // Observe elements for animation
 
     const animateElements = document.querySelectorAll('.feature-card, .activity-column, .floating-card');
@@ -661,8 +572,6 @@ function initializeScrollEffects() {
     animateElements.forEach(el => observer.observe(el));
 
 }
-
-
 
 // ===================================
 
@@ -681,8 +590,6 @@ function initializeFormHandlers() {
         newsletterForm.addEventListener('submit', handleNewsletterSubmit);
 
     }
-
-    
 
     // Generic form validation
 
@@ -704,15 +611,11 @@ function initializeFormHandlers() {
 
 }
 
-
-
 function handleNewsletterSubmit(e) {
 
     e.preventDefault();
 
     const email = e.target.querySelector('.newsletter-input').value;
-
-    
 
     if (validateEmail(email)) {
 
@@ -728,19 +631,13 @@ function handleNewsletterSubmit(e) {
 
 }
 
-
-
 function validateField(e) {
 
     const field = e.target;
 
     const value = field.value.trim();
 
-    
-
     clearFieldError(field);
-
-    
 
     if (field.hasAttribute('required') && !value) {
 
@@ -750,23 +647,16 @@ function validateField(e) {
 
     }
 
-    
-
     if (field.type === 'email' && value && !validateEmail(value)) {
 
         showFieldError(field, 'Email không hợp lệ');
 
         return false;
-
     }
-
-    
 
     return true;
 
 }
-
-
 
 function clearFieldError(field) {
 
@@ -775,8 +665,6 @@ function clearFieldError(field) {
         field = field.target;
 
     }
-
-    
 
     const errorElement = field.parentNode.querySelector('.field-error');
 
@@ -789,16 +677,11 @@ function clearFieldError(field) {
     field.classList.remove('error');
 
 }
-
-
-
 function showFieldError(field, message) {
 
     clearFieldError(field);
 
     field.classList.add('error');
-
-    
 
     const errorElement = document.createElement('div');
 
@@ -810,8 +693,6 @@ function showFieldError(field, message) {
 
 }
 
-
-
 function validateEmail(email) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -819,8 +700,6 @@ function validateEmail(email) {
     return emailRegex.test(email);
 
 }
-
-
 
 // ===================================
 
@@ -833,8 +712,6 @@ function initializeAnimations() {
     // Counter animation for stats
 
     const statNumbers = document.querySelectorAll('.stat-number');
-
-    
 
     const countUpObserver = new IntersectionObserver((entries) => {
 
@@ -852,12 +729,8 @@ function initializeAnimations() {
 
     }, { threshold: 0.5 });
 
-    
-
     statNumbers.forEach(stat => countUpObserver.observe(stat));
-
     
-
     // Floating cards animation timing
 
     const floatingCards = document.querySelectorAll('.floating-card');
@@ -869,8 +742,6 @@ function initializeAnimations() {
     });
 
 }
-
-
 
 function animateCounter(element) {
 
@@ -900,8 +771,6 @@ function animateCounter(element) {
 
 }
 
-
-
 // ===================================
 
 // Accessibility Module
@@ -913,8 +782,6 @@ function initializeAccessibility() {
     // Keyboard navigation
 
     document.addEventListener('keydown', handleKeyboardNavigation);
-
-    
 
     // Focus management for dropdowns
 
@@ -936,15 +803,11 @@ function initializeAccessibility() {
 
     });
 
-    
-
     // Announce screen reader messages
 
     createAriaLiveRegion();
 
 }
-
-
 
 function handleKeyboardNavigation(e) {
 
@@ -962,8 +825,6 @@ function handleKeyboardNavigation(e) {
 
         });
 
-        
-
         // Close chatbot if open
 
         const chatbotContainer = document.querySelector('.chatbot-container');
@@ -977,8 +838,6 @@ function handleKeyboardNavigation(e) {
     }
 
 }
-
-
 
 function createAriaLiveRegion() {
 
@@ -995,8 +854,6 @@ function createAriaLiveRegion() {
     document.body.appendChild(liveRegion);
 
 }
-
-
 
 function announceToScreenReader(message) {
 
@@ -1015,8 +872,6 @@ function announceToScreenReader(message) {
     }
 
 }
-
-
 
 // ===================================
 
@@ -1048,23 +903,15 @@ function showNotification(message, type = 'info') {
 
     `;
 
-    
-
     document.body.appendChild(notification);
-
-    
 
     // Show animation
 
     setTimeout(() => notification.classList.add('show'), 100);
 
-    
-
     // Auto remove
 
     setTimeout(() => removeNotification(notification), 5000);
-
-    
 
     // Manual close
 
@@ -1074,15 +921,11 @@ function showNotification(message, type = 'info') {
 
     });
 
-    
-
     // Announce to screen readers
 
     announceToScreenReader(message);
 
 }
-
-
 
 function removeNotification(notification) {
 
@@ -1091,8 +934,6 @@ function removeNotification(notification) {
     setTimeout(() => notification.remove(), 300);
 
 }
-
-
 
 function getNotificationIcon(type) {
 
@@ -1111,8 +952,6 @@ function getNotificationIcon(type) {
     return icons[type] || icons.info;
 
 }
-
-
 
 // ===================================
 
@@ -1144,8 +983,6 @@ function throttle(func, limit) {
 
 }
 
-
-
 function debounce(func, delay) {
 
     let debounceTimer;
@@ -1164,8 +1001,6 @@ function debounce(func, delay) {
 
 }
 
-
-
 // ===================================
 
 // API Helpers
@@ -1175,8 +1010,6 @@ function debounce(func, delay) {
 const API = {
 
     baseURL: '/api',
-
-    
 
     async request(endpoint, options = {}) {
 
@@ -1195,8 +1028,6 @@ const API = {
             ...options
 
         };
-
-        
 
         try {
 
@@ -1220,15 +1051,11 @@ const API = {
 
     },
 
-    
-
     get(endpoint, options = {}) {
 
         return this.request(endpoint, { method: 'GET', ...options });
 
     },
-
-    
 
     post(endpoint, data, options = {}) {
 
@@ -1244,8 +1071,6 @@ const API = {
 
     },
 
-    
-
     put(endpoint, data, options = {}) {
 
         return this.request(endpoint, {
@@ -1260,8 +1085,6 @@ const API = {
 
     },
 
-    
-
     delete(endpoint, options = {}) {
 
         return this.request(endpoint, { method: 'DELETE', ...options });
@@ -1269,8 +1092,6 @@ const API = {
     }
 
 };
-
-
 
 // ===================================
 
@@ -1284,23 +1105,17 @@ function initializeSocket() {
 
         const socket = io();
 
-        
-
         socket.on('connect', () => {
 
             console.log('Connected to server');
 
         });
 
-        
-
         socket.on('disconnect', () => {
 
             console.log('Disconnected from server');
 
         });
-
-        
 
         // Listen for real-time notifications
 
@@ -1310,8 +1125,6 @@ function initializeSocket() {
 
         });
 
-        
-
         // Listen for new forum posts
 
         socket.on('newForumPost', (post) => {
@@ -1320,15 +1133,11 @@ function initializeSocket() {
 
         });
 
-        
-
         return socket;
 
     }
 
 }
-
-
 
 // Initialize socket when available
 
@@ -1337,8 +1146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initializeSocket, 1000);
 
 });
-
-
 
 // ===================================
 
@@ -1360,8 +1167,6 @@ window.addEventListener('error', (e) => {
 
 });
 
-
-
 window.addEventListener('unhandledrejection', (e) => {
 
     console.error('Unhandled promise rejection:', e.reason);
@@ -1369,8 +1174,6 @@ window.addEventListener('unhandledrejection', (e) => {
     e.preventDefault();
 
 });
-
-
 
 // ===================================
 
