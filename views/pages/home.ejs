@@ -1,25 +1,51 @@
-<!-- [CẬP NHẬT] Gộp cả hai đoạn mã CSS sửa lỗi căn lề -->
+<!-- [CẬP NHẬT] Thay thế toàn bộ khối <style> cũ bằng khối <style> đã sửa lỗi -->
 <style>
-    /* Căn giữa các biểu tượng trong widget trên toàn trang */
-    .floating-card i, 
+    /* =================================== */
+    /* [FIX] Global Icon Alignment        */
+    /* =================================== */
+
+    /* 1. "Luật" cho các KHUNG CHỨA (widget) */
+    /* Buộc các thẻ chứa icon phải sử dụng Flexbox 
+     * để căn giữa nội dung bên trong nó theo cả chiều ngang và chiều dọc.
+    */
+    .feature-icon, 
+    .floating-card, 
+    .ai-robot, 
+    .ai-feature, 
+    .activity-icon, 
+    .activity-avatar, 
+    .activity-date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* 2. "Luật" cho các ICON (biểu tượng) */
+    /* Đảm bảo các icon lớn (thường là font-size kế thừa) 
+     * được hiển thị đúng và không bị cắt xén.
+    */
     .feature-icon i, 
-    .ai-robot i, 
-    .ai-feature i,
+    .floating-card i, 
+    .ai-robot i {
+        line-height: 1; /* Ngăn không cho icon bị lệch chiều cao */
+    }
+
+    /* Luật này đảm bảo các icon FontAwesome khác (như trong nút bấm) cũng hiển thị đúng */
+    .fas, .fab, .far, #chatbot-bubble i,
     .hero-cta .btn i,
     .feature-link i,
     .ai-info .btn i,
     .activity-title i,
-    .activity-avatar i,
-    .activity-icon i,
     .view-all-link i,
     .cta-buttons .btn i {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.25em; /* Đảm bảo icon có không gian để căn giữa */
+        width: 1.25em; 
     }
 
-     /* Căn chỉnh cho khu vực Trợ lý AI */
+    /* 3. Căn chỉnh cho khu vực Trợ lý AI (Giữ nguyên) */
     .ai-info {
         display: flex;
         flex-direction: column;
@@ -29,8 +55,31 @@
     }
     .ai-info > .ai-features,
     .ai-info > button {
-        align-self: center;
+        /* Bỏ align-self: center; và để CSS cho .ai-actions (bên ngoài) xử lý */
     }
+
+    /* [BỔ SUNG] Luật căn chỉnh cho .ai-actions (đã có trong main.css, nhưng thêm vào đây cho chắc) */
+    .ai-actions {
+        display: flex;
+        align-items: center; 
+        gap: 2.5rem; 
+        margin-top: 2rem;
+    }
+    .ai-feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .ai-feature i {
+        font-size: 1.1rem;
+        color: #A16207;
+        background-color: #FFFBEB;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
 </style>
 
 <!-- Hero Section -->
