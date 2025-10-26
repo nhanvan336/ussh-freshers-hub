@@ -404,3 +404,46 @@
         </div>
     </div>
 </section>
+<!-- [CẬP NHẬT] Thay thế toàn bộ khối <style> cũ bằng khối <style> đã sửa lỗi -->
+<style>
+    /* 1. "Luật" cho các KHUNG CHỨA (widget) */
+    /* Buộc các thẻ chứa icon phải sử dụng Flexbox 
+     * để căn giữa nội dung bên trong nó theo cả chiều ngang và chiều dọc.
+    */
+    .feature-icon, 
+    .floating-card, 
+    .ai-robot, 
+    .ai-feature, 
+    .activity-icon, 
+    .activity-avatar, 
+    .activity-date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* 2. "Luật" cho các ICON (biểu tượng) */
+    /* Đảm bảo các icon lớn (thường là font-size kế thừa) 
+     * được hiển thị đúng và không bị cắt xén.
+    */
+    .feature-icon i, 
+    .floating-card i, 
+    .ai-robot i {
+        line-height: 1; /* Ngăn không cho icon bị lệch chiều cao */
+    }
+
+    /* 3. Luật này đảm bảo các icon FontAwesome khác (như trong nút bấm) cũng hiển thị đúng */
+    .fas, .fab, .far, #chatbot-bubble i,
+    .hero-cta .btn i,
+    .feature-link i,
+    .ai-info .btn i,
+    .activity-title i,
+    .view-all-link i,
+    .cta-buttons .btn i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25em; 
+    }
+</style>
