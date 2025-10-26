@@ -1837,3 +1837,65 @@ sẽ ghi đè lên bất kỳ style nào đang gây lỗi từ các file CSS kh�
 .form-label {
 display: block !important;
 }
+/* =============================== */
+/* [GLOBAL ICON + CARD ALIGN FIX]  */
+/* =============================== */
+
+/* Toàn bộ khung chứa icon & text */
+.feature-card,
+.floating-card,
+.ai-feature,
+.activity-card,
+.activity-item,
+.widget,
+.card,
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: center !important;   /* căn giữa theo trục ngang */
+  justify-content: center !important; /* căn giữa theo trục dọc */
+  text-align: center;
+}
+
+/* Các icon bên trong (FontAwesome, Material, SVG, ...) */
+.feature-card i,
+.floating-card i,
+.ai-feature i,
+.activity-card i,
+.widget i,
+.block i,
+.card i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Đảm bảo chữ không bị lệch */
+.feature-card h3,
+.ai-feature h3,
+.activity-card h3,
+.widget h3,
+.block h3 {
+  text-align: center;
+}
+
+/* Nếu vẫn còn layout lưới (Grid) cho card, đảm bảo auto-center */
+.grid,
+.feature-grid,
+.ai-grid,
+.card-grid {
+  justify-items: center;
+  align-items: center;
+}
+
+/* Fix riêng cho icon tròn (nếu dùng) */
+.icon,
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
