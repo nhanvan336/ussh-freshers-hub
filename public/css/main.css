@@ -1872,48 +1872,6 @@ display: block !important;
     align-items: center !important;
     justify-content: center !important;
     width: 1.25em;
-}
-/* =================================== */
-/* [FIX] AI Assistant Section Alignment */
-/* =================================== */
-
-/* Sử dụng Flexbox để sắp xếp các mục con bên trong .ai-actions */
-.ai-actions {
-    display: flex;
-    /* Căn giữa các mục con theo chiều dọc */
-    align-items: center; 
-    /* Tạo một khoảng trống giữa cột tính năng và nút bấm */
-    gap: 2.5rem; 
-    margin-top: 2rem;
-}
-
-/* Sắp xếp 3 mục tính năng theo chiều dọc */
-.ai-features {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; /* Tạo khoảng cách giữa các mục tính năng */
-}
-
-/* Căn chỉnh icon và text bên trong mỗi mục tính năng */
-.ai-feature {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Khoảng cách giữa icon và chữ */
-}
-
-.ai-feature i {
-    font-size: 1.1rem;
-    color: #A16207; /* Màu nâu của theme */
-    background-color: #FFFBEB; /* Màu nền vàng nhạt */
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    /* Đảm bảo icon luôn nằm giữa vòng tròn */
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0; /* Ngăn icon bị co lại */
-}
 
 <style>
   #learning-hub-upload-link {
