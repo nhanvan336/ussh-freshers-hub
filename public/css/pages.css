@@ -2995,3 +2995,20 @@
     margin: auto !important;
     text-align: center !important;
 }
+/* ==== ALIGN AI FEATURES COLUMN WITH CTA BUTTON ==== */
+.ai-features {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;      /* Căn giữa theo trục dọc */
+    align-items: flex-start;      /* Căn theo chiều ngang, khớp với text bên phải */
+    height: 100%;                 /* Cho phép chiếm toàn bộ chiều cao cột */
+    margin-top: -20px;            /* Có thể tinh chỉnh nhỏ để thẳng hàng nút CTA */
+}
+
+/* Đảm bảo từng khối icon cách đều nhau */
+.ai-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
