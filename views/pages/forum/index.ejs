@@ -112,13 +112,13 @@
             </div>
         </div>
 
-<% if (user) { %>
-     <div class="create-post-btn">
-        <a href="/forum/new" class="btn btn-success">
-            <i class="fas fa-plus me-1"></i> Tạo bài đăng mới
-        </a>
-    </div>
-<% } %>
+<div class="create-post-btn">
+    <%- include('../../partials/_createPostButton', { user: user }) %>
+</div>
+
+<div class="row row-cols-1 row-cols-lg-2 g-4">
+    <!-- danh sách bài -->
+</div>
 
         <!-- Danh sách bài đăng -->
         <div>
@@ -203,6 +203,7 @@
         margin: 1.5rem 0 2rem 0; /* top 1.5rem, bottom 2rem */ 
     }
 </style>
+
 
 
 
