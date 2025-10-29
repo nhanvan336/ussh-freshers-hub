@@ -455,62 +455,6 @@ window.toggleChatbot = function() {
 
 };
 
-// ===================================
-
-// Scroll Effects Module
-
-// ===================================
-
-function initializeScrollEffects() {
-
-    const backToTopBtn = document.querySelector('.back-to-top');
-
-    const header = document.querySelector('.header');
-
-    // Back to top button
-
-    if (backToTopBtn) {
-
-        window.addEventListener('scroll', throttle(() => {
-
-            if (window.scrollY > 300) {
-
-                backToTopBtn.style.display = 'block';
-
-                backToTopBtn.style.opacity = '1';
-
-            } else {
-
-                backToTopBtn.style.opacity = '0';
-
-                setTimeout(() => {
-
-                    if (window.scrollY <= 300) {
-
-                        backToTopBtn.style.display = 'none';
-
-                    }
-
-                }, 300);
-
-            }
-
-        }, 100));
-
-        backToTopBtn.addEventListener('click', () => {
-
-            window.scrollTo({
-
-                top: 0,
-
-                behavior: 'smooth'
-
-            });
-
-        });
-
-    }
-
     // Header scroll effect
 
     if (header) {
