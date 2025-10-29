@@ -37,6 +37,11 @@
     .filter-card .form-group {
         margin-bottom: 1rem;
     }
+    .create-post-btn {
+    margin-bottom: 2rem; /* khoảng cách với phân trang và footer */
+    display: flex;
+    justify-content: flex-end; /* nút bên phải */
+    }
 </style>
 
 <!-- Thẻ div container-fluid đã được loại bỏ để khớp với layout chính -->
@@ -106,6 +111,14 @@
                 </div>
             </div>
         </div>
+
+<% if (user) { %>
+     <div class="create-post-btn">
+        <a href="/forum/new" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> Tạo bài đăng mới
+        </a>
+    </div>
+<% } %>
 
         <!-- Danh sách bài đăng -->
         <div>
@@ -190,5 +203,6 @@
         margin: 1.5rem 0 2rem 0; /* top 1.5rem, bottom 2rem */ 
     }
 </style>
+
 
 
