@@ -206,7 +206,7 @@
                         <%- include('../../partials/pagination', { 
                             currentPage: currentPage, 
                             totalPages: totalSamplePages, 
-                            baseUrl: `/learning-hub?sort=${(filters && filters.sort) || 'newest'}&category=${(filters && filters.category) || 'all'}&subject=${(filters && filters.subject) || 'all'}&q=${(filters && filters.q) || ''}` 
+                            baseUrl: `/learning-hub?sort=${(filters && filters.sort) || 'newest'}&category=${(filters && filters.category) || 'all'}&subject=${(filters && filters.subject) || 'all'}&q=${(filters && filters.q) || ''}&page=` 
                         }) %>
                     <% } %>
 
@@ -229,9 +229,3 @@
     pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
   }
 </style>
-
-
-
-
-
-
