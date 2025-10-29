@@ -120,11 +120,20 @@
 
                 <!-- Phân trang cho dữ liệu thật -->
                 <% if (totalPages > 1) { %>
-                    <%- include('../../partials/pagination', { currentPage: currentPage, totalPages: totalPages, baseUrl: `/learning-hub?sort=${filters.sort}&category=${filters.category}&subject=${filters.subject}&q=${filters.q || ''}` }) %>
+                    <%- include('../../partials/pagination', { 
+                        currentPage: currentPage, 
+                        totalPages: totalPages, 
+                        baseUrl: `/learning-hub?sort=${filters.sort}&category=${filters.category}&subject=${filters.subject}&q=${filters.q || ''}&page=` 
+                    }) %>
                 <% } %>
-            <% } else { %>
+
+                <% } else { %>
                 <%# --- PHẦN BÀI ĐĂNG MẪU KHI DATABASE TRỐNG --- %>
                 <%
+                    const safePage = (typeof currentPage !== 'undefined') 
+                    ? currentPage 
+                    : ((typeof page !== 'undefined') ? parseInt(page) : 1);
+
                     const allSampleDocuments = [
                         { _id: 'sample1', title: 'Giáo trình Nhập môn Quan hệ Công chúng', description: 'Tài liệu cơ bản cho sinh viên ngành PR.', category: 'ebook', subject: 'Quan-hệ-công-chúng', fileInfo: { fileType: 'PDF' }, averageRating: 4.8, downloads: 152, views: 830, uploader: { username: 'thanhmai' }, createdAt: '2025-10-18T10:00:00Z', externalUrl: 'https://www.scribd.com/document/514168824/Giao-Trinh-Quan-H%E1%BB%87-Cong-Chung-894525' },
                         { _id: 'sample2', title: 'Đề cương ôn tập Triết học Mác-Lênin', description: 'Tổng hợp câu hỏi và đáp án chi tiết.', category: 'exam', subject: 'Triết-học', fileInfo: { fileType: 'PDF' }, averageRating: 4.9, downloads: 210, views: 1200, uploader: { username: 'minhquan' }, createdAt: '2025-10-17T11:30:00Z', externalUrl: 'https://www.scribd.com/document/800409487/%C4%90%E1%BB%81-C%C6%B0%C6%A1ng-On-T%E1%BA%ADp-Tri%E1%BA%BFt-H%E1%BB%8Dc-Mac-Lenin' },
@@ -144,10 +153,6 @@
                     ];
 
                     let filteredDocuments = allSampleDocuments;
-                    
-                    const currentPage = (typeof currentPage !== 'undefined') 
-                      ? currentPage 
-                      : ((typeof page !== 'undefined') ? parseInt(page) : 1);
 
                     // Lọc và Sắp xếp
                     if (filters && filters.category && filters.category !== 'all') { filteredDocuments = filteredDocuments.filter(doc => doc.category === filters.category); }
@@ -231,4 +236,3 @@
     pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
   }
 </style>
-
