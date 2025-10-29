@@ -31,34 +31,29 @@
 .footer-contact .contact-item span {
     line-height: 1.4;
 }
-/* === CĂN GIỮA HOÀN HẢO ICON MẠNG XÃ HỘI TRONG FOOTER === */
+/* === SỬA CĂN GIỮA ICON MẠNG XÃ HỘI TRONG FOOTER === */
 .social-links {
   display: flex;
   gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 44px;
   height: 44px;
-  background-color: #5D5238; /* màu nền hiện tại của bạn */
+  background-color: #5D5238;
   border-radius: 8px;
   transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
 }
 
 .social-link i {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.2rem;
+  color: #fff;
   line-height: 1;
-  color: #fff; /* hoặc màu be sáng của theme bạn */
-}
-
-/* hiệu ứng hover nhẹ */
-.social-link:hover {
-  background-color: #A16207;
-  transform: translateY(-2px);
-}
+  disp
