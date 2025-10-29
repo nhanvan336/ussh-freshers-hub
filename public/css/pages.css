@@ -3012,3 +3012,51 @@
     gap: 10px;
     margin-bottom: 20px;
 }
+/* =================================== */
+/* FIX CHỈ RIÊNG ICON: FOOTER + CHATBOT + BACK-TO-TOP */
+/* =================================== */
+
+/* Footer social icons */
+.social-link {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--beige-800);
+  color: var(--beige-300);
+  transition: var(--transition-fast);
+}
+
+.social-link i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: inherit;
+}
+
+.social-link:hover {
+  background-color: var(--primary-brown);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* Chatbot bubble icon */
+#chatbot-bubble {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#chatbot-bubble i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+/* Back to top button */
+.back
