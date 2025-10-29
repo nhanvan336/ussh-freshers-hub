@@ -31,35 +31,3 @@
 .footer-contact .contact-item span {
     line-height: 1.4;
 }
-/* === Căn giữa tuyệt đối các icon trong footer === */
-.footer .social-links {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 12px !important;
-}
-
-.footer .social-link {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 44px !important;
-  height: 44px !important;
-  background-color: #5D5238 !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease-in-out !important;
-}
-
-.footer .social-link i {
-  font-size: 1.2rem !important;
-  color: #fff !important;
-  line-height: 1 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.footer .social-link:hover {
-  background-color: #A16207 !important;
-  transform: translateY(-2px) !important;
-}
