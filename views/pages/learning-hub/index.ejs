@@ -170,7 +170,7 @@
                     const docsPerPage = 10;
                     const totalSampleDocs = filteredDocuments.length;
                     const totalSamplePages = Math.ceil(totalSampleDocs / docsPerPage);
-                    const paginatedDocs = filteredDocuments.slice((currentPage - 1) * docsPerPage, currentPage * docsPerPage);
+                    const paginatedDocs = filteredDocuments.slice((safePage - 1) * docsPerPage, safePage * docsPerPage);
                 %>
                 
                 <% if (paginatedDocs.length > 0) { %>
@@ -211,10 +211,10 @@
                     
                     <% if (totalSamplePages > 1) { %>
                         <%- include('../../partials/pagination', { 
-                            currentPage: currentPage, 
-                            totalPages: totalSamplePages, 
-                            baseUrl: `/learning-hub?sort=${(filters && filters.sort) || 'newest'}&category=${(filters && filters.category) || 'all'}&subject=${(filters && filters.subject) || 'all'}&q=${(filters && filters.q) || ''}&page=` 
-                        }) %>
+                        currentPage: safePage, 
+                        totalPages: totalSamplePages, 
+                        baseUrl: `/learning-hub?sort=${(filters && filters.sort) || 'newest'}&category=${(filters && filters.category) || 'all'}&subject=${(filters && filters.subject) || 'all'}&q=${(filters && filters.q) || ''}&page=` 
+                    }) %>
                     <% } %>
 
                 <% } else { %>
@@ -236,3 +236,4 @@
     pointer-events: auto !important; /* Buộc nút này phải nhận tín hiệu nhấp chuột */
   }
 </style>
+
