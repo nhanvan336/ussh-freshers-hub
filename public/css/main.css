@@ -1824,3 +1824,23 @@ h1, h2, h3, h4, h5, h6 {
 .document-card .card-body {
   padding: 1.25rem; /* rem là đơn vị co giãn theo kích thước font gốc */
 }
+/* === FIX: Căn giữa icon trong Chatbot & Back-to-Top === */
+
+/* Cho cả hai nút đều dùng flex để căn giữa hoàn toàn */
+#chatbot-bubble,
+.back-to-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Icon trong hai nút này căn giữa tuyệt đối và không bị lệch do line-height */
+#chatbot-bubble i,
+.back-to-top i {
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.4rem !important;
+  color: #fff !important;
+}
